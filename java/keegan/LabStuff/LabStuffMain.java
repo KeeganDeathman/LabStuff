@@ -36,7 +36,7 @@ public class LabStuffMain
 	public static LabStuffMain instance;
 	
 	//Blocks
-	public static Blocks blockCopperOre;
+	public static Block blockCopperOre;
 	public static Block blockCircuitDesignTable;
 	public static Block blockCircuitMaker;
 			
@@ -57,8 +57,8 @@ public class LabStuffMain
 	public void PreInit(FMLPreInitializationEvent event)
 	{
 		//Blocks
-		blockCopperOre = new BlockCopperOre(600, Material.field_151566_D).setHardness(3.0F).setResistance(5.0F);
-		blockCircuitDesignTable = new BlockCircuitDesignTable(601, Material.field_151566_D).setUnlocalizedName("blockCircuitDesignTable").setCreativeTab(tabLabStuff);
+		blockCopperOre = new BlockCopperOre(600, Material.field_151566_D).func_149647_a(tabLabStuff).func_149658_d("blockCopperOre").func_149711_c(3.0F).func_149752_b(5.0F);
+		blockCircuitDesignTable = new BlockCircuitDesignTable(601, Material.field_151566_D).func_149647_a(tabLabStuff).func_149658_d("blockCircuitDesignTable");
 		//Items
 		itemFiberGlass = new ItemFiberGlass(600).setUnlocalizedName("itemFiberGlass").setCreativeTab(tabLabStuff);
 		itemCopperIngot = new ItemCopperIngot(601).setUnlocalizedName("itemCopperIngot").setCreativeTab(tabLabStuff);
@@ -87,7 +87,7 @@ public class LabStuffMain
 		LanguageRegistry.addName(itemBasicCircuitDesign, "Basic Circuit Design");
 		
 		//Crafting Recipes
-		GameRegistry.addShapelessRecipe(new ItemStack(LabStuffMain.itemFiberGlass), new ItemStack(Items.bread), new ItemStack(Block.thinGlass));
+		GameRegistry.addShapelessRecipe(new ItemStack(LabStuffMain.itemFiberGlass), new ItemStack(Items.bread), new ItemStack(Blocks.glass_pane));
 		
 		//Tile Entities
 		GameRegistry.registerTileEntity(TileEntityCircuitDesignTable.class, "TileEntityCircuitDesignTable");
