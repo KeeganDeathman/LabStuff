@@ -1,0 +1,16 @@
+[
+{
+  "modid": "labstuff",
+  "name": "LabStuff",
+  "description": "Adds a bunch of items, blocks, and machines for use in labs.",
+  "version": "0.02",
+  "mcversion": "1.6.4",
+  "url": "http://keegandeathman.weebly.com",
+  "updateUrl": "",
+  "authors": ["KeeganDeathman"],
+  "credits": "Made by KeeganDeathman",
+  "parent": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
