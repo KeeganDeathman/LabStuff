@@ -1,10 +1,10 @@
-package LabStuff.client;
+package keegan.LabStuff.client;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import LabStuff.container.*;
-import LabStuff.tileentity.*;
+import keegan.LabStuff.container.*;
+import keegan.LabStuff.tileentity.*;
 import cpw.mods.fml.common.network.IGuiHandler;
 
 public class GuiHandler implements IGuiHandler
@@ -12,7 +12,7 @@ public class GuiHandler implements IGuiHandler
 
 	@Override
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+		TileEntity tileEntity = world.func_147438_o(x, y, z);
 		
 		if(tileEntity instanceof TileEntityCircuitDesignTable)
 		{
@@ -24,7 +24,7 @@ public class GuiHandler implements IGuiHandler
 
 	@Override
 	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+		TileEntity tileEntity = world.func_147438_o(x, y, z);
 		
 		if(tileEntity instanceof TileEntityCircuitDesignTable)
 		{

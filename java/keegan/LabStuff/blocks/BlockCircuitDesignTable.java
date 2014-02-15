@@ -40,14 +40,18 @@ public class BlockCircuitDesignTable extends Block implements ITileEntityProvide
     
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9)
     {
-    	player.openGui(LabStuffMain.instance, 4, world, x, y, z);
-		return true;
+    	if(world.isRemote == false)
+    	{
+    		player.openGui(LabStuffMain.instance, 4, world, x, y, z);
+    		return true;
+    	}
+    	return false;
     }
 
 	@Override
 	public TileEntity func_149915_a(World var1, int var2) {
 		// TODO Auto-generated method stub
-		return new TileEntityCircuitDesignTable();
+		return new TileEntityCircuitDesignTable(var1);
 	}
 
 }

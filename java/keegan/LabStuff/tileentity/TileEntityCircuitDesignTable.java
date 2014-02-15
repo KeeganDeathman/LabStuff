@@ -4,17 +4,26 @@ import keegan.LabStuff.LabStuffMain;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.INetHandler;
+import net.minecraft.network.Packet;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 
 public class TileEntityCircuitDesignTable extends TileEntity implements IInventory
 {
 	private ItemStack[] inv  = new ItemStack[2];
 	public String circuitDesign = "";
+	private World world;
+	
+	
+	public TileEntityCircuitDesignTable(World world)
+	{
+		this.world = world;
+	}
+	
 	
 	public void writeToNBT(NBTTagCompound tagCompound)
 	{
@@ -35,44 +44,49 @@ public class TileEntityCircuitDesignTable extends TileEntity implements IInvento
 	
 	public void drawCircuit(String design)
 	{
-		System.out.println("Drawing begun");
-		if(design.equals("Basic"))
+		if(world.isRemote == true)
 		{
-			ItemStack basicDesign = new ItemStack(Items.paper);
-			setInventorySlotContents(1, basicDesign);
-			setInventorySlotContents(0, null);
-			System.out.println("Circuit Drawn");
-		}
-		else
-		{
-			System.out.println("We found the unregonized design: " + design);
+			System.out.println("Drawing begun");
+			if(design.equals("Basic"))
+			{
+				ItemStack basicDesign = new ItemStack(Items.paper);
+				setInventorySlotContents(1, basicDesign);
+				setInventorySlotContents(0, null);
+				System.out.println("Circuit Drawn");
+			}
+			else
+			{
+				System.out.println("We found the unregonized design: " + design);
+			}
 		}
 	}
 	
-	@Override
-	public Packet getDescriptionPacket()
-	{
-		NBTTagCompound tag = new NBTTagCompound();
-		this.writeToNBT(tag);
-		return new Packet132TileEntityData(xCoord, yCoord, zCoord, 0, tag);
-	}
+	
+//	@Override
+//	public Packet getDescriptionPacket()
+//	{
+//		NBTTagCompound tag = new NBTTagCompound();
+//		this.writeToNBT(tag);
+//		return new Packet132TileEntityData(xCoord, yCoord, zCoord, 0, tag);
+//	}
 
-	@Override
-    public void onDataPacket(INetHandler net, Packet132TileEntityData pkt)
-    {
-        NBTTagCompound tag = pkt.data;
-        System.out.println("Design recieved");
-        this.readFromNBT(tag);
-        System.out.println(circuitDesign);
-        this.drawCircuit(circuitDesign);
-    }
+//	@Override
+//    public void onDataPacket(INetHandler net, Packet132TileEntityData pkt)
+//    {
+//        NBTTagCompound tag = pkt.data;
+//        System.out.println("Design recieved");
+//        this.readFromNBT(tag);
+//      System.out.println(circuitDesign);
+//        this.drawCircuit(circuitDesign);
+//   }
+	
 
 	public void readFromNBT(NBTTagCompound tagCompound)
 	{
-		NBTTagList tagList = tagCompound.getTagList("Inventory");
+		NBTTagList tagList = tagCompound.func_150295_c("Inventory", 10);
 		for (int i = 0; i < tagList.tagCount(); i++) 
 		{
-			NBTTagCompound tag = (NBTTagCompound) tagList.tagAt(i);
+			NBTTagCompound tag = (NBTTagCompound) tagList.func_150305_b(i);
 			byte slot = tag.getByte("Slot");
 			if (slot >= 0 && slot < inv.length) 
 			{
@@ -142,20 +156,6 @@ public class TileEntityCircuitDesignTable extends TileEntity implements IInvento
 	}
 
 	@Override
-	public String getInvName() 
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public boolean isInvNameLocalized() 
-	{
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
 	public int getInventoryStackLimit() 
 	{
 		// TODO Auto-generated method stub
@@ -184,11 +184,11 @@ public class TileEntityCircuitDesignTable extends TileEntity implements IInvento
 
 	@Override
 	public boolean isItemValidForSlot(int slot, ItemStack itemstack) {
-		if(slot == 0 && itemstack.getItem() == Item.paper)
+		if(slot == 0 && itemstack.getItem() == Items.paper)
 		{
 			return true;
 		}
-		else if(slot == 1 && itemstack.getItem() == LabStuffMain.itemBasicCircuitDesign)
+		else if(slot == 0 && itemstack.getItem() == LabStuffMain.itemBasicCircuitDesign)
 		{
 			return true;
 		}
@@ -198,7 +198,7 @@ public class TileEntityCircuitDesignTable extends TileEntity implements IInvento
 	@Override
 	public String func_145825_b() {
 		// TODO Auto-generated method stub
-		return null;
+		return "Circuit Design Table";
 	}
 
 	@Override

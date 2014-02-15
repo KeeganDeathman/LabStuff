@@ -1,5 +1,8 @@
 package keegan.LabStuff;
 
+
+import keegan.LabStuff.PacketHandling.PacketCircuitDesignTable;
+import keegan.LabStuff.PacketHandling.PacketPipeline;
 import keegan.LabStuff.blocks.BlockCircuitDesignTable;
 import keegan.LabStuff.blocks.BlockCopperOre;
 import keegan.LabStuff.common.LabStuffCommonProxy;
@@ -11,26 +14,33 @@ import keegan.LabStuff.items.ItemFiberGlass;
 import keegan.LabStuff.tileentity.TileEntityCircuitDesignTable;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.play.client.C17PacketCustomPayload;
+import net.minecraftforge.event.entity.living.LivingEvent;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.eventhandler.EventPriority;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 
 @Mod(modid= "labstuff", name="LabStuff", version="0.2")
 public class LabStuffMain 
 {
-	@SidedProxy(clientSide = "LabStuff.client.LabStuffClientProxy", serverSide = "LabStuff.common.LabStuffCommonProxy")
+	@SidedProxy(clientSide = "keegan.LabStuff.client.LabStuffClientProxy", serverSide = "keegan.LabStuff.common.LabStuffCommonProxy")
 	public static LabStuffCommonProxy proxy;
-	
 	
 	@Instance("labstuff")
 	public static LabStuffMain instance;
@@ -49,9 +59,9 @@ public class LabStuffMain
 	public static Item itemEtchedCircuitBoard;
 	public static Item itemCircuitBoard;
 	
-	
 	//Other
 	public static CreativeTabs tabLabStuff = new TabLabStuff("tabLabStuff");
+	public static final PacketPipeline packetPipeline = new PacketPipeline();
 	
 	@EventHandler
 	public void PreInit(FMLPreInitializationEvent event)
@@ -74,17 +84,12 @@ public class LabStuffMain
 		
 		//Blocks
 		GameRegistry.registerBlock(blockCopperOre, "blockCopperOre");
-		LanguageRegistry.addName(blockCopperOre, "Copper Ore");
 		GameRegistry.registerBlock(blockCircuitDesignTable, "blockCircuitDesignTable");
-		LanguageRegistry.addName(blockCircuitDesignTable, "Circuit Design Table");
 		
 		//Items
 		GameRegistry.registerItem(itemFiberGlass, "itemFiberGlass");
 		GameRegistry.registerItem(itemCopperIngot, "itemCopperIngot");
 		GameRegistry.registerItem(itemBasicCircuitDesign, "itemBasicCircuitDesign");
-		LanguageRegistry.addName(itemCopperIngot, "Copper Ingot");
-		LanguageRegistry.addName(itemFiberGlass, "Fiberglass");
-		LanguageRegistry.addName(itemBasicCircuitDesign, "Basic Circuit Design");
 		
 		//Crafting Recipes
 		GameRegistry.addShapelessRecipe(new ItemStack(LabStuffMain.itemFiberGlass), new ItemStack(Items.bread), new ItemStack(Blocks.glass_pane));
@@ -92,8 +97,16 @@ public class LabStuffMain
 		//Tile Entities
 		GameRegistry.registerTileEntity(TileEntityCircuitDesignTable.class, "TileEntityCircuitDesignTable");
 		
-		//Other stuff
+		//Packets
+		packetPipeline.initalise();
+		packetPipeline.registerPacket(PacketCircuitDesignTable.class);
 		//LanguageRegistry.instance().addStringLocalization("itemGroup.TabLabStuff", "en_US", "LabStuff");
+	}
+	
+	@EventHandler
+	public void postLoad(FMLPostInitializationEvent event)
+	{
+		packetPipeline.postInitialise();
 	}
 	
 }
