@@ -22,7 +22,7 @@ public class TileEntityRenderCircuitDesignTable extends TileEntitySpecialRendere
 	
 	public void renderTable(TileEntityCircuitDesignTable entity, double x, double y, double z, float tick)
 	{
-		 int i = entity.func_145832_p();
+		 int i = entity.blockMetadata;
 
 	        // Binds the texture
 		 	mc.renderEngine.bindTexture(new ResourceLocation("labstuff:textures/models/CircuitDesignTable.png"));
@@ -91,10 +91,4 @@ public class TileEntityRenderCircuitDesignTable extends TileEntitySpecialRendere
 		return true;
 	}
 
-	@Override
-	public void func_147500_a(TileEntity var1, double var2, double var4,
-			double var6, float var8) {
-		// TODO Auto-generated method stub
-		
-	}
 }

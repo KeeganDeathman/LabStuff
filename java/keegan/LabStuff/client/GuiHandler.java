@@ -12,7 +12,7 @@ public class GuiHandler implements IGuiHandler
 
 	@Override
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-		TileEntity tileEntity = world.func_147438_o(x, y, z);
+		TileEntity tileEntity = world.getTileEntity(x, y, z);
 		
 		if(tileEntity instanceof TileEntityCircuitDesignTable)
 		{
@@ -24,7 +24,7 @@ public class GuiHandler implements IGuiHandler
 
 	@Override
 	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-		TileEntity tileEntity = world.func_147438_o(x, y, z);
+		TileEntity tileEntity = world.getTileEntity(x, y, z);
 		
 		if(tileEntity instanceof TileEntityCircuitDesignTable)
 		{

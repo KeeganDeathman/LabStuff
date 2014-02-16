@@ -13,7 +13,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class BlockCopperOre extends Block
 {
 
-	public BlockCopperOre(int par1, Material par2Material) 
+	public BlockCopperOre(Material par2Material) 
 	{
 		super(par2Material);
 	}
@@ -26,7 +26,7 @@ public class BlockCopperOre extends Block
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IIconRegister register)
 	{
-		this.field_149761_L = register.registerIcon("labstuff:blockCopperOre");
+		this.blockIcon = register.registerIcon("labstuff:blockCopperOre");
 	}
 
 }

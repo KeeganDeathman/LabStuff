@@ -1,0 +1,10 @@
+language.name=English
+
+language.region=US
+
+language.code=en_US
+item.itemBasicCircuitDesign.name=Basic Circuit Design
+item.itemFiberGlass.name=Fiber Glass
+item.itemCopperIngot.name=Copper Ingot
+tile.blockCircuitDesignTable.name=Circuit Design Table
+tile.blockCopperOre.name=Copper Ore

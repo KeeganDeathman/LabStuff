@@ -50,7 +50,7 @@ public class PacketCircuitDesignTable extends AbstractPacket {
 	public void handleServerSide(EntityPlayer player) 
 	{
 		World world = player.worldObj;
-		TileEntity te = world.func_147438_o(x,y,z);
+		TileEntity te = world.getTileEntity(x,y,z);
 		if(te instanceof TileEntityCircuitDesignTable)
 		{System.out.println("Yeah we got it bro!");
 		}

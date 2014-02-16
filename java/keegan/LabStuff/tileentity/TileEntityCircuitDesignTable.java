@@ -83,10 +83,10 @@ public class TileEntityCircuitDesignTable extends TileEntity implements IInvento
 
 	public void readFromNBT(NBTTagCompound tagCompound)
 	{
-		NBTTagList tagList = tagCompound.func_150295_c("Inventory", 10);
+		NBTTagList tagList = tagCompound.getTagList("Inventory", 10);
 		for (int i = 0; i < tagList.tagCount(); i++) 
 		{
-			NBTTagCompound tag = (NBTTagCompound) tagList.func_150305_b(i);
+			NBTTagCompound tag = (NBTTagCompound) tagList.getCompoundTagAt(i);
 			byte slot = tag.getByte("Slot");
 			if (slot >= 0 && slot < inv.length) 
 			{
@@ -169,18 +169,6 @@ public class TileEntityCircuitDesignTable extends TileEntity implements IInvento
 		return true;
 	}
 
-	@Override
-	public void openChest() 
-	{
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void closeChest() {
-		// TODO Auto-generated method stub
-		
-	}
 
 	@Override
 	public boolean isItemValidForSlot(int slot, ItemStack itemstack) {
@@ -196,14 +184,32 @@ public class TileEntityCircuitDesignTable extends TileEntity implements IInvento
 	}
 
 	@Override
-	public String func_145825_b() {
+	public String getInventoryName() {
 		// TODO Auto-generated method stub
 		return "Circuit Design Table";
 	}
 
+
+
 	@Override
-	public boolean func_145818_k_() {
+	public void closeInventory() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+
+	@Override
+	public boolean hasCustomInventoryName() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+
+	@Override
+	public void openInventory() {
+		// TODO Auto-generated method stub
+		
 	}
 }

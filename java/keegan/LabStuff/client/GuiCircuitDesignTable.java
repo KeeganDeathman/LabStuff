@@ -31,8 +31,6 @@ public class GuiCircuitDesignTable extends GuiContainer
 	private GuiButton right;
 	private String circuitDesign = "";
 	private EntityPlayer player;
-	private int ySize = this.field_146999_f;
-	private int xSize = this.field_147000_g;
 	private Minecraft mc = Minecraft.getMinecraft();
 
 
@@ -43,8 +41,8 @@ public class GuiCircuitDesignTable extends GuiContainer
 		tile = tileEntity;
 		player = inv.player;
 		
-		this.field_146999_f = 256;
-		this.field_147000_g = 256;
+		this.xSize = 256;
+		this.ySize = 256;
 	}
 
 	
@@ -52,17 +50,17 @@ public class GuiCircuitDesignTable extends GuiContainer
 	public void initGui()
 	{
 		 super.initGui();
-		 this.field_146292_n.clear();
-		 this.field_146292_n.add(this.draw = new GuiButton(0, xSize + 55 + 2, ySize - 33 + 2, 100, 20, "Draw"));
-		 this.field_146292_n.add(this.left = new GuiButton(1, xSize + 10 + 2, ySize - 58 + 2, 20, 20, "<"));
-		 this.field_146292_n.add(this.right = new GuiButton(2, xSize + 125 + 2, ySize - 58 + 2, 20, 20, ">"));
+		 this.buttonList.clear();
+		 this.buttonList.add(this.draw = new GuiButton(0, xSize + 55 + 2, ySize - 33 + 2, 100, 20, "Draw"));
+		 this.buttonList.add(this.left = new GuiButton(1, xSize + 10 + 2, ySize - 58 + 2, 20, 20, "<"));
+		 this.buttonList.add(this.right = new GuiButton(2, xSize + 125 + 2, ySize - 58 + 2, 20, 20, ">"));
 		 circuitDesign = "Basic";
 	}
 	
 	@Override 
-	protected void func_146284_a(GuiButton par1GuiButton)
+	protected void actionPerformed(GuiButton par1GuiButton)
 	 { 
-	    	if (par1GuiButton.field_146127_k == 2)
+	    	if (par1GuiButton.id == 2)
 	        {
 	    		if(circuitDesign == "Basic")
 	    		{
@@ -77,7 +75,7 @@ public class GuiCircuitDesignTable extends GuiContainer
 	    			circuitDesign = "Basic";
 	    		}
 	        }
-	    	else if(par1GuiButton.field_146127_k == 1)
+	    	else if(par1GuiButton.id == 1)
 	    	{
 	    		if(circuitDesign == "Basic")
 	    		{
@@ -92,19 +90,19 @@ public class GuiCircuitDesignTable extends GuiContainer
 	    			circuitDesign = "Intermidiate";
 	    		}
 	    	}
-	    	else if(par1GuiButton.field_146127_k == 0)
+	    	else if(par1GuiButton.id == 0)
 	    	{
 	    		if(tile.getStackInSlot(0).getItem() == Items.paper)
 	    		{
 	    			if(circuitDesign == "Basic")
 	    			{
-	    				LabStuffMain.packetPipeline.sendToServer(new PacketCircuitDesignTable(tile.field_145851_c,tile.field_145848_d,tile.field_145849_e, circuitDesign));
+	    				LabStuffMain.packetPipeline.sendToServer(new PacketCircuitDesignTable(tile.xCoord, tile.yCoord, tile.zCoord, circuitDesign));
 	    			}
 	    		}
 	    	}
 	    	else
 	    	{
-	    		this.field_146297_k.func_147108_a((GuiScreen)null);
+	    		
 	    	}
 	            
 	 }
@@ -113,17 +111,19 @@ public class GuiCircuitDesignTable extends GuiContainer
 	@Override
 	public void drawScreen(int par1, int par2, float par3)
 	{
-		this.field_146289_q.drawString(StatCollector.translateToLocal("container.inventory"), 8, ySize - 255 + 2, 4210752);
-		this.field_146289_q.drawString(StatCollector.translateToLocal(circuitDesign), xSize - 105 + 2, ySize - 100 + 2, 4210752);
+		this.fontRendererObj.drawString(StatCollector.translateToLocal("container.inventory"), 8, ySize - 255 + 2, 4210752);
+		this.fontRendererObj.drawString(StatCollector.translateToLocal(circuitDesign), xSize - 105 + 2, ySize - 100 + 2, 4210752);
 	}
 
+
+
 	@Override
-	protected void func_146976_a(float var1, int var2, int var3) 
+	protected void drawGuiContainerBackgroundLayer(float var1, int var2, int var3) 
 	{
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		this.mc.renderEngine.bindTexture(new ResourceLocation("labstuff:textures/gui/container/CircuitDesignTable.png"));
-		int x = (this.field_146295_m - xSize) / 2;
-		int y = (this.field_146294_l - ySize) / 2;
+		int x = (this.width - xSize) / 2;
+		int y = (this.height - ySize) / 2;
 		this.drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
 	}
 

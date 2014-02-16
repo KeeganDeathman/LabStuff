@@ -15,17 +15,18 @@ import keegan.LabStuff.tileentity.TileEntityCircuitDesignTable;
 
 public class BlockCircuitDesignTable extends Block implements ITileEntityProvider{
 
-	public BlockCircuitDesignTable(int par1, Material par2Material) 
+	public BlockCircuitDesignTable(Material par2Material) 
 	{
 		super(par2Material);
 	}
 	
    
 	//It's not an opaque cube, so you need this.
-    //@Override
-    //public boolean isOpaqueCube() {
-    //        return false;
-    //}
+    @Override
+    public boolean isOpaqueCube() 
+    {
+            return false;
+    }
     
     public boolean shouldSideBeRendered(IBlockAccess access, int i, int j, int k, int l)
 	{
@@ -38,8 +39,10 @@ public class BlockCircuitDesignTable extends Block implements ITileEntityProvide
         par1World.setBlockMetadataWithNotify(par2, par3, par4, l, 2);
     }
     
-    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9)
+    @Override
+    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par5, float par6, float par7, float par8)
     {
+    	System.out.println("Im awake!");
     	if(world.isRemote == false)
     	{
     		player.openGui(LabStuffMain.instance, 4, world, x, y, z);
@@ -48,8 +51,9 @@ public class BlockCircuitDesignTable extends Block implements ITileEntityProvide
     	return false;
     }
 
+
 	@Override
-	public TileEntity func_149915_a(World var1, int var2) {
+	public TileEntity createNewTileEntity(World var1, int var2) {
 		// TODO Auto-generated method stub
 		return new TileEntityCircuitDesignTable(var1);
 	}
