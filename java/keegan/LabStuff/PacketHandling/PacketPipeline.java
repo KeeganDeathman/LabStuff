@@ -77,37 +77,36 @@ public class PacketPipeline extends MessageToMessageCodec<FMLProxyPacket, Abstra
     }
 
     // In line decoding and handling of the packet
-    @Override
-    protected void decode(ChannelHandlerContext ctx, FMLProxyPacket msg, List<Object> out) throws Exception {
-        ByteBuf payload = msg.payload();
-        byte discriminator = payload.readByte();
-        Class<? extends AbstractPacket> clazz = this.packets.get(discriminator);
-        if (clazz == null) {
-            throw new NullPointerException("No packet registered for discriminator: " + discriminator);
-        }
+	@Override
+	protected void decode(ChannelHandlerContext ctx, FMLProxyPacket msg, List<Object> out) throws Exception {
+		ByteBuf payload = msg.payload();
+		byte discriminator = payload.readByte();
+		Class<? extends AbstractPacket> clazz = this.packets.get(discriminator);
+		if (clazz == null) {
+			throw new NullPointerException("No packet registered for discriminator: " + discriminator);
+		}
 
-        AbstractPacket pkt = clazz.newInstance();
-        pkt.decodeInto(ctx, payload.slice());
+		AbstractPacket pkt = clazz.newInstance();
+		pkt.decodeInto(ctx, payload.slice());
 
-        EntityPlayer player;
-        switch (FMLCommonHandler.instance().getEffectiveSide()) {
-            case CLIENT:
-                player = Minecraft.getMinecraft().thePlayer;
-                pkt.handleClientSide(player);
-                break;
+		EntityPlayer player;
+		switch (FMLCommonHandler.instance().getEffectiveSide()) {
+		case CLIENT:
+			player = Minecraft.getMinecraft().thePlayer;
+			pkt.handleClientSide(player);
+			break;
 
-            case SERVER:
-                INetHandler netHandler = ctx.channel().attr(NetworkRegistry.NET_HANDLER).get();
-                player = ((NetHandlerPlayServer) netHandler).playerEntity;
-                pkt.handleServerSide(player);
-                break;
+		case SERVER:
+			INetHandler netHandler = ctx.channel().attr(NetworkRegistry.NET_HANDLER).get();
+			player = ((NetHandlerPlayServer) netHandler).playerEntity;
+			pkt.handleServerSide(player);
+			break;
 
-            default:
-        }
-
-        out.add(pkt);
-    }
-
+		default:
+		}
+		out.add(pkt);
+	}
+	
     // Method to call from FMLInitializationEvent
     public void initalise() {
         this.channels = NetworkRegistry.INSTANCE.newChannel("LabStuff", this);

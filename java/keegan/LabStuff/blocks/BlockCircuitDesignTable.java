@@ -45,7 +45,7 @@ public class BlockCircuitDesignTable extends Block implements ITileEntityProvide
     	System.out.println("Im awake!");
     	if(world.isRemote == false)
     	{
-    		player.openGui(LabStuffMain.instance, 4, world, x, y, z);
+    		player.openGui(LabStuffMain.instance, 0, world, x, y, z);
     		return true;
     	}
     	return false;

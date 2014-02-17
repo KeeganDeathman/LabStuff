@@ -71,6 +71,17 @@ public class LabStuffMain
 		itemCopperIngot = new ItemCopperIngot(601).setUnlocalizedName("itemCopperIngot").setCreativeTab(tabLabStuff);
 		itemCircuitBoardPlate = new ItemCircuitBoardPlate(602).setUnlocalizedName("itemCircuitBoardPlate").setCreativeTab(tabLabStuff);
 		itemBasicCircuitDesign = new ItemCircuitDesign(603).setUnlocalizedName("itemBasicCircuitDesign").setCreativeTab(tabLabStuff);
+		
+		//Registries
+		//Blocks
+		GameRegistry.registerBlock(blockCopperOre, blockCopperOre.getUnlocalizedName().substring(5));
+		GameRegistry.registerBlock(blockCircuitDesignTable, "blockCircuitDesignTable");
+		GameRegistry.registerBlock(blockCircuitMaker, blockCircuitMaker.getUnlocalizedName().substring(5));
+				
+		//Items
+		GameRegistry.registerItem(itemFiberGlass, "FiberGlass");
+		GameRegistry.registerItem(itemCopperIngot, "CopperIngot");
+		GameRegistry.registerItem(itemBasicCircuitDesign, "BasicCircuitDesign");		
 
 	}
 	
@@ -82,18 +93,6 @@ public class LabStuffMain
 		//Proxy junk
 		proxy.registerRenders();
 		
-		//Blocks
-		System.out.println("Lets register some blocks");
-		GameRegistry.registerBlock(blockCopperOre, blockCopperOre.getUnlocalizedName().substring(5));
-		GameRegistry.registerBlock(blockCircuitDesignTable, "blockCircuitDesignTable");
-		GameRegistry.registerBlock(blockCircuitMaker, blockCircuitMaker.getUnlocalizedName().substring(5));
-		System.out.println("Now were here");
-		
-		//Items
-		GameRegistry.registerItem(itemFiberGlass, "FiberGlass");
-		GameRegistry.registerItem(itemCopperIngot, "CopperIngot");
-		GameRegistry.registerItem(itemBasicCircuitDesign, "BasicCircuitDesign");
-		
 		//Crafting Recipes
 		GameRegistry.addShapelessRecipe(new ItemStack(LabStuffMain.itemFiberGlass), new ItemStack(Items.bread), new ItemStack(Blocks.glass_pane));
 		
@@ -104,7 +103,7 @@ public class LabStuffMain
 		packetPipeline.initalise();
 		packetPipeline.registerPacket(PacketCircuitDesignTable.class);
 		//LanguageRegistry.instance().addStringLocalization("itemGroup.TabLabStuff", "en_US", "LabStuff");
-		 NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
+	    NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
 	}
 	
 	@EventHandler

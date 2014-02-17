@@ -14,7 +14,7 @@ public class ItemCircuitDesign extends Item {
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IIconRegister register)
 	{
-		this.itemIcon = register.registerIcon("labstuff:itemCircuitDesignPaper");
+		this.itemIcon = register.registerIcon("labstuff:itemCircuitDesign");
 	}
 
 }

@@ -109,7 +109,7 @@ public class GuiCircuitDesignTable extends GuiContainer
 	
 	
 	@Override
-	public void drawScreen(int par1, int par2, float par3)
+	public void drawGuiContainerForegroundLayer(int par1, int par2)
 	{
 		this.fontRendererObj.drawString(StatCollector.translateToLocal("container.inventory"), 8, ySize - 255 + 2, 4210752);
 		this.fontRendererObj.drawString(StatCollector.translateToLocal(circuitDesign), xSize - 105 + 2, ySize - 100 + 2, 4210752);
@@ -121,10 +121,11 @@ public class GuiCircuitDesignTable extends GuiContainer
 	protected void drawGuiContainerBackgroundLayer(float var1, int var2, int var3) 
 	{
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		this.mc.renderEngine.bindTexture(new ResourceLocation("labstuff:textures/gui/container/CircuitDesignTable.png"));
+		this.mc.renderEngine.bindTexture(new ResourceLocation("labstuff:textures/gui/CircuitDesignTable.png"));
 		int x = (this.width - xSize) / 2;
 		int y = (this.height - ySize) / 2;
 		this.drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
 	}
+	
 
 }
