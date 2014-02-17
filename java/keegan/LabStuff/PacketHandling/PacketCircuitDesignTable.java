@@ -14,6 +14,9 @@ public class PacketCircuitDesignTable extends AbstractPacket {
 	int x,y,z;
 	String design;
 	
+	public PacketCircuitDesignTable(){
+	}
+	
 	public PacketCircuitDesignTable(int x, int y, int z, String design)
 	{
 		this.x = x;
@@ -53,7 +56,7 @@ public class PacketCircuitDesignTable extends AbstractPacket {
 		TileEntity te = world.getTileEntity(x,y,z);
 		if(te instanceof TileEntityCircuitDesignTable)
 		{
-			System.out.println("Yeah we got it bro!");
+			((TileEntityCircuitDesignTable) te).drawCircuit(design);
 		}
 		else
 		{

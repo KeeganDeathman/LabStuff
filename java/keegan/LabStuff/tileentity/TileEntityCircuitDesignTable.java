@@ -7,8 +7,6 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.network.INetHandler;
-import net.minecraft.network.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
@@ -49,9 +47,22 @@ public class TileEntityCircuitDesignTable extends TileEntity implements IInvento
 			System.out.println("Drawing begun");
 			if(design.equals("Basic"))
 			{
-				ItemStack basicDesign = new ItemStack(Items.paper);
-				setInventorySlotContents(1, basicDesign);
-				setInventorySlotContents(0, null);
+				ItemStack basicDesign = new ItemStack(LabStuffMain.itemBasicCircuitDesign);
+				setInventorySlotContents(0, basicDesign);
+				System.out.println("Circuit Drawn");
+			}
+			else
+			{
+				System.out.println("We found the unregonized design: " + design);
+			}
+		}
+		else
+		{
+			System.out.println("Drawing begun");
+			if(design.equals("Basic"))
+			{
+				ItemStack basicDesign = new ItemStack(LabStuffMain.itemBasicCircuitDesign);
+				setInventorySlotContents(0, basicDesign);
 				System.out.println("Circuit Drawn");
 			}
 			else
