@@ -1,6 +1,7 @@
-package keegan.LabStuff.slot;
+package keegan.labstuff.slot;
 
-import keegan.LabStuff.container.ContainerCircuitDesignTable;
+import keegan.labstuff.container.ContainerCircuitDesignTable;
+import keegan.labstuff.items.ItemCircuitDesign;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
@@ -16,7 +17,7 @@ public class SlotCircuitDesignTable extends Slot {
 	@Override
 	public boolean isItemValid(ItemStack par1ItemStack)
 	{
-		if(par1ItemStack.getItem() == Items.paper)
+		if(par1ItemStack.getItem() == Items.paper || par1ItemStack.getItem() instanceof ItemCircuitDesign)
 		{
 			return true;
 		}

@@ -1,4 +1,4 @@
-package keegan.LabStuff.items;
+package keegan.labstuff.items;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

@@ -1,6 +1,6 @@
-package keegan.LabStuff.common;
+package keegan.labstuff.common;
 
-import keegan.LabStuff.LabStuffMain;
+import keegan.labstuff.LabStuffMain;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 

@@ -1,4 +1,4 @@
-package keegan.LabStuff.render;
+package keegan.labstuff.render;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -10,8 +10,8 @@ import net.minecraft.world.IBlockAccess;
 
 import org.lwjgl.opengl.GL11;
 
-import keegan.LabStuff.models.ModelCircuitDesignTable;
-import keegan.LabStuff.tileentity.TileEntityCircuitDesignTable;
+import keegan.labstuff.models.ModelCircuitDesignTable;
+import keegan.labstuff.tileentity.TileEntityCircuitDesignTable;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 
 public class TileEntityRenderCircuitDesignTable extends TileEntitySpecialRenderer implements ISimpleBlockRenderingHandler{

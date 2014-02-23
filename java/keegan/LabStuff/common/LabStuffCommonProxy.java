@@ -1,4 +1,4 @@
-package keegan.LabStuff.common;
+package keegan.labstuff.common;
 
 public class LabStuffCommonProxy 
 {

@@ -1,4 +1,4 @@
-package keegan.LabStuff.container;
+package keegan.labstuff.container;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -6,9 +6,9 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import keegan.LabStuff.items.ItemCircuitDesign;
-import keegan.LabStuff.slot.*;
-import keegan.LabStuff.tileentity.TileEntityCircuitDesignTable;
+import keegan.labstuff.items.ItemCircuitDesign;
+import keegan.labstuff.slot.*;
+import keegan.labstuff.tileentity.TileEntityCircuitDesignTable;
 
 public class ContainerCircuitDesignTable extends Container
 {

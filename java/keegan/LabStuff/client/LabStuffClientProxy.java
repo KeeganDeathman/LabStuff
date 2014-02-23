@@ -1,8 +1,9 @@
-package keegan.LabStuff.client;
+package keegan.labstuff.client;
 
+import keegan.labstuff.common.*;
+import keegan.labstuff.tileentity.*;
+import keegan.labstuff.render.*;
 import cpw.mods.fml.client.registry.ClientRegistry;
-import keegan.LabStuff.common.LabStuffCommonProxy;
-import keegan.LabStuff.render.TileEntityRenderCircuitDesignTable;
 
 public class LabStuffClientProxy extends LabStuffCommonProxy
 {
@@ -10,7 +11,8 @@ public class LabStuffClientProxy extends LabStuffCommonProxy
 	public void registerRenders()
 	{
 		//TileEntityrenderers
-		ClientRegistry.bindTileEntitySpecialRenderer(keegan.LabStuff.tileentity.TileEntityCircuitDesignTable.class, new TileEntityRenderCircuitDesignTable());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCircuitDesignTable.class, new TileEntityRenderCircuitDesignTable());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityComputer.class, new TileEntityRenderComputer());
 	}
 	
 	@Override

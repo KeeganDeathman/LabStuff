@@ -1,4 +1,4 @@
-package keegan.LabStuff.items;
+package keegan.labstuff.items;
 
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.item.Item;

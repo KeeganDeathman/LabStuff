@@ -1,4 +1,4 @@
-package keegan.LabStuff.blocks;
+package keegan.labstuff.blocks;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
@@ -10,11 +10,13 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import keegan.LabStuff.LabStuffMain;
-import keegan.LabStuff.tileentity.TileEntityCircuitDesignTable;
+import keegan.labstuff.LabStuffMain;
+import keegan.labstuff.tileentity.TileEntityCircuitDesignTable;
 
 public class BlockCircuitDesignTable extends Block implements ITileEntityProvider{
 
+	public static Block instance;
+	
 	public BlockCircuitDesignTable(Material par2Material) 
 	{
 		super(par2Material);
@@ -33,9 +35,8 @@ public class BlockCircuitDesignTable extends Block implements ITileEntityProvide
 		return false;
 	}
     
-    public void onBlockPlacedBy(World par1World, int par2, int par3, int par4, EntityLivingBase par5EntityLivingBase, ItemStack par6ItemStack)
+    public void onBlockPlacedBy(World par1World, int par2, int par3, int par4, EntityLivingBase par5EntityLivingBase, ItemStack par6ItemStack, int l)
     {
-        int l = MathHelper.floor_double((double)(par5EntityLivingBase.rotationYaw * 4.0F / 360.0F) + 2.5D) & 3;
         par1World.setBlockMetadataWithNotify(par2, par3, par4, l, 2);
     }
     

@@ -1,6 +1,6 @@
-package keegan.LabStuff.tileentity;
+package keegan.labstuff.tileentity;
 
-import keegan.LabStuff.LabStuffMain;
+import keegan.labstuff.LabStuffMain;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
@@ -12,7 +12,7 @@ import net.minecraft.world.World;
 
 public class TileEntityCircuitDesignTable extends TileEntity implements IInventory
 {
-	private ItemStack[] inv  = new ItemStack[2];
+	private ItemStack[] inv  = new ItemStack[1];
 	public String circuitDesign = "";
 	private World world;
 	
@@ -51,6 +51,12 @@ public class TileEntityCircuitDesignTable extends TileEntity implements IInvento
 				setInventorySlotContents(0, basicDesign);
 				System.out.println("Circuit Drawn");
 			}
+			else if(design.equals("Computer"))
+			{
+				ItemStack compDesign = new ItemStack(LabStuffMain.itemComputerCircuitDesign);
+				setInventorySlotContents(0, compDesign);
+				System.out.println("Circuit Drawn");
+			}
 			else
 			{
 				System.out.println("We found the unregonized design: " + design);
@@ -63,6 +69,12 @@ public class TileEntityCircuitDesignTable extends TileEntity implements IInvento
 			{
 				ItemStack basicDesign = new ItemStack(LabStuffMain.itemBasicCircuitDesign);
 				setInventorySlotContents(0, basicDesign);
+				System.out.println("Circuit Drawn");
+			}
+			else if(design.equals("Computer"))
+			{
+				ItemStack compDesign = new ItemStack(LabStuffMain.itemComputerCircuitDesign);
+				setInventorySlotContents(0, compDesign);
 				System.out.println("Circuit Drawn");
 			}
 			else

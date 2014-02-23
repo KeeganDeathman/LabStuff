@@ -1,8 +1,8 @@
-package keegan.LabStuff.blocks;
+package keegan.labstuff.blocks;
 
 import java.util.Random;
 
-import keegan.LabStuff.LabStuffMain;
+import keegan.labstuff.LabStuffMain;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;

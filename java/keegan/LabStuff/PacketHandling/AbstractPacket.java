@@ -1,4 +1,4 @@
-package keegan.LabStuff.PacketHandling;
+package keegan.labstuff.PacketHandling;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;

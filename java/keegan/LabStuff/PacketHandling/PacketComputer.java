@@ -1,0 +1,82 @@
+package keegan.labstuff.PacketHandling;
+
+import io.netty.buffer.ByteBuf;
+import io.netty.channel.ChannelHandlerContext;
+import keegan.labstuff.tileentity.TileEntityComputer;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
+import cpw.mods.fml.common.network.ByteBufUtils;
+
+public class PacketComputer extends AbstractPacket {
+
+	public PacketComputer()
+	{
+		
+	}
+	
+	int x, y, z;
+	String line1, line2, line3, line4, line5;
+	
+	public PacketComputer(int x, int y, int z, String line1, String line2, String line3, String line4, String line5)
+	{
+		this.x = x;
+		this.y = y;
+		this.z = z;
+		this.line1 = line1;
+		this.line2 = line2;
+		this.line3 = line3;
+		this.line4 = line4;
+		this.line5 = line5;
+	}
+	
+	@Override
+	public void encodeInto(ChannelHandlerContext ctx, ByteBuf buffer) {
+		buffer.writeInt(x);
+		buffer.writeInt(y);
+		buffer.writeInt(z);
+		ByteBufUtils.writeUTF8String(buffer, line1);
+		ByteBufUtils.writeUTF8String(buffer, line2);
+		ByteBufUtils.writeUTF8String(buffer, line3);
+		ByteBufUtils.writeUTF8String(buffer, line4);
+		ByteBufUtils.writeUTF8String(buffer, line5);
+
+	}
+
+	@Override
+	public void decodeInto(ChannelHandlerContext ctx, ByteBuf buffer) {
+		x = buffer.readInt();
+		y = buffer.readInt();
+		z = buffer.readInt();
+		line1 = ByteBufUtils.readUTF8String(buffer);
+		line2 = ByteBufUtils.readUTF8String(buffer);
+		line3 = ByteBufUtils.readUTF8String(buffer);
+		line4 = ByteBufUtils.readUTF8String(buffer);
+		line5 = ByteBufUtils.readUTF8String(buffer);
+
+	}
+
+	@Override
+	public void handleClientSide(EntityPlayer player) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void handleServerSide(EntityPlayer player) 
+	{
+		World world = player.worldObj;
+		TileEntity te = world.getTileEntity(x,y,z);
+		if(te instanceof TileEntityComputer)
+		{
+			((TileEntityComputer) te).ConsoleLogLine1 = line1;
+			((TileEntityComputer) te).ConsoleLogLine2 = line2;
+			((TileEntityComputer) te).ConsoleLogLine3 = line3;
+			((TileEntityComputer) te).ConsoleLogLine4 = line4;
+			((TileEntityComputer) te).ConsoleLogLine5 = line5;
+			((TileEntityComputer) te).writeToNBT(new NBTTagCompound());
+		}
+	}
+
+}
