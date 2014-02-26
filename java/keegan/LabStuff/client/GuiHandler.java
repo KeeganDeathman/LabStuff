@@ -44,7 +44,7 @@ public class GuiHandler implements IGuiHandler
 		}
 		if(tileEntity instanceof TileEntityComputer)
 		{
-			return new GuiComputer(player.inventory, (TileEntityComputer) tileEntity);
+			return new GuiComputer(player.inventory, (TileEntityComputer) tileEntity, player);
 		}
 		
 		return null;

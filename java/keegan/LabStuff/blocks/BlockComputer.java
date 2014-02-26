@@ -20,11 +20,19 @@ public class BlockComputer extends Block implements ITileEntityProvider
 	{
 		super(p_i45394_1_);
 	}
+	
+	public boolean providingPower = false;
 
 	@Override
 	public TileEntity createNewTileEntity(World var1, int var2) 
 	{
 		return new TileEntityComputer();
+	}
+	
+	@Override
+	public boolean canConnectRedstone(IBlockAccess par1iBlockAccess, int par2, int par3, int par4, int par5)
+	{
+		return true;
 	}
 	
 	@Override

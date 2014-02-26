@@ -3,6 +3,7 @@ package keegan.labstuff;
 
 import keegan.labstuff.PacketHandling.PacketCircuitDesignTable;
 import keegan.labstuff.PacketHandling.PacketCircuitMaker;
+import keegan.labstuff.PacketHandling.PacketComputer;
 import keegan.labstuff.PacketHandling.PacketPipeline;
 import keegan.labstuff.blocks.BlockCircuitDesignTable;
 import keegan.labstuff.blocks.BlockCircuitMaker;
@@ -43,7 +44,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 
-@Mod(modid= "labstuff", name="LabStuff", version="0.7")
+@Mod(modid= "labstuff", name="LabStuff", version="1.0")
 public class LabStuffMain 
 {
 	@SidedProxy(clientSide = "keegan.labstuff.client.LabStuffClientProxy", serverSide = "keegan.labstuff.common.LabStuffCommonProxy")
@@ -163,8 +164,7 @@ public class LabStuffMain
 		//Packets
 		packetPipeline.initalise();
 		packetPipeline.registerPacket(PacketCircuitDesignTable.class);
-		packetPipeline.registerPacket(PacketCircuitMaker.class);
-		//LanguageRegistry.instance().addStringLocalization("itemGroup.TabLabStuff", "en_US", "LabStuff");
+		packetPipeline.registerPacket(PacketComputer.class);
 	    NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
 	    
 	    GameRegistry.registerWorldGenerator(new LabStuffOreGen(), 0);

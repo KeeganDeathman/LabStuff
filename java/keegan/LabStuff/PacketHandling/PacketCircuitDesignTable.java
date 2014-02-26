@@ -11,8 +11,8 @@ import cpw.mods.fml.common.network.ByteBufUtils;
 public class PacketCircuitDesignTable extends AbstractPacket {
 
 	
-	int x,y,z;
-	String design;
+	public int x,y,z;
+	public String design;
 	
 	public PacketCircuitDesignTable(){
 	}

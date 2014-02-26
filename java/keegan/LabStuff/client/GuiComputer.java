@@ -2,14 +2,18 @@ package keegan.labstuff.client;
 
 import keegan.labstuff.LabStuffMain;
 import keegan.labstuff.PacketHandling.PacketComputer;
+import keegan.labstuff.blocks.BlockComputer;
 import keegan.labstuff.container.ContainerComputer;
 import keegan.labstuff.tileentity.TileEntityComputer;
+import net.minecraft.block.Block;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
@@ -27,15 +31,16 @@ public class GuiComputer extends GuiContainer
 	
 	private EntityPlayer player;
 	private TileEntityComputer tile;
+	private World world;
 	
-	public GuiComputer(InventoryPlayer inv, TileEntityComputer tileEntity)
+	public GuiComputer(InventoryPlayer inv, TileEntityComputer tileEntity, EntityPlayer player)
 	{
 		super(new ContainerComputer(inv, tileEntity));
 		tile = tileEntity;
+		world = player.worldObj;
 		player = inv.player;
 		
 		
-		tile.readFromNBT(new NBTTagCompound());
 		this.ConsoleLogLine1 = tile.ConsoleLogLine1;
 		this.ConsoleLogLine2 = tile.ConsoleLogLine2;
 		this.ConsoleLogLine3 = tile.ConsoleLogLine3;
@@ -64,7 +69,6 @@ public class GuiComputer extends GuiContainer
     public void onGuiClosed()
     {
         Keyboard.enableRepeatEvents(false);
-        LabStuffMain.packetPipeline.sendToServer(new PacketComputer(tile.xCoord, tile.yCoord, tile.zCoord, this.ConsoleLogLine1, this.ConsoleLogLine2, this.ConsoleLogLine3, this.ConsoleLogLine4, this.ConsoleLogLine5));
     }
     
     @Override
@@ -99,6 +103,8 @@ public class GuiComputer extends GuiContainer
             
             this.consoleInput.writeText("");
         	this.consoleInput.setText("");
+        	System.out.println(this.ConsoleLogLine5);
+        	LabStuffMain.packetPipeline.sendToServer(new PacketComputer(tile.xCoord, tile.yCoord, tile.zCoord, this.ConsoleLogLine1, this.ConsoleLogLine2, this.ConsoleLogLine3, this.ConsoleLogLine4, this.ConsoleLogLine5));
         }
     	
     	//Closes Screen
