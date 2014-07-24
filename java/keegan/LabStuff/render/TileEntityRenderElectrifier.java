@@ -1,8 +1,8 @@
 package keegan.labstuff.render;
 
-import keegan.labstuff.models.ModelBlockComputer;
+import keegan.labstuff.models.ModelElectrifier;
 import keegan.labstuff.tileentity.TileEntityComputer;
-
+import keegan.labstuff.tileentity.TileEntityElectrifier;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderBlocks;
@@ -15,18 +15,20 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 
-public class TileEntityRenderComputer extends TileEntitySpecialRenderer implements ISimpleBlockRenderingHandler{
+public class TileEntityRenderElectrifier extends TileEntitySpecialRenderer implements ISimpleBlockRenderingHandler{
 	//This method is called when minecraft renders a tile entity
 
 	public static Minecraft mc = Minecraft.getMinecraft();
-	public static ModelBlockComputer model = new ModelBlockComputer();
+	public static ModelElectrifier model = new ModelElectrifier();
+	public static ResourceLocation Tex;
 	
-	public void renderComputer(TileEntityComputer entity, double x, double y, double z, float tick)
+	public void renderElectrifier(TileEntityElectrifier entity, double x, double y, double z, float tick)
 	{
 		 int i = entity.blockMetadata;
 
 	        // Binds the texture
-		 	mc.renderEngine.bindTexture(new ResourceLocation("labstuff:textures/models/BlockComputer.png"));
+		 	Tex = entity.Tex;
+		 	mc.renderEngine.bindTexture(Tex);
 	        GL11.glPushMatrix();
 	        GL11.glTranslatef((float) x, (float) y, (float) z);
 	        GL11.glTranslatef(0.5F, 1.5F, 0.5F);
@@ -54,7 +56,7 @@ public class TileEntityRenderComputer extends TileEntitySpecialRenderer implemen
 	
 	public void renderTileEntityAt(TileEntity tileEntity, double d, double d1, double d2, float f) 
 	{
-		this.renderComputer((TileEntityComputer) tileEntity, d, d1, d2, f);
+		this.renderElectrifier((TileEntityElectrifier) tileEntity, d, d1, d2, f);
 	}
 	
 	@Override
@@ -64,7 +66,7 @@ public class TileEntityRenderComputer extends TileEntitySpecialRenderer implemen
 
         GL11.glPushMatrix();
         // Binds the texture
-        mc.renderEngine.bindTexture(new ResourceLocation("labstuff:textures/models/BlockComputer.png"));
+        mc.renderEngine.bindTexture(Tex);
 
         GL11.glRotatef(180, 0F, 1F, 0F);
         GL11.glTranslatef(0F, 0.5F, 0F);

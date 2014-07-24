@@ -1,29 +1,28 @@
 package keegan.labstuff.blocks;
 
 import keegan.labstuff.LabStuffMain;
-import keegan.labstuff.tileentity.TileEntityCircuitDesignTable;
-
+import keegan.labstuff.tileentity.TileEntityElectrifier;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-public class BlockCircuitDesignTable extends Block implements ITileEntityProvider{
+public class BlockElectrifier extends Block implements ITileEntityProvider
+{
 
-	public static Block instance;
-	
-	public BlockCircuitDesignTable(Material par2Material) 
+	public BlockElectrifier(Material p_i45394_1_) 
 	{
-		super(par2Material);
+		super(p_i45394_1_);
+	}
+
+	@Override
+	public TileEntity createNewTileEntity(World arg0, int arg1) {
+		return new TileEntityElectrifier();
 	}
 	
-   
 	//It's not an opaque cube, so you need this.
     @Override
     public boolean isOpaqueCube() 
@@ -36,28 +35,16 @@ public class BlockCircuitDesignTable extends Block implements ITileEntityProvide
 		return false;
 	}
     
-    public void onBlockPlacedBy(World par1World, int par2, int par3, int par4, EntityLivingBase par5EntityLivingBase, ItemStack par6ItemStack, int l)
-    {
-        par1World.setBlockMetadataWithNotify(par2, par3, par4, l, 2);
-    }
-    
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par5, float par6, float par7, float par8)
     {
     	System.out.println("Im awake!");
-    	if(world.isRemote == false)
+    	if(!world.isRemote)
     	{
-    		player.openGui(LabStuffMain.instance, 0, world, x, y, z);
+    		player.openGui(LabStuffMain.instance, 4, world, x, y, z);
     		return true;
     	}
     	return false;
     }
-
-
-	@Override
-	public TileEntity createNewTileEntity(World var1, int var2) {
-		// TODO Auto-generated method stub
-		return new TileEntityCircuitDesignTable(var1);
-	}
 
 }

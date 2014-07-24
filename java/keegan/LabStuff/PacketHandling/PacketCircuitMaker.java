@@ -1,9 +1,10 @@
 package keegan.labstuff.PacketHandling;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.channel.ChannelHandlerContext;
 import keegan.labstuff.LabStuffMain;
 import keegan.labstuff.tileentity.TileEntityCircuitMaker;
+
+import io.netty.buffer.ByteBuf;
+import io.netty.channel.ChannelHandlerContext;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;

@@ -1,6 +1,7 @@
 package keegan.labstuff.container;
 
 import keegan.labstuff.tileentity.TileEntityComputer;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;

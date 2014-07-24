@@ -1,8 +1,9 @@
 package keegan.labstuff.PacketHandling;
 
+import keegan.labstuff.tileentity.TileEntityComputer;
+
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
-import keegan.labstuff.tileentity.TileEntityComputer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;

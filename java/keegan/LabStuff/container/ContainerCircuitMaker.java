@@ -4,6 +4,7 @@ import keegan.labstuff.slot.SlotCircuitMakerCircuitBoardOutput;
 import keegan.labstuff.slot.SlotCircuitMakerCircuitDesignInput;
 import keegan.labstuff.slot.SlotCircuitMakerCircuitPlateInput;
 import keegan.labstuff.tileentity.TileEntityCircuitMaker;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;

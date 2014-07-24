@@ -5,6 +5,7 @@ import keegan.labstuff.PacketHandling.PacketCircuitDesignTable;
 import keegan.labstuff.PacketHandling.PacketCircuitMaker;
 import keegan.labstuff.container.ContainerCircuitMaker;
 import keegan.labstuff.tileentity.TileEntityCircuitMaker;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;

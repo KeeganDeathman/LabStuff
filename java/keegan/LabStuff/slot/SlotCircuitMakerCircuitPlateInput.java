@@ -3,6 +3,7 @@ package keegan.labstuff.slot;
 import keegan.labstuff.LabStuffMain;
 import keegan.labstuff.container.ContainerCircuitDesignTable;
 import keegan.labstuff.container.ContainerCircuitMaker;
+
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;

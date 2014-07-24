@@ -1,6 +1,7 @@
 package keegan.labstuff.tileentity;
 
 import keegan.labstuff.LabStuffMain;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;

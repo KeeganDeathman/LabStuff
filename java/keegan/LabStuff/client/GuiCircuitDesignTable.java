@@ -1,13 +1,14 @@
 package keegan.labstuff.client;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
-import io.netty.channel.ChannelHandlerContext;
 import keegan.labstuff.LabStuffMain;
 import keegan.labstuff.PacketHandling.PacketCircuitDesignTable;
 import keegan.labstuff.PacketHandling.PacketPipeline;
 import keegan.labstuff.container.ContainerCircuitDesignTable;
 import keegan.labstuff.tileentity.TileEntityCircuitDesignTable;
+
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
+import io.netty.channel.ChannelHandlerContext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;

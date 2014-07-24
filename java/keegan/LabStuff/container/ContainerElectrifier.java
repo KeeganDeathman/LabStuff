@@ -3,7 +3,7 @@ package keegan.labstuff.container;
 import keegan.labstuff.items.ItemCircuitDesign;
 import keegan.labstuff.slot.*;
 import keegan.labstuff.tileentity.TileEntityCircuitDesignTable;
-
+import keegan.labstuff.tileentity.TileEntityElectrifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -11,18 +11,22 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-public class ContainerCircuitDesignTable extends Container
+public class ContainerElectrifier extends Container
 {
 
-	protected TileEntityCircuitDesignTable tileEntity;
+	protected TileEntityElectrifier tileEntity;
 	
-	public ContainerCircuitDesignTable(InventoryPlayer invPlayer, TileEntityCircuitDesignTable te)
+	public ContainerElectrifier(InventoryPlayer invPlayer, TileEntityElectrifier te)
 	{
 		tileEntity = te;
 		
 		bindPlayerInventory(invPlayer);
 		
-		this.addSlotToContainer(new SlotCircuitDesignTable(this, tileEntity, 0, 201, 37));
+		this.addSlotToContainer(new SlotElectrifier(tileEntity, 0, 120, 125));
+		this.addSlotToContainer(new SlotElectrifier(tileEntity, 1, 120, 201));
+		this.addSlotToContainer(new SlotElectrifier(tileEntity, 2, 58, 201));
+		this.addSlotToContainer(new SlotElectrifier(tileEntity, 3, 184, 201));
+		
 	}
 	
 	@Override

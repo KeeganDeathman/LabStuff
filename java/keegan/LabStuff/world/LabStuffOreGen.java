@@ -1,8 +1,8 @@
 package keegan.labstuff.world;
 
+import keegan.labstuff.LabStuffMain;
 import java.util.Random;
 
-import keegan.labstuff.LabStuffMain;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.feature.WorldGenMinable;

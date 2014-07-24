@@ -2,6 +2,7 @@ package keegan.labstuff.blocks;
 
 import keegan.labstuff.LabStuffMain;
 import keegan.labstuff.tileentity.TileEntityComputer;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;

@@ -1,17 +1,18 @@
 package keegan.labstuff.client;
 
+import java.io.File;
+import java.io.IOException;
+
 import keegan.labstuff.LabStuffMain;
 import keegan.labstuff.PacketHandling.PacketComputer;
-import keegan.labstuff.blocks.BlockComputer;
 import keegan.labstuff.container.ContainerComputer;
+import keegan.labstuff.io.ReadFile;
+import keegan.labstuff.io.WriteFile;
 import keegan.labstuff.tileentity.TileEntityComputer;
-import net.minecraft.block.Block;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
@@ -33,22 +34,21 @@ public class GuiComputer extends GuiContainer
 	private TileEntityComputer tile;
 	private World world;
 	
+	private File documents;
+	private File log;
+	
 	public GuiComputer(InventoryPlayer inv, TileEntityComputer tileEntity, EntityPlayer player)
 	{
 		super(new ContainerComputer(inv, tileEntity));
 		tile = tileEntity;
 		world = player.worldObj;
 		player = inv.player;
-		
-		
-		this.ConsoleLogLine1 = tile.ConsoleLogLine1;
-		this.ConsoleLogLine2 = tile.ConsoleLogLine2;
-		this.ConsoleLogLine3 = tile.ConsoleLogLine3;
-		this.ConsoleLogLine4 = tile.ConsoleLogLine4;
-		this.ConsoleLogLine5 = tile.ConsoleLogLine5;
+		documents = new File(LabStuffMain.filesDir, player.getDisplayName());
+		{documents.mkdirs();}
+		log = new File(documents, "computer.json");
 		this.cmd = "";
-		this.xSize = 300;
-		this.ySize = 200;
+		this.xSize = 256;
+		this.ySize = 256;
 	}
 	
 	@Override
@@ -57,6 +57,64 @@ public class GuiComputer extends GuiContainer
 		super.initGui();
 		this.consoleInput = new GuiTextField(this.fontRendererObj, 110, 190, 80, 10);
 		this.consoleInput.setText(this.cmd);
+		readConsoleFile();
+	}
+	
+	public void readConsoleFile()
+	{
+		ReadFile rf = new ReadFile();
+		try {
+			String[] lines = rf.readLines(log);
+			if(lines.length == 6)
+			{
+				ConsoleLogLine1=lines[1];
+				ConsoleLogLine2=lines[2];
+				ConsoleLogLine3=lines[3];
+				ConsoleLogLine4=lines[4];
+				ConsoleLogLine5=lines[5];
+			}
+			else if(lines.length == 5)
+			{
+				ConsoleLogLine2=lines[1];
+				ConsoleLogLine3=lines[2];
+				ConsoleLogLine4=lines[3];
+				ConsoleLogLine5=lines[4];
+			}
+			else if(lines.length == 4)
+			{
+				ConsoleLogLine3=lines[1];
+				ConsoleLogLine4=lines[2];
+				ConsoleLogLine5=lines[3];
+			}
+			else if(lines.length == 3)
+			{
+				ConsoleLogLine4=lines[1];
+				ConsoleLogLine5=lines[2];
+			}
+			else if(lines.length == 2)
+			{
+				ConsoleLogLine5=lines[1];
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void writeConsoleToFile()
+	{
+		WriteFile wf = new WriteFile();
+		wf.write(log, "--KDDOS--", false);
+		if(ConsoleLogLine1 != null)
+			wf.write(log, ConsoleLogLine1, true);
+		if(ConsoleLogLine2 != null)
+			wf.write(log, ConsoleLogLine2, true);
+		if(ConsoleLogLine3 != null)
+			wf.write(log, ConsoleLogLine3, true);	
+		if(ConsoleLogLine4 != null)
+			wf.write(log, ConsoleLogLine4, true);
+		if(ConsoleLogLine5 != null)
+			wf.write(log, ConsoleLogLine5, true);
 	}
 	
 	@Override
@@ -104,12 +162,12 @@ public class GuiComputer extends GuiContainer
             this.consoleInput.writeText("");
         	this.consoleInput.setText("");
         	System.out.println(this.ConsoleLogLine5);
-        	LabStuffMain.packetPipeline.sendToServer(new PacketComputer(tile.xCoord, tile.yCoord, tile.zCoord, this.ConsoleLogLine1, this.ConsoleLogLine2, this.ConsoleLogLine3, this.ConsoleLogLine4, this.ConsoleLogLine5));
         }
     	
     	//Closes Screen
     	if(par2 == 1 || par2 == this.mc.gameSettings.keyBindInventory.getKeyCode() && !this.consoleInput.isFocused())
     	{	
+    		this.writeConsoleToFile();
     		this.mc.thePlayer.closeScreen();
     	}
         

@@ -1,13 +1,14 @@
 package keegan.labstuff.items;
 
+import keegan.labstuff.LabStuffMain;
+import keegan.labstuff.blocks.BlockCircuitDesignTable;
+
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import keegan.labstuff.LabStuffMain;
-import keegan.labstuff.blocks.BlockCircuitDesignTable;
 
 public class ItemCircuitDesignTable extends Item 
 {
