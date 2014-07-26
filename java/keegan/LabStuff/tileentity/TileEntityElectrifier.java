@@ -188,17 +188,8 @@ public class TileEntityElectrifier extends TileEntity implements IInventory
 						&& !electrifing) {
 					electrifing = true;
 					System.out.println("ZAP!");
-					LabStuffMain.packetPipeline.sendToServer(new PacketElectrifier(this.xCoord, this.yCoord, this.zCoord, false));
-				}
-			} else {
-				if (this.getStackInSlot(0).getItem() == Items.water_bucket
-						&& this.getStackInSlot(1).getItem() == LabStuffMain.itemBattery
-						&& this.getStackInSlot(2).getItem() == LabStuffMain.itemTestTube
-						&& this.getStackInSlot(3).getItem() == LabStuffMain.itemTestTube
-						&& electrifing) {
-					electrifing = false;
 					this.setInventorySlotContents(0, new ItemStack(Items.bucket, 1));
-					this.setInventorySlotContents(1, new ItemStack(LabStuffMain.itemCopperIngot, 1));
+					this.setInventorySlotContents(1, new ItemStack(LabStuffMain.itemDeadBattery, 1));
 					this.setInventorySlotContents(2, new ItemStack(LabStuffMain.itemOxygenTestTube, 1));
 					this.setInventorySlotContents(3, new ItemStack(LabStuffMain.itemHydrogenTestTube, 1));
 					System.out.println("ZAPPED!");

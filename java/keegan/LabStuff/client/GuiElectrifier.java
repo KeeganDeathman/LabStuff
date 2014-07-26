@@ -9,6 +9,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.inventory.Slot;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
@@ -56,6 +57,15 @@ public class GuiElectrifier extends GuiContainer
 	{
 		super.mouseClicked(x, y, arg3);
 		LabStuffMain.packetPipeline.sendToServer(new PacketElectrifier(tile.xCoord, tile.yCoord, tile.zCoord, false));
+		if (tile.getStackInSlot(0) != null && tile.getStackInSlot(1) != null && tile.getStackInSlot(2) != null && tile.getStackInSlot(3) != null) {
+			if (tile.getStackInSlot(0).getItem() == Items.water_bucket
+					&& tile.getStackInSlot(1).getItem() == LabStuffMain.itemBattery
+					&& tile.getStackInSlot(2).getItem() == LabStuffMain.itemTestTube
+					&& tile.getStackInSlot(3).getItem() == LabStuffMain.itemTestTube
+					&& !electrifing) {
+				electrifing = true;
+			}
+		}
 		System.out.println("ZAP?");
 	}
 	
@@ -66,22 +76,13 @@ public class GuiElectrifier extends GuiContainer
 	public void drawGuiContainerForegroundLayer(int par1, int par2)
 	{
 		this.fontRendererObj.drawString(StatCollector.translateToLocal("container.inventory"), 8, ySize - 255 + 2, 4210752);
-		System.out.println("Current process: " + electrifing);
+		//System.out.println("electrify? " + electrifing);
 		if(electrifing)
 		{
-			System.out.println("Rendering ZAP");
 			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 			this.mc.renderEngine.bindTexture(new ResourceLocation("labstuff:textures/gui/ElectrifierProgressBar.png"));
-			int x = ((this.width - xSize) / 2) + 123;
-			int y = ((this.width - xSize) / 2) + 154;
-			for(int i = 7; i <= 42; i+=7)
-			{
-				this.drawTexturedModalRect(x, y, 0, 0, 10, i);
-				if(i == 42)
-				{
-					LabStuffMain.packetPipeline.sendToServer(new PacketElectrifier(tile.xCoord,tile.yCoord,tile.zCoord, true));
-				}
-			}
+			int x = 123;
+			int y = 154;
 		}
 	}
 

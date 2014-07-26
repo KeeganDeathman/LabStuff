@@ -92,6 +92,7 @@ public class LabStuffMain
 	public static Item itemManganese;
 	public static Item itemZinc;
 	public static Item itemBattery;
+	public static Item itemDeadBattery;
 	
 	//Other
 	public static CreativeTabs tabLabStuff = new TabLabStuff("tabLabStuff");
@@ -133,6 +134,7 @@ public class LabStuffMain
 		itemZinc = new ItemLabIngot().setCreativeTab(tabLabStuff).setUnlocalizedName("itemZinc").setTextureName("labstuff:itemZinc");
 		itemManganese = new ItemLabIngot().setCreativeTab(tabLabStuff).setUnlocalizedName("itemMang").setTextureName("labstuff:itemMang");
 		itemBattery = new ItemBattery().setCreativeTab(tabLabStuff).setTextureName("labstuff:itemBattery").setUnlocalizedName("itemBattery");
+		itemDeadBattery = new ItemBattery().setCreativeTab(tabLabStuff).setTextureName("labstuff:itemBattery").setUnlocalizedName("itemDeadBattery");
 		itemTestTube = new ItemTestTube().setCreativeTab(tabLabStuff).setTextureName("labstuff:itemTestTube").setUnlocalizedName("itemTestTube");
 		itemHydrogenTestTube = new ItemTestTube().setCreativeTab(tabLabStuff).setTextureName("labstuff:itemHydrogenTestTube").setUnlocalizedName("itemHydrogenTestTube");
 		itemOxygenTestTube = new ItemTestTube().setCreativeTab(tabLabStuff).setTextureName("labstuff:itemOxygenTestTube").setUnlocalizedName("itemOxygenTestTube");
@@ -164,6 +166,7 @@ public class LabStuffMain
 		GameRegistry.registerItem(itemZinc, "itemZinc");
 		GameRegistry.registerItem(itemManganese, "itemMang");
 		GameRegistry.registerItem(itemBattery, "itemBattery");
+		GameRegistry.registerItem(itemDeadBattery, "itemDeadBattery");
 		GameRegistry.registerItem(itemTestTube, "itemTestTube");
 		GameRegistry.registerItem(itemHydrogenTestTube, "itemHydrogenTestTube");
 		GameRegistry.registerItem(itemOxygenTestTube, "itemOxygenTestTube");
