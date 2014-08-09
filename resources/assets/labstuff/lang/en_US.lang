@@ -23,6 +23,7 @@ item.itemDeadBattery.name=Dead Battery
 item.itemTestTube.name=Test Tube
 item.itemHydrogenTestTube.name=Test Tube of Hydrogen
 item.itemOxygenTestTube.name=Test Tube of Oxygen
+item.itemPlasmaBucket.name = Bucket of Plasma
 tile.blockCircuitDesignTable.name=Circuit Design Table
 tile.blockCopperOre.name=Copper Ore
 tile.blockCircuitMaker.name=Circuit Board Maker(BROKEN DO NOT USE!)

@@ -3,37 +3,14 @@ package keegan.labstuff;
 
 import java.io.File;
 
-import keegan.labstuff.PacketHandling.PacketCircuitDesignTable;
-import keegan.labstuff.PacketHandling.PacketComputer;
-import keegan.labstuff.PacketHandling.PacketElectrifier;
-import keegan.labstuff.PacketHandling.PacketPipeline;
-import keegan.labstuff.blocks.BlockCircuitDesignTable;
-import keegan.labstuff.blocks.BlockCircuitMaker;
-import keegan.labstuff.blocks.BlockComputer;
-import keegan.labstuff.blocks.BlockCopperOre;
-import keegan.labstuff.blocks.BlockElectrifier;
-import keegan.labstuff.blocks.BlockLabOre;
-import keegan.labstuff.blocks.BlockPlasticOre;
-import keegan.labstuff.blocks.BlockWorkbench;
-import keegan.labstuff.client.GuiHandler;
-import keegan.labstuff.common.LabStuffCommonProxy;
-import keegan.labstuff.common.TabLabStuff;
-import keegan.labstuff.items.ItemBattery;
-import keegan.labstuff.items.ItemCircuitBoard;
-import keegan.labstuff.items.ItemCircuitBoardPlate;
-import keegan.labstuff.items.ItemCircuitDesign;
-import keegan.labstuff.items.ItemComputerPart;
-import keegan.labstuff.items.ItemCopperIngot;
-import keegan.labstuff.items.ItemFiberGlass;
-import keegan.labstuff.items.ItemLabIngot;
-import keegan.labstuff.items.ItemPartialCircuitBoard;
-import keegan.labstuff.items.ItemPlastic;
-import keegan.labstuff.items.ItemTestTube;
-import keegan.labstuff.tileentity.TileEntityCircuitDesignTable;
-import keegan.labstuff.tileentity.TileEntityCircuitMaker;
-import keegan.labstuff.tileentity.TileEntityComputer;
-import keegan.labstuff.tileentity.TileEntityElectrifier;
-import keegan.labstuff.world.LabStuffOreGen;
+import keegan.labstuff.PacketHandling.*;
+import keegan.labstuff.blocks.*;
+import keegan.labstuff.client.*;
+import keegan.labstuff.common.*;
+import keegan.labstuff.handlers.*;
+import keegan.labstuff.items.*;
+import keegan.labstuff.tileentity.*;
+import keegan.labstuff.world.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
@@ -41,6 +18,10 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidRegistry;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -52,7 +33,7 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.FMLInjectionData;
 
-@Mod(modid= "labstuff", name="LabStuff", version="1.0")
+@Mod(modid= "labstuff", name="LabStuff", version="2.0")
 public class LabStuffMain 
 {
 	@SidedProxy(clientSide = "keegan.labstuff.client.LabStuffClientProxy", serverSide = "keegan.labstuff.common.LabStuffCommonProxy")
@@ -71,6 +52,8 @@ public class LabStuffMain
 	public static Block blockElectrifier;
 	public static Block blockZincOre;
 	public static Block blockMangOre;
+	public static Block blockPlasmaBlock;
+	public static Block blockPlasmaPipe;
 			
 	//Items
 	public static Item itemFiberGlass;
@@ -93,6 +76,7 @@ public class LabStuffMain
 	public static Item itemZinc;
 	public static Item itemBattery;
 	public static Item itemDeadBattery;
+	public static Item itemPlasmaBucket;
 	
 	//Other
 	public static CreativeTabs tabLabStuff = new TabLabStuff("tabLabStuff");
@@ -102,6 +86,8 @@ public class LabStuffMain
     static {filesDir.mkdirs();}
     
 	public static final PacketPipeline packetPipeline = new PacketPipeline();
+	
+	public Fluid plasma = new Fluid("plasma");
 	
 	@EventHandler
 	public void PreInit(FMLPreInitializationEvent event)
@@ -117,6 +103,7 @@ public class LabStuffMain
 		blockZincOre = new BlockLabOre().setBlockName("blockZincOre").setBlockTextureName("labstuff:blockZincOre").setCreativeTab(tabLabStuff).setHardness(10F).setResistance(20F);
 		blockMangOre = new BlockLabOre().setBlockName("blockMangOre").setBlockTextureName("labstuff:blockMangOre").setCreativeTab(tabLabStuff).setHardness(10F).setResistance(20F);
 		blockElectrifier = new BlockElectrifier(Material.iron).setBlockName("blockElectrifier").setCreativeTab(tabLabStuff);
+		blockPlasmaPipe = new BlockPlasmaPipe(Material.iron).setBlockName("plasmaPipe").setCreativeTab(tabLabStuff);
 		//Items
 		itemFiberGlass = new ItemFiberGlass(600).setUnlocalizedName("itemFiberGlass").setCreativeTab(tabLabStuff);
 		itemCopperIngot = new ItemCopperIngot(601).setUnlocalizedName("itemCopperIngot").setCreativeTab(tabLabStuff);
@@ -148,6 +135,7 @@ public class LabStuffMain
 		GameRegistry.registerBlock(blockZincOre, "blockZincOre");
 		GameRegistry.registerBlock(blockMangOre, "blockMangOre");
 		GameRegistry.registerBlock(blockElectrifier, "blockElectrifier");
+		GameRegistry.registerBlock(blockPlasmaPipe, "plasmaPipe");
 				
 		//Items
 		GameRegistry.registerItem(itemFiberGlass, "FiberGlass");
@@ -170,6 +158,18 @@ public class LabStuffMain
 		GameRegistry.registerItem(itemTestTube, "itemTestTube");
 		GameRegistry.registerItem(itemHydrogenTestTube, "itemHydrogenTestTube");
 		GameRegistry.registerItem(itemOxygenTestTube, "itemOxygenTestTube");
+		
+		//Plasma
+		plasma.setLuminosity(13);
+		plasma.setTemperature(20000000);
+		FluidRegistry.registerFluid(plasma);
+		blockPlasmaBlock = new BlockPlasma(plasma, Material.lava).setBlockName("blockPlasma");
+		GameRegistry.registerBlock(blockPlasmaBlock, "blockPlasma");
+		itemPlasmaBucket = new ItemPlasmaBucket(blockPlasmaBlock).setUnlocalizedName("itemPlasmaBucket").setTextureName("labstuff:itemPlasmaBucket").setCreativeTab(tabLabStuff);
+		GameRegistry.registerItem(itemPlasmaBucket, "plasmaBucket");
+		FluidContainerRegistry.registerFluidContainer(FluidRegistry.getFluidStack("plasma", FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(itemPlasmaBucket), new ItemStack(Items.bucket));
+		BucketHandler.INSTANCE.buckets.put(blockPlasmaBlock, itemPlasmaBucket);
+		MinecraftForge.EVENT_BUS.register(BucketHandler.INSTANCE);
 
 	}
 	
@@ -201,6 +201,7 @@ public class LabStuffMain
 		GameRegistry.registerTileEntity(TileEntityCircuitMaker.class, "TileEntityCircuitMaker");
 		GameRegistry.registerTileEntity(TileEntityComputer.class, "TileEntityComputer");
 		GameRegistry.registerTileEntity(TileEntityElectrifier.class, "TileEntityElectrifier");
+		GameRegistry.registerTileEntity(TileEntityPlasmaPipe.class, "TileEntityPlasmaPipe");
 		
 		//Packets
 		packetPipeline.initalise();

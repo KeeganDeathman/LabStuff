@@ -19,6 +19,9 @@ public class LabStuffClientProxy extends LabStuffCommonProxy
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityComputer.class, new TileEntityRenderComputer());
 		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(LabStuffMain.blockComputer), new ItemRenderComputer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityElectrifier.class, new TileEntityRenderElectrifier());
+		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(LabStuffMain.blockElectrifier), new ItemRenderElectrifier());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPlasmaPipe.class, new TileEntityRenderPlasmaPipe());
+		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(LabStuffMain.blockPlasmaPipe), new ItemRenderPlasmaPipe());
 	}
 	
 	@Override
