@@ -1,6 +1,6 @@
 package keegan.labstuff.render;
 
-import keegan.labstuff.models.ModelPlasmaPipe;
+import keegan.labstuff.models.ModelElectronCannon;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
@@ -8,16 +8,17 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.IItemRenderer;
 
 import org.lwjgl.opengl.GL11;
-public class ItemRenderPlasmaPipe implements IItemRenderer
-{
-	protected ModelPlasmaPipe plasmaPipeModel;
+
+public class ItemRenderElectronCannon implements IItemRenderer {
+
+	protected ModelElectronCannon cannonModel;
 	protected ResourceLocation Tex;
 	
 	
-	public ItemRenderPlasmaPipe()
+	public ItemRenderElectronCannon()
 	{
-		plasmaPipeModel = new ModelPlasmaPipe();
-		Tex = new ResourceLocation("labstuff:textures/models/PlasmaPipe.png");
+		cannonModel = new ModelElectronCannon();
+		Tex = new ResourceLocation("labstuff:textures/models/electron cannon.png");
 	}
 	
 	@Override
@@ -67,10 +68,9 @@ public class ItemRenderPlasmaPipe implements IItemRenderer
 		//System.out.println(type.toString() + "," + inventory);
     	GL11.glPushMatrix();
         
-    	
         if(!inventory)
         {
-        	//GL11.glRotatef(-55f, 0f, 0f, 1f);
+        	GL11.glRotatef(-55f, 0f, 0f, 1f);
         	GL11.glRotatef(90f, 0f, 1f, 0f);
         	GL11.glRotatef(90f, 1f, 0f, 0f);
         	GL11.glRotatef(5f, 0f, 1f, 0f);
@@ -78,8 +78,9 @@ public class ItemRenderPlasmaPipe implements IItemRenderer
         else if(inventory)
         {
         	GL11.glRotatef(180f, 1f, 0f, 0f);
-        	GL11.glTranslatef(0f, 0f, 0f);
+        	GL11.glTranslatef(0f, 0f, 1f);
         }
+        
         
         float scale = 2F;
         
@@ -97,12 +98,12 @@ public class ItemRenderPlasmaPipe implements IItemRenderer
 
         	}
     		Minecraft.getMinecraft().renderEngine.bindTexture(Tex);
-        	plasmaPipeModel.renderCable(0.03125F, false, false, false, false, true, true);
+        	cannonModel.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.03125F);
         }
         else if(!inventory)
         {
     		Minecraft.getMinecraft().renderEngine.bindTexture(Tex);
-        	plasmaPipeModel.renderCable(0.03125F, false, false, false, false, true, true);
+        	cannonModel.render((Entity) data[1], 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.03125F);
         }
         
         GL11.glPopMatrix();

@@ -4,10 +4,8 @@ import keegan.labstuff.container.ContainerCircuitDesignTable;
 import keegan.labstuff.container.ContainerCircuitMaker;
 import keegan.labstuff.container.ContainerComputer;
 import keegan.labstuff.container.ContainerElectrifier;
-import keegan.labstuff.tileentity.TileEntityCircuitDesignTable;
-import keegan.labstuff.tileentity.TileEntityCircuitMaker;
-import keegan.labstuff.tileentity.TileEntityComputer;
-import keegan.labstuff.tileentity.TileEntityElectrifier;
+import keegan.labstuff.container.ContainerGasChamberPort;
+import keegan.labstuff.tileentity.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -35,6 +33,10 @@ public class GuiHandler implements IGuiHandler
 		if(tileEntity instanceof TileEntityElectrifier)
 		{
 			return new ContainerElectrifier(player.inventory, (TileEntityElectrifier) tileEntity);
+		}
+		if(tileEntity instanceof TileEntityGasChamberPort)
+		{
+			return new ContainerGasChamberPort(player.inventory, (TileEntityGasChamberPort) tileEntity);
 		}
 		
 		return null;
@@ -64,6 +66,10 @@ public class GuiHandler implements IGuiHandler
 		if(tileEntity instanceof TileEntityElectrifier)
 		{
 			return new GuiElectrifier(player.inventory, (TileEntityElectrifier) tileEntity, world);
+		}
+		if(tileEntity instanceof TileEntityGasChamberPort)
+		{
+			return new GuiGasChamberPort(player.inventory, (TileEntityGasChamberPort) tileEntity, world);
 		}
 		
 		return null;

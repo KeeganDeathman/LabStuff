@@ -5,8 +5,11 @@ import keegan.labstuff.tileentity.TileEntityElectrifier;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
@@ -28,6 +31,13 @@ public class BlockElectrifier extends Block implements ITileEntityProvider
     public boolean isOpaqueCube() 
     {
             return false;
+    }
+    
+    @Override
+    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack)
+    {
+    	int l = MathHelper.floor_double((double)(player.rotationYaw * 4.0F / 360.0F) + 2.5D) & 3;
+    	world.setBlockMetadataWithNotify(x, y, z, l, 2);
     }
     
     public boolean shouldSideBeRendered(IBlockAccess access, int i, int j, int k, int l)

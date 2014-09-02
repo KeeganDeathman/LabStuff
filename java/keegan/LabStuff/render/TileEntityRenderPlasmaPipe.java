@@ -1,5 +1,6 @@
 package keegan.labstuff.render;
 
+import keegan.labstuff.blocks.BlockGasChamberPort;
 import keegan.labstuff.blocks.BlockPlasmaPipe;
 import keegan.labstuff.models.ModelPlasmaPipe;
 import keegan.labstuff.tileentity.TileEntityPlasmaPipe;
@@ -83,7 +84,7 @@ public class TileEntityRenderPlasmaPipe extends TileEntitySpecialRenderer implem
 	 
 	 public boolean configSide(World world, int x, int y, int z)
 	 {
-		 if(world.getBlock(x, y, z) instanceof BlockPlasmaPipe)
+		 if(world.getBlock(x, y, z) instanceof BlockPlasmaPipe || world.getBlock(x, y, z) instanceof  BlockGasChamberPort)
 			 return true;
 		 return false;
 	 }

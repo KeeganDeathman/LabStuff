@@ -54,6 +54,10 @@ public class LabStuffMain
 	public static Block blockMangOre;
 	public static Block blockPlasmaBlock;
 	public static Block blockPlasmaPipe;
+	public static Block blockElectronCannon;
+	public static Block blockElectronGrabber;
+	public static Block blockGasChamberWall;
+	public static Block blockGasChamberPort;
 			
 	//Items
 	public static Item itemFiberGlass;
@@ -104,6 +108,10 @@ public class LabStuffMain
 		blockMangOre = new BlockLabOre().setBlockName("blockMangOre").setBlockTextureName("labstuff:blockMangOre").setCreativeTab(tabLabStuff).setHardness(10F).setResistance(20F);
 		blockElectrifier = new BlockElectrifier(Material.iron).setBlockName("blockElectrifier").setCreativeTab(tabLabStuff);
 		blockPlasmaPipe = new BlockPlasmaPipe(Material.iron).setBlockName("plasmaPipe").setCreativeTab(tabLabStuff);
+		blockGasChamberWall = new BlockGasChamberWall(Material.iron).setBlockName("blockGasChamberWall").setCreativeTab(tabLabStuff);
+		blockElectronGrabber = new BlockElectronGrabber(Material.iron).setBlockName("blockElectronGrabber").setCreativeTab(tabLabStuff);
+		blockElectronCannon = new BlockElectronCannon(Material.iron).setBlockName("blockElectronCannon").setCreativeTab(tabLabStuff);
+		blockGasChamberPort = new BlockGasChamberPort(Material.iron).setBlockName("blockGasChamberPort").setCreativeTab(tabLabStuff).setBlockTextureName("labstuff:gaschamberPort");
 		//Items
 		itemFiberGlass = new ItemFiberGlass(600).setUnlocalizedName("itemFiberGlass").setCreativeTab(tabLabStuff);
 		itemCopperIngot = new ItemCopperIngot(601).setUnlocalizedName("itemCopperIngot").setCreativeTab(tabLabStuff);
@@ -136,7 +144,11 @@ public class LabStuffMain
 		GameRegistry.registerBlock(blockMangOre, "blockMangOre");
 		GameRegistry.registerBlock(blockElectrifier, "blockElectrifier");
 		GameRegistry.registerBlock(blockPlasmaPipe, "plasmaPipe");
-				
+		GameRegistry.registerBlock(blockGasChamberWall, "blockGasChamberWall");
+		GameRegistry.registerBlock(blockGasChamberPort, "blockGasChamberPort");
+		GameRegistry.registerBlock(blockElectronGrabber, "blockElectronGrabber");
+		GameRegistry.registerBlock(blockElectronCannon, "BlockElectronCannon");
+		
 		//Items
 		GameRegistry.registerItem(itemFiberGlass, "FiberGlass");
 		GameRegistry.registerItem(itemCopperIngot, "CopperIngot");
@@ -202,6 +214,8 @@ public class LabStuffMain
 		GameRegistry.registerTileEntity(TileEntityComputer.class, "TileEntityComputer");
 		GameRegistry.registerTileEntity(TileEntityElectrifier.class, "TileEntityElectrifier");
 		GameRegistry.registerTileEntity(TileEntityPlasmaPipe.class, "TileEntityPlasmaPipe");
+		GameRegistry.registerTileEntity(TileEntityElectronGrabber.class, "TileEntityElectronGrabber");
+		GameRegistry.registerTileEntity(TileEntityElectronCannon.class, "TileEntityElectronCannon");
 		
 		//Packets
 		packetPipeline.initalise();
