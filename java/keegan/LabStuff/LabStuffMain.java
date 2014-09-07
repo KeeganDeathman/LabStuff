@@ -3,14 +3,48 @@ package keegan.labstuff;
 
 import java.io.File;
 
-import keegan.labstuff.PacketHandling.*;
-import keegan.labstuff.blocks.*;
-import keegan.labstuff.client.*;
-import keegan.labstuff.common.*;
-import keegan.labstuff.handlers.*;
-import keegan.labstuff.items.*;
-import keegan.labstuff.tileentity.*;
-import keegan.labstuff.world.*;
+import keegan.labstuff.PacketHandling.PacketCircuitDesignTable;
+import keegan.labstuff.PacketHandling.PacketComputer;
+import keegan.labstuff.PacketHandling.PacketElectrifier;
+import keegan.labstuff.PacketHandling.PacketPipeline;
+import keegan.labstuff.blocks.BlockCircuitDesignTable;
+import keegan.labstuff.blocks.BlockCircuitMaker;
+import keegan.labstuff.blocks.BlockComputer;
+import keegan.labstuff.blocks.BlockCopperOre;
+import keegan.labstuff.blocks.BlockElectrifier;
+import keegan.labstuff.blocks.BlockElectronCannon;
+import keegan.labstuff.blocks.BlockElectronGrabber;
+import keegan.labstuff.blocks.BlockGasChamberPort;
+import keegan.labstuff.blocks.BlockGasChamberWall;
+import keegan.labstuff.blocks.BlockLabOre;
+import keegan.labstuff.blocks.BlockPlasma;
+import keegan.labstuff.blocks.BlockPlasmaPipe;
+import keegan.labstuff.blocks.BlockPlasticOre;
+import keegan.labstuff.blocks.BlockWorkbench;
+import keegan.labstuff.client.GuiHandler;
+import keegan.labstuff.common.LabStuffCommonProxy;
+import keegan.labstuff.common.TabLabStuff;
+import keegan.labstuff.handlers.BucketHandler;
+import keegan.labstuff.items.ItemBattery;
+import keegan.labstuff.items.ItemCircuitBoard;
+import keegan.labstuff.items.ItemCircuitBoardPlate;
+import keegan.labstuff.items.ItemCircuitDesign;
+import keegan.labstuff.items.ItemComputerPart;
+import keegan.labstuff.items.ItemCopperIngot;
+import keegan.labstuff.items.ItemFiberGlass;
+import keegan.labstuff.items.ItemLabIngot;
+import keegan.labstuff.items.ItemPartialCircuitBoard;
+import keegan.labstuff.items.ItemPlasmaBucket;
+import keegan.labstuff.items.ItemPlastic;
+import keegan.labstuff.items.ItemTestTube;
+import keegan.labstuff.tileentity.TileEntityCircuitDesignTable;
+import keegan.labstuff.tileentity.TileEntityCircuitMaker;
+import keegan.labstuff.tileentity.TileEntityComputer;
+import keegan.labstuff.tileentity.TileEntityElectrifier;
+import keegan.labstuff.tileentity.TileEntityElectronCannon;
+import keegan.labstuff.tileentity.TileEntityElectronGrabber;
+import keegan.labstuff.tileentity.TileEntityPlasmaPipe;
+import keegan.labstuff.world.LabStuffOreGen;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
@@ -18,10 +52,14 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.CraftingManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.oredict.ShapedOreRecipe;
+import net.minecraftforge.oredict.ShapelessOreRecipe;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -188,21 +226,25 @@ public class LabStuffMain
 	@EventHandler
 	public void load(FMLInitializationEvent event)
 	{
-		System.out.println("Hi yah we get here.");			
+		System.out.println("Hi yah we get here.");		
+		
+		oreDict();
 		
 		//Proxy junk
 		proxy.registerRenders();
 		
 		//Crafting Recipes
 		GameRegistry.addShapelessRecipe(new ItemStack(LabStuffMain.itemFiberGlass), new ItemStack(Items.bread), new ItemStack(Blocks.glass_pane));
-		GameRegistry.addShapelessRecipe(new ItemStack(this.itemBasicCircuitBoard), new ItemStack(this.itemBasicCircuitDesign), new ItemStack(this.itemCopperIngot), new ItemStack(this.itemCopperIngot), new ItemStack(this.itemCopperIngot), new ItemStack(this.itemCopperIngot), new ItemStack(this.itemCircuitBoardPlate));
-		GameRegistry.addShapelessRecipe(new ItemStack(this.itemComputerCircuitBoard), new ItemStack(this.itemComputerCircuitDesign), new ItemStack(this.itemCopperIngot), new ItemStack(this.itemCopperIngot), new ItemStack(this.itemCopperIngot), new ItemStack(this.itemCopperIngot), new ItemStack(this.itemCircuitBoardPlate));
-		GameRegistry.addRecipe(new ItemStack(this.itemCircuitBoardPlate), "x", "y", "x", 'x', new ItemStack(this.itemFiberGlass), 'y', new ItemStack(this.itemCopperIngot));
-		GameRegistry.addRecipe(new ItemStack(blockComputer), " x "," yi", 'x', new ItemStack(itemMonitor), 'y', new ItemStack(itemComputerTower), 'i', new ItemStack(itemKeyboard));
-		GameRegistry.addRecipe(new ItemStack(itemMonitor), "iii","ibg","ici",'i',new ItemStack(Items.iron_ingot), 'b', new ItemStack(itemBasicCircuitBoard), 'g', new ItemStack(Blocks.glass_pane), 'c', new ItemStack(itemCopperIngot));
-		GameRegistry.addRecipe(new ItemStack(itemComputerTower), "iii","ibi","iii",'i',new ItemStack(Items.iron_ingot), 'b', new ItemStack(itemComputerCircuitBoard));
-		GameRegistry.addRecipe(new ItemStack(itemKeyboard), "ppp","cbp","ppp", 'p', new ItemStack(itemPlastic), 'b', new ItemStack(itemBasicCircuitBoard), 'c', new ItemStack(itemCopperIngot));
-		GameRegistry.addRecipe(new ItemStack(itemBattery), "pzp", "pmp", "pzp", 'p', new ItemStack(Items.paper), 'z', new ItemStack(itemZinc), 'm', new ItemStack(itemManganese));
+		CraftingManager.getInstance().getRecipeList().add(new ShapelessOreRecipe(new ItemStack(this.itemBasicCircuitBoard), new ItemStack(this.itemBasicCircuitDesign), "ingotCopper", "ingotCopper", "ingotCopper", "ingotCopper", new ItemStack(this.itemCircuitBoardPlate)));
+		CraftingManager.getInstance().getRecipeList().add(new ShapelessOreRecipe(new ItemStack(this.itemComputerCircuitBoard), new ItemStack(this.itemComputerCircuitDesign), "ingotCopper", "ingotCopper", "ingotCopper", "ingotCopper", new ItemStack(this.itemCircuitBoardPlate)));
+		//GameRegistry.addShapelessRecipe(new ItemStack(this.itemBasicCircuitBoard), new ItemStack(this.itemBasicCircuitDesign), "ingotCopper", "ingotCopper", "ingotCopper", "ingotCopper", new ItemStack(this.itemCircuitBoardPlate));
+		//GameRegistry.addShapelessRecipe(new ItemStack(this.itemComputerCircuitBoard), new ItemStack(this.itemComputerCircuitDesign), "ingotCopper", "ingotCopper", "ingotCopper", "ingotCopper", new ItemStack(this.itemCircuitBoardPlate));
+		CraftingManager.getInstance().getRecipeList().add(new ShapedOreRecipe(new ItemStack(this.itemCircuitBoardPlate), "x", "y", "x", 'x', new ItemStack(this.itemFiberGlass), 'y', "ingotCopper"));
+		CraftingManager.getInstance().getRecipeList().add(new ShapedOreRecipe(new ItemStack(blockComputer), " x "," yi", 'x', new ItemStack(itemMonitor), 'y', new ItemStack(itemComputerTower), 'i', new ItemStack(itemKeyboard)));
+		CraftingManager.getInstance().getRecipeList().add(new ShapedOreRecipe(new ItemStack(itemMonitor), "iii","ibg","ici",'i',new ItemStack(Items.iron_ingot), 'b', "circuitBasic", 'g', new ItemStack(Blocks.glass_pane), 'c', "ingotCopper"));
+		CraftingManager.getInstance().getRecipeList().add(new ShapedOreRecipe(new ItemStack(itemComputerTower), "iii","ibi","iii",'i',new ItemStack(Items.iron_ingot), 'b', "circuitComputer"));
+		CraftingManager.getInstance().getRecipeList().add(new ShapedOreRecipe(new ItemStack(itemKeyboard), "ppp","cbp","ppp", 'p', new ItemStack(itemPlastic), 'b', "circuitBasic", 'c', new ItemStack(itemCopperIngot)));
+		CraftingManager.getInstance().getRecipeList().add(new ShapedOreRecipe(new ItemStack(itemBattery), "pzp", "pmp", "pzp", 'p', new ItemStack(Items.paper), 'z', "ingotZinc", 'm', "ingotMaganese"));
 		//Smelting recipes
 		GameRegistry.addSmelting(blockCopperOre, new ItemStack(this.itemCopperIngot, 2), 3);
 		GameRegistry.addSmelting(blockPlasticOre, new ItemStack(this.itemPlastic, 2), 3);
@@ -225,6 +267,18 @@ public class LabStuffMain
 	    NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
 	    
 	    GameRegistry.registerWorldGenerator(new LabStuffOreGen(), 0);
+	}
+	
+	private void oreDict()
+	{
+		OreDictionary.registerOre("oreCopper", new ItemStack(blockCopperOre));
+		OreDictionary.registerOre("oreManganese", new ItemStack(blockMangOre));
+		OreDictionary.registerOre("oreZinc", new ItemStack(blockZincOre));
+		OreDictionary.registerOre("ingotCopper", new ItemStack(itemCopperIngot));
+		OreDictionary.registerOre("ingotManganese", new ItemStack(itemManganese));
+		OreDictionary.registerOre("ingotZinc", new ItemStack(itemZinc));
+		OreDictionary.registerOre("circuitBasic", new ItemStack(itemBasicCircuitBoard));
+		OreDictionary.registerOre("circuitComputer", new ItemStack(itemComputerCircuitBoard));
 	}
 	
 	@EventHandler

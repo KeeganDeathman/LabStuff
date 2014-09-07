@@ -34,13 +34,6 @@ public class TileEntityElectronCannon extends TileEntity
 			coreZ = zCoord + 1;
 		}
 		
-		if(blockMetadata == 2)
-		{
-			coreX = xCoord;
-			coreY = yCoord;
-			coreZ = zCoord - 1;
-		}
-		
 		if(blockMetadata == 1)
 		{
 			coreX = xCoord + 1;
@@ -48,7 +41,14 @@ public class TileEntityElectronCannon extends TileEntity
 			coreZ = zCoord;
 		}
 		
-		if(blockMetadata == 1)
+		if(blockMetadata == 2)
+		{
+			coreX = xCoord;
+			coreY = yCoord;
+			coreZ = zCoord - 1;
+		}
+		
+		if(blockMetadata == 3)
 		{
 			coreX = xCoord - 1;
 			coreY = yCoord;

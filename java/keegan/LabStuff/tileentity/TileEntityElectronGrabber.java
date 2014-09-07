@@ -31,26 +31,26 @@ public class TileEntityElectronGrabber extends TileEntity
 		{
 			coreX = xCoord;
 			coreY = yCoord;
-			coreZ = zCoord + 1;
+			coreZ = zCoord - 2;
+		}
+		
+		if(blockMetadata == 1)
+		{
+			coreX = xCoord - 2;
+			coreY = yCoord;
+			coreZ = zCoord;
 		}
 		
 		if(blockMetadata == 2)
 		{
 			coreX = xCoord;
 			coreY = yCoord;
-			coreZ = zCoord - 1;
+			coreZ = zCoord + 2;
 		}
 		
-		if(blockMetadata == 1)
+		if(blockMetadata == 3)
 		{
-			coreX = xCoord + 1;
-			coreY = yCoord;
-			coreZ = zCoord;
-		}
-		
-		if(blockMetadata == 1)
-		{
-			coreX = xCoord - 1;
+			coreX = xCoord + 2;
 			coreY = yCoord;
 			coreZ = zCoord;
 		}
@@ -62,8 +62,8 @@ public class TileEntityElectronGrabber extends TileEntity
 		multiblocks[0][1][1] = worldObj.getBlock(coreX, coreY + 1, coreZ);
 		multiblocks[0][1][2] = worldObj.getBlock(coreX - 1, coreY + 1, coreZ);
 		multiblocks[0][2][0] = worldObj.getBlock(coreX + 1, coreY + 1, coreZ - 1);
-		multiblocks[0][2][0] = worldObj.getBlock(coreX, coreY + 1, coreZ - 1);
-		multiblocks[0][2][0] = worldObj.getBlock(coreX - 1, coreY + 1, coreZ - 1);
+		multiblocks[0][2][1] = worldObj.getBlock(coreX, coreY + 1, coreZ - 1);
+		multiblocks[0][2][2] = worldObj.getBlock(coreX - 1, coreY + 1, coreZ - 1);
 		multiblocks[1][0][0] = worldObj.getBlock(coreX + 1, coreY, coreZ + 1);
 		multiblocks[1][0][1] = worldObj.getBlock(coreX, coreY, coreZ + 1);
 		multiblocks[1][0][2] = worldObj.getBlock(coreX - 1, coreY, coreZ + 1);
@@ -71,8 +71,8 @@ public class TileEntityElectronGrabber extends TileEntity
 		multiblocks[1][1][1] = worldObj.getBlock(coreX, coreY, coreZ);
 		multiblocks[1][1][2] = worldObj.getBlock(coreX - 1, coreY, coreZ);
 		multiblocks[1][2][0] = worldObj.getBlock(coreX + 1, coreY, coreZ - 1);
-		multiblocks[1][2][0] = worldObj.getBlock(coreX, coreY, coreZ - 1);
-		multiblocks[1][2][0] = worldObj.getBlock(coreX - 1, coreY, coreZ - 1);
+		multiblocks[1][2][1] = worldObj.getBlock(coreX, coreY, coreZ - 1);
+		multiblocks[1][2][2] = worldObj.getBlock(coreX - 1, coreY, coreZ - 1);
 		multiblocks[2][0][0] = worldObj.getBlock(coreX + 1, coreY - 1, coreZ + 1);
 		multiblocks[2][0][1] = worldObj.getBlock(coreX, coreY - 1, coreZ + 1);
 		multiblocks[2][0][2] = worldObj.getBlock(coreX - 1, coreY - 1, coreZ + 1);
@@ -82,6 +82,7 @@ public class TileEntityElectronGrabber extends TileEntity
 		multiblocks[2][2][0] = worldObj.getBlock(coreX + 1, coreY - 1, coreZ - 1);
 		multiblocks[2][2][1] = worldObj.getBlock(coreX, coreY - 1, coreZ - 1);
 		multiblocks[2][2][2] = worldObj.getBlock(coreX - 1, coreY - 1, coreZ - 1);
+		System.out.println("Array created.");
 		for(int i = 0; i < 3; i++)
 		{
 			for(int j = 0; j < 3; j++)
@@ -116,6 +117,7 @@ public class TileEntityElectronGrabber extends TileEntity
 					&& multiblocks[2][2][1] == LabStuffMain.blockGasChamberWall
 					&& multiblocks[2][2][2] == LabStuffMain.blockGasChamberWall) 
 					{
+						System.out.println("Array verified.");
 						if (multiblocks[i][j][k] != null
 								&& multiblocks[i][j][k] == LabStuffMain.blockGasChamberWall) {
 							System.out.println("Lets a go!");
@@ -127,6 +129,10 @@ public class TileEntityElectronGrabber extends TileEntity
 								&& i == 0) {
 							((BlockGasChamberPort) multiblocks[i][j][k]).input = true;
 						}
+					}
+					else
+					{
+						System.out.println("Something is not right.");
 					}
 				}
 			}

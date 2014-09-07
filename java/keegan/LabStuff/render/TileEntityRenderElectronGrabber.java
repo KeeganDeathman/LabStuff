@@ -35,16 +35,16 @@ public class TileEntityRenderElectronGrabber extends TileEntitySpecialRenderer i
 	        short rotate = 0;
 	        
 	        if (i == 0)
-	            rotate = 0;
-
-	        if (i == 1)
-	            rotate = 90;
-
-	        if (i == 2)
 	            rotate = 180;
 
-	        if (i == 3)
+	        if (i == 1)
 	            rotate = -90;
+
+	        if (i == 2)
+	            rotate = 0;
+
+	        if (i == 3)
+	            rotate = 90;
 	        GL11.glRotatef(rotate, 0F, 1F, 0F);
 	        
 	        this.model.render(null, (float) x, (float) y, (float) z, 0.0F, 0.0F, 0.0625F);

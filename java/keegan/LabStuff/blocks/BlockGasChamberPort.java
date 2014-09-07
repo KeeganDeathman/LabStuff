@@ -47,7 +47,7 @@ public class BlockGasChamberPort extends Block implements ITileEntityProvider
     {
     	if(!world.isRemote)
     	{
-    		player.openGui(LabStuffMain.instance, 5, world, x, y, z);
+    		//player.openGui(LabStuffMain.instance, 5, world, x, y, z);
     		return true;
     	}
     	return false;
@@ -55,7 +55,8 @@ public class BlockGasChamberPort extends Block implements ITileEntityProvider
 
 	@Override
 	public TileEntity createNewTileEntity(World arg0, int arg1) {
-		return new TileEntityGasChamberPort();
+		//return new TileEntityGasChamberPort();
+		return null;
 	}
 
 }
