@@ -37,6 +37,7 @@ public class GuiGasChamberPort extends GuiContainer
 	@Override
 	protected void drawGuiContainerForegroundLayer(int par1, int par2)
 	{
+		input = tile.input;
 		if(!input)
 		{
 			this.fontRendererObj.drawString("Stats:", 10, 50, 4210752);
@@ -52,6 +53,10 @@ public class GuiGasChamberPort extends GuiContainer
 		{
 			//output screen
 			this.mc.renderEngine.bindTexture(new ResourceLocation("labstuff:textures/gui/GasChamberPortOutput.png"));
+		}
+		else
+		{
+			this.mc.renderEngine.bindTexture(new ResourceLocation("labstuff:textures/gui/gaschamberportinput.png"));
 		}
 		int x = (this.width - xSize) / 2;
 		int y = (this.height - ySize) / 2;

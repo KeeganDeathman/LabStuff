@@ -1,8 +1,8 @@
 package keegan.labstuff.render;
 
 import keegan.labstuff.blocks.BlockGasChamberPort;
-import keegan.labstuff.blocks.BlockPlasmaPipe;
 import keegan.labstuff.models.ModelPlasmaPipe;
+import keegan.labstuff.tileentity.TileEntityPlasma;
 import keegan.labstuff.tileentity.TileEntityPlasmaPipe;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -22,7 +22,7 @@ public class TileEntityRenderPlasmaPipe extends TileEntitySpecialRenderer implem
 
 	public static Minecraft mc = Minecraft.getMinecraft();
 	public static ModelPlasmaPipe model = new ModelPlasmaPipe();
-	public static ResourceLocation Tex = new ResourceLocation("labstuff:textures/models/PlasmaPipe.png");
+	public static ResourceLocation tex = new ResourceLocation("labstuff:textures/models/PlasmaPipe.png");
 	
 	
 	private boolean up = false;
@@ -39,7 +39,7 @@ public class TileEntityRenderPlasmaPipe extends TileEntitySpecialRenderer implem
 			// Binds the texture
 		 	GL11.glEnable(GL11.GL_BLEND);
 			OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ZERO);
-		 	mc.renderEngine.bindTexture(Tex);
+		 	mc.renderEngine.bindTexture(tex);
 	        GL11.glPushMatrix();
 	        GL11.glTranslatef((float) x, (float) y, (float) z);
 	        GL11.glTranslatef(0.5F, 1.5F, 0.5F);
@@ -61,6 +61,7 @@ public class TileEntityRenderPlasmaPipe extends TileEntitySpecialRenderer implem
 	        GL11.glRotatef(rotate, 0F, 1F, 0F);
 	        
 	        this.configureSides(entity);
+	        this.configureTexture(entity);
 	        
 	        this.model.renderCable(0.0625F, north, east, south, west, up, down);
 
@@ -68,6 +69,18 @@ public class TileEntityRenderPlasmaPipe extends TileEntitySpecialRenderer implem
 	        
 	        GL11.glPopMatrix();
 	}
+	
+	 public void configureTexture(TileEntityPlasmaPipe tile)
+	 {
+		 if(tile.getPlasma() != 0)
+		 {
+			 tex = new ResourceLocation("labstuff:textures/models/PlasmaPipe-full.png");
+		 }
+		 else
+		 {
+			 tex = new ResourceLocation("labstuff:textures/models/PlasmaPipe.png");
+		 }
+	 }
 	
 	 public void configureSides(TileEntityPlasmaPipe tile)
 	 {
@@ -84,7 +97,7 @@ public class TileEntityRenderPlasmaPipe extends TileEntitySpecialRenderer implem
 	 
 	 public boolean configSide(World world, int x, int y, int z)
 	 {
-		 if(world.getBlock(x, y, z) instanceof BlockPlasmaPipe || world.getBlock(x, y, z) instanceof  BlockGasChamberPort)
+		 if(world.getBlock(x, y, z) instanceof  BlockGasChamberPort || world.getTileEntity(x, y, z) instanceof TileEntityPlasma)
 			 return true;
 		 return false;
 	 }
@@ -101,7 +114,7 @@ public class TileEntityRenderPlasmaPipe extends TileEntitySpecialRenderer implem
 
         GL11.glPushMatrix();
         // Binds the texture
-        mc.renderEngine.bindTexture(Tex);
+        mc.renderEngine.bindTexture(tex);
 
         GL11.glRotatef(180, 0F, 1F, 0F);
         GL11.glTranslatef(0F, 0.5F, 0F);

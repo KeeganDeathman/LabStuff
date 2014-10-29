@@ -10,7 +10,7 @@ public class TileEntityGasChamberPort extends TileEntity implements IInventory
 {
 	private ItemStack[] chestContents;
 	
-	private boolean input = false;
+	public boolean input = false;
 	public int testtubes;
 	
 	public TileEntityGasChamberPort()
@@ -18,14 +18,38 @@ public class TileEntityGasChamberPort extends TileEntity implements IInventory
 		chestContents = new ItemStack[1];
 	}
 	
-	public void onEntityUpdate()
+	TileEntityGasChamberPort remoteTile;
+	
+	@Override
+	public void updateEntity()
 	{
 		//get input.output state
-		this.input = ((BlockGasChamberPort)worldObj.getBlock(xCoord, yCoord, zCoord)).input;
-		TileEntity remoteTile = worldObj.getTileEntity(xCoord, yCoord+2, zCoord);
-		if(remoteTile instanceof TileEntityGasChamberPort)
+		System.out.println("Let's do this.");
+		this.input = ((BlockGasChamberPort)worldObj.getBlock(xCoord, yCoord, zCoord)).getInputState() || worldObj.getBlock(xCoord, yCoord - 2, zCoord) instanceof BlockGasChamberPort;
+		if(input)
 		{
-			this.testtubes = ((TileEntityGasChamberPort)remoteTile).getStackInSlot(0).stackSize;
+			remoteTile = (TileEntityGasChamberPort)worldObj.getTileEntity(xCoord, yCoord-2, zCoord);
+			if (this.getStackInSlot(0) != null) 
+			{
+				if(this.getStackInSlot(0).stackSize > 0)
+				{
+					remoteTile.testtubes = this.getStackInSlot(0).stackSize;
+				}
+			}
+		}
+		if(worldObj.getTileEntity(xCoord, yCoord-1, zCoord) != null && !input)
+		{
+			if(worldObj.getTileEntity(xCoord, yCoord-1, zCoord) instanceof TileEntityPlasmaPipe)
+			{
+				TileEntityPlasmaPipe pipe = (TileEntityPlasmaPipe)worldObj.getTileEntity(xCoord, yCoord-1, zCoord);
+				remoteTile = (TileEntityGasChamberPort)worldObj.getTileEntity(xCoord, yCoord+2, zCoord);
+				if(testtubes > 0)
+				{
+					pipe.addPlasma(20, this);
+					remoteTile.decrStackSize(0, 1);
+					testtubes-=1;
+				}
+			}
 		}
 	}
 
@@ -92,7 +116,7 @@ public class TileEntityGasChamberPort extends TileEntity implements IInventory
 	public int getInventoryStackLimit() 
 	{
 		// TODO Auto-generated method stub
-		return 1;
+		return 64;
 	}
 
 	@Override

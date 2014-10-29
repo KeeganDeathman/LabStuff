@@ -1,5 +1,6 @@
 package keegan.labstuff.container;
 
+import keegan.labstuff.slot.SlotTestTubes;
 import keegan.labstuff.tileentity.TileEntityGasChamberPort;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -16,7 +17,11 @@ public class ContainerGasChamberPort extends Container {
 	{
 		tileEntity = te;
 		
-		bindPlayerInventory(invPlayer);
+		if(tileEntity.input)
+		{
+			bindPlayerInventory(invPlayer);
+			this.addSlotToContainer(new SlotTestTubes(this, tileEntity, 0, 201, 37));
+		}
 	}
 		
 	

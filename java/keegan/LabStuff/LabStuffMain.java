@@ -3,48 +3,14 @@ package keegan.labstuff;
 
 import java.io.File;
 
-import keegan.labstuff.PacketHandling.PacketCircuitDesignTable;
-import keegan.labstuff.PacketHandling.PacketComputer;
-import keegan.labstuff.PacketHandling.PacketElectrifier;
-import keegan.labstuff.PacketHandling.PacketPipeline;
-import keegan.labstuff.blocks.BlockCircuitDesignTable;
-import keegan.labstuff.blocks.BlockCircuitMaker;
-import keegan.labstuff.blocks.BlockComputer;
-import keegan.labstuff.blocks.BlockCopperOre;
-import keegan.labstuff.blocks.BlockElectrifier;
-import keegan.labstuff.blocks.BlockElectronCannon;
-import keegan.labstuff.blocks.BlockElectronGrabber;
-import keegan.labstuff.blocks.BlockGasChamberPort;
-import keegan.labstuff.blocks.BlockGasChamberWall;
-import keegan.labstuff.blocks.BlockLabOre;
-import keegan.labstuff.blocks.BlockPlasma;
-import keegan.labstuff.blocks.BlockPlasmaPipe;
-import keegan.labstuff.blocks.BlockPlasticOre;
-import keegan.labstuff.blocks.BlockWorkbench;
-import keegan.labstuff.client.GuiHandler;
-import keegan.labstuff.common.LabStuffCommonProxy;
-import keegan.labstuff.common.TabLabStuff;
-import keegan.labstuff.handlers.BucketHandler;
-import keegan.labstuff.items.ItemBattery;
-import keegan.labstuff.items.ItemCircuitBoard;
-import keegan.labstuff.items.ItemCircuitBoardPlate;
-import keegan.labstuff.items.ItemCircuitDesign;
-import keegan.labstuff.items.ItemComputerPart;
-import keegan.labstuff.items.ItemCopperIngot;
-import keegan.labstuff.items.ItemFiberGlass;
-import keegan.labstuff.items.ItemLabIngot;
-import keegan.labstuff.items.ItemPartialCircuitBoard;
-import keegan.labstuff.items.ItemPlasmaBucket;
-import keegan.labstuff.items.ItemPlastic;
-import keegan.labstuff.items.ItemTestTube;
-import keegan.labstuff.tileentity.TileEntityCircuitDesignTable;
-import keegan.labstuff.tileentity.TileEntityCircuitMaker;
-import keegan.labstuff.tileentity.TileEntityComputer;
-import keegan.labstuff.tileentity.TileEntityElectrifier;
-import keegan.labstuff.tileentity.TileEntityElectronCannon;
-import keegan.labstuff.tileentity.TileEntityElectronGrabber;
-import keegan.labstuff.tileentity.TileEntityPlasmaPipe;
-import keegan.labstuff.world.LabStuffOreGen;
+import keegan.labstuff.PacketHandling.*;
+import keegan.labstuff.blocks.*;
+import keegan.labstuff.client.*;
+import keegan.labstuff.common.*;
+import keegan.labstuff.handlers.*;
+import keegan.labstuff.items.*;
+import keegan.labstuff.tileentity.*;
+import keegan.labstuff.world.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
@@ -96,6 +62,7 @@ public class LabStuffMain
 	public static Block blockElectronGrabber;
 	public static Block blockGasChamberWall;
 	public static Block blockGasChamberPort;
+	public static Block blockPlasmaTank;
 			
 	//Items
 	public static Item itemFiberGlass;
@@ -150,6 +117,7 @@ public class LabStuffMain
 		blockElectronGrabber = new BlockElectronGrabber(Material.iron).setBlockName("blockElectronGrabber").setCreativeTab(tabLabStuff);
 		blockElectronCannon = new BlockElectronCannon(Material.iron).setBlockName("blockElectronCannon").setCreativeTab(tabLabStuff);
 		blockGasChamberPort = new BlockGasChamberPort(Material.iron).setBlockName("blockGasChamberPort").setCreativeTab(tabLabStuff).setBlockTextureName("labstuff:gaschamberPort");
+		blockPlasmaTank = new BlockPlasmaTank(Material.glass).setBlockName("blockPlasmaTank").setCreativeTab(tabLabStuff).setBlockTextureName("labstuff:blockPlasmaTank");
 		//Items
 		itemFiberGlass = new ItemFiberGlass(600).setUnlocalizedName("itemFiberGlass").setCreativeTab(tabLabStuff);
 		itemCopperIngot = new ItemCopperIngot(601).setUnlocalizedName("itemCopperIngot").setCreativeTab(tabLabStuff);
@@ -185,7 +153,7 @@ public class LabStuffMain
 		GameRegistry.registerBlock(blockGasChamberWall, "blockGasChamberWall");
 		GameRegistry.registerBlock(blockGasChamberPort, "blockGasChamberPort");
 		GameRegistry.registerBlock(blockElectronGrabber, "blockElectronGrabber");
-		GameRegistry.registerBlock(blockElectronCannon, "BlockElectronCannon");
+		GameRegistry.registerBlock(blockPlasmaTank, "blockPlasmaTank");
 		
 		//Items
 		GameRegistry.registerItem(itemFiberGlass, "FiberGlass");
@@ -216,10 +184,10 @@ public class LabStuffMain
 		blockPlasmaBlock = new BlockPlasma(plasma, Material.lava).setBlockName("blockPlasma");
 		GameRegistry.registerBlock(blockPlasmaBlock, "blockPlasma");
 		itemPlasmaBucket = new ItemPlasmaBucket(blockPlasmaBlock).setUnlocalizedName("itemPlasmaBucket").setTextureName("labstuff:itemPlasmaBucket").setCreativeTab(tabLabStuff);
-		GameRegistry.registerItem(itemPlasmaBucket, "plasmaBucket");
-		FluidContainerRegistry.registerFluidContainer(FluidRegistry.getFluidStack("plasma", FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(itemPlasmaBucket), new ItemStack(Items.bucket));
-		BucketHandler.INSTANCE.buckets.put(blockPlasmaBlock, itemPlasmaBucket);
-		MinecraftForge.EVENT_BUS.register(BucketHandler.INSTANCE);
+		//GameRegistry.registerItem(itemPlasmaBucket, "plasmaBucket");
+		//FluidContainerRegistry.registerFluidContainer(FluidRegistry.getFluidStack("plasma", FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(itemPlasmaBucket), new ItemStack(Items.bucket));
+		//BucketHandler.INSTANCE.buckets.put(blockPlasmaBlock, itemPlasmaBucket);
+		//MinecraftForge.EVENT_BUS.register(BucketHandler.INSTANCE);
 
 	}
 	
@@ -257,7 +225,7 @@ public class LabStuffMain
 		GameRegistry.registerTileEntity(TileEntityElectrifier.class, "TileEntityElectrifier");
 		GameRegistry.registerTileEntity(TileEntityPlasmaPipe.class, "TileEntityPlasmaPipe");
 		GameRegistry.registerTileEntity(TileEntityElectronGrabber.class, "TileEntityElectronGrabber");
-		GameRegistry.registerTileEntity(TileEntityElectronCannon.class, "TileEntityElectronCannon");
+		GameRegistry.registerTileEntity(TileEntityGasChamberPort.class, "TileEntityGasChamberPort");
 		
 		//Packets
 		packetPipeline.initalise();

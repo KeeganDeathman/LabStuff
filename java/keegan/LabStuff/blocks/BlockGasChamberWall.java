@@ -163,38 +163,63 @@ public class BlockGasChamberWall extends Block
 			if (access.getBlock(x, y - 1, z) == LabStuffMain.blockGasChamberWall
 					|| access.getBlock(x, y - 1, z) == LabStuffMain.blockGasChamberPort
 					|| access.getBlock(x, y - 1, z) == LabStuffMain.blockElectronCannon
-					|| access.getBlock(x, y - 1, z) == LabStuffMain.blockElectronGrabber) {
+					|| access.getBlock(x, y - 1, z) == LabStuffMain.blockElectronGrabber) 
+			{
 				if (side == 2 || side == 3) {
-					if (access.getBlock(x + 1, y, z + 1) == LabStuffMain.blockGasChamberPort) {
+					if (access.getBlock(x + 1, y, z + 1) == LabStuffMain.blockGasChamberPort && side == 3) {
 						return icons[2][2];
+					}
+					if (access.getBlock(x + 1, y, z + 1) == LabStuffMain.blockGasChamberPort && side == 2) {
+						return icons[2][0];
 					}
 					if (access.getBlock(x, y, z + 1) == LabStuffMain.blockGasChamberPort) {
 						return icons[2][1];
 					}
-					if (access.getBlock(x - 1, y, z + 1) == LabStuffMain.blockGasChamberPort) {
+					if (access.getBlock(x - 1, y, z + 1) == LabStuffMain.blockGasChamberPort && side == 3) {
 						return icons[2][0];
 					}
-					if (access.getBlock(x + 1, y, z) == LabStuffMain.blockGasChamberPort) {
+					if (access.getBlock(x - 1, y, z + 1) == LabStuffMain.blockGasChamberPort && side == 2) {
 						return icons[2][2];
 					}
-					if (access.getBlock(x - 1, y, z) == LabStuffMain.blockGasChamberPort) {
+					if (access.getBlock(x + 1, y, z) == LabStuffMain.blockGasChamberPort && side == 3) {
+						return icons[2][2];
+					}
+					if (access.getBlock(x + 1, y, z) == LabStuffMain.blockGasChamberPort && side == 2) {
 						return icons[2][0];
 					}
-					if (access.getBlock(x - 1, y, z - 1) == LabStuffMain.blockGasChamberPort) {
+					if (access.getBlock(x - 1, y, z) == LabStuffMain.blockGasChamberPort && side == 3) {
 						return icons[2][0];
+					}
+					if (access.getBlock(x - 1, y, z) == LabStuffMain.blockGasChamberPort && side == 2) {
+						return icons[2][2];
+					}
+					if (access.getBlock(x - 1, y, z - 1) == LabStuffMain.blockGasChamberPort && side == 3) {
+						return icons[2][0];
+					}
+					if (access.getBlock(x - 1, y, z - 1) == LabStuffMain.blockGasChamberPort && side == 2) {
+						return icons[2][2];
 					}
 					if (access.getBlock(x, y, z - 1) == LabStuffMain.blockGasChamberPort) {
 						return icons[2][1];
 					}
-					if (access.getBlock(x + 1, y, z - 1) == LabStuffMain.blockGasChamberPort) {
+					if (access.getBlock(x + 1, y, z - 1) == LabStuffMain.blockGasChamberPort && side == 3) {
 						return icons[2][2];
+					}
+					if (access.getBlock(x + 1, y, z - 1) == LabStuffMain.blockGasChamberPort && side == 2) {
+						return icons[2][0];
 					}
 				}
 				if (side == 4 || side == 5) {
-					if (access.getBlock(x + 1, y, z + 1) == LabStuffMain.blockGasChamberPort) {
+					if (access.getBlock(x + 1, y, z + 1) == LabStuffMain.blockGasChamberPort && side == 5) {
+						return icons[2][0];
+					}
+					if (access.getBlock(x + 1, y, z + 1) == LabStuffMain.blockGasChamberPort && side == 4) {
 						return icons[2][2];
 					}
-					if (access.getBlock(x - 1, y, z + 1) == LabStuffMain.blockGasChamberPort) {
+					if (access.getBlock(x - 1, y, z + 1) == LabStuffMain.blockGasChamberPort && side == 5) {
+						return icons[2][0];
+					}
+					if (access.getBlock(x - 1, y, z + 1) == LabStuffMain.blockGasChamberPort && side == 4) {
 						return icons[2][2];
 					}
 					if (access.getBlock(x + 1, y, z) == LabStuffMain.blockGasChamberPort) {
@@ -203,10 +228,10 @@ public class BlockGasChamberWall extends Block
 					if (access.getBlock(x - 1, y, z) == LabStuffMain.blockGasChamberPort) {
 						return icons[2][1];
 					}
-					if (access.getBlock(x - 1, y, z - 1) == LabStuffMain.blockGasChamberPort) {
-						return icons[2][0];
+					if (access.getBlock(x - 1, y, z - 1) == LabStuffMain.blockGasChamberPort && side == 5) {
+						return icons[2][2];
 					}
-					if (access.getBlock(x + 1, y, z - 1) == LabStuffMain.blockGasChamberPort) {
+					if (access.getBlock(x - 1, y, z - 1) == LabStuffMain.blockGasChamberPort && side == 4) {
 						return icons[2][0];
 					}
 				}
@@ -216,7 +241,8 @@ public class BlockGasChamberWall extends Block
 							.getBlock(x + 1, y, z) == LabStuffMain.blockGasChamberWall)
 							&& access.getBlock(x, y + 1, z) == LabStuffMain.blockGasChamberWall
 							&& access.getBlock(x, y - 1, z) == LabStuffMain.blockGasChamberWall
-							&& access.getBlock(x - 1, y, z) != LabStuffMain.blockGasChamberWall) {
+							&& access.getBlock(x - 1, y, z) != LabStuffMain.blockGasChamberWall
+							&& side == 3) {
 						return icons[1][2];
 					}
 					if ((access.getBlock(x - 1, y, z) == LabStuffMain.blockElectronCannon
@@ -224,7 +250,26 @@ public class BlockGasChamberWall extends Block
 							.getBlock(x - 1, y, z) == LabStuffMain.blockGasChamberWall)
 							&& access.getBlock(x, y + 1, z) == LabStuffMain.blockGasChamberWall
 							&& access.getBlock(x, y - 1, z) == LabStuffMain.blockGasChamberWall
-							&& access.getBlock(x + 1, y, z) != LabStuffMain.blockGasChamberWall) {
+							&& access.getBlock(x + 1, y, z) != LabStuffMain.blockGasChamberWall
+							&& side == 2) {
+						return icons[1][2];
+					}
+					if ((access.getBlock(x + 1, y, z) == LabStuffMain.blockElectronCannon
+							|| access.getBlock(x + 1, y, z) == LabStuffMain.blockElectronGrabber || access
+							.getBlock(x + 1, y, z) == LabStuffMain.blockGasChamberWall)
+							&& access.getBlock(x, y + 1, z) == LabStuffMain.blockGasChamberWall
+							&& access.getBlock(x, y - 1, z) == LabStuffMain.blockGasChamberWall
+							&& access.getBlock(x - 1, y, z) != LabStuffMain.blockGasChamberWall
+							&& side == 2) {
+						return icons[1][0];
+					}
+					if ((access.getBlock(x - 1, y, z) == LabStuffMain.blockElectronCannon
+							|| access.getBlock(x - 1, y, z) == LabStuffMain.blockElectronGrabber || access
+							.getBlock(x - 1, y, z) == LabStuffMain.blockGasChamberWall)
+							&& access.getBlock(x, y + 1, z) == LabStuffMain.blockGasChamberWall
+							&& access.getBlock(x, y - 1, z) == LabStuffMain.blockGasChamberWall
+							&& access.getBlock(x + 1, y, z) != LabStuffMain.blockGasChamberWall
+							&& side == 3) {
 						return icons[1][0];
 					}
 					if (access.getBlock(x - 1, y, z) == LabStuffMain.blockGasChamberWall
@@ -240,16 +285,36 @@ public class BlockGasChamberWall extends Block
 							.getBlock(x, y, z + 1) == LabStuffMain.blockGasChamberWall)
 							&& access.getBlock(x, y + 1, z) == LabStuffMain.blockGasChamberWall
 							&& access.getBlock(x, y - 1, z) == LabStuffMain.blockGasChamberWall
-							&& access.getBlock(x, y, z - 1) != LabStuffMain.blockGasChamberWall) {
+							&& access.getBlock(x, y, z - 1) != LabStuffMain.blockGasChamberWall
+							&& side == 4) {
 						return icons[1][2];
+					}
+					if ((access.getBlock(x, y, z + 1) == LabStuffMain.blockElectronCannon
+							|| access.getBlock(x + 1, y, z) == LabStuffMain.blockElectronGrabber || access
+							.getBlock(x, y, z + 1) == LabStuffMain.blockGasChamberWall)
+							&& access.getBlock(x, y + 1, z) == LabStuffMain.blockGasChamberWall
+							&& access.getBlock(x, y - 1, z) == LabStuffMain.blockGasChamberWall
+							&& access.getBlock(x, y, z - 1) != LabStuffMain.blockGasChamberWall
+							&& side == 5) {
+						return icons[1][0];
 					}
 					if ((access.getBlock(x, y, z - 1) == LabStuffMain.blockElectronCannon
 							|| access.getBlock(x - 1, y, z) == LabStuffMain.blockElectronGrabber || access
 							.getBlock(x, y, z - 1) == LabStuffMain.blockGasChamberWall)
 							&& access.getBlock(x, y + 1, z) == LabStuffMain.blockGasChamberWall
 							&& access.getBlock(x, y - 1, z) == LabStuffMain.blockGasChamberWall
-							&& access.getBlock(x, y, z + 1) != LabStuffMain.blockGasChamberWall) {
+							&& access.getBlock(x, y, z + 1) != LabStuffMain.blockGasChamberWall
+							&& side == 4) {
 						return icons[1][0];
+					}
+					if ((access.getBlock(x, y, z - 1) == LabStuffMain.blockElectronCannon
+							|| access.getBlock(x - 1, y, z) == LabStuffMain.blockElectronGrabber || access
+							.getBlock(x, y, z - 1) == LabStuffMain.blockGasChamberWall)
+							&& access.getBlock(x, y + 1, z) == LabStuffMain.blockGasChamberWall
+							&& access.getBlock(x, y - 1, z) == LabStuffMain.blockGasChamberWall
+							&& access.getBlock(x, y, z + 1) != LabStuffMain.blockGasChamberWall
+							&& side == 5) {
+						return icons[1][2];
 					}
 					if (access.getBlock(x, y, z - 1) == LabStuffMain.blockGasChamberWall
 							&& access.getBlock(x, y + 1, z) == LabStuffMain.blockGasChamberWall
@@ -261,14 +326,20 @@ public class BlockGasChamberWall extends Block
 				return this.blank;
 			}
 			if (side == 2 || side == 3) {
-				if (access.getBlock(x + 1, y, z + 1) == LabStuffMain.blockGasChamberPort) {
+				if (access.getBlock(x + 1, y, z + 1) == LabStuffMain.blockGasChamberPort && side == 3) {
 					return icons[0][2];
+				}
+				if (access.getBlock(x + 1, y, z + 1) == LabStuffMain.blockGasChamberPort && side == 2) {
+					return icons[0][0];
 				}
 				if (access.getBlock(x, y, z + 1) == LabStuffMain.blockGasChamberPort) {
 					return icons[0][1];
 				}
-				if (access.getBlock(x - 1, y, z + 1) == LabStuffMain.blockGasChamberPort) {
+				if (access.getBlock(x - 1, y, z + 1) == LabStuffMain.blockGasChamberPort && side == 3) {
 					return icons[0][0];
+				}
+				if (access.getBlock(x - 1, y, z + 1) == LabStuffMain.blockGasChamberPort && side == 2) {
+					return icons[0][2];
 				}
 				if (access.getBlock(x + 1, y, z) == LabStuffMain.blockGasChamberPort) {
 					return icons[0][2];
@@ -287,11 +358,17 @@ public class BlockGasChamberWall extends Block
 				}
 			}
 			if (side == 4 || side == 5) {
-				if (access.getBlock(x + 1, y, z + 1) == LabStuffMain.blockGasChamberPort) {
+				if (access.getBlock(x + 1, y, z + 1) == LabStuffMain.blockGasChamberPort && side == 4) {
 					return icons[0][2];
 				}
-				if (access.getBlock(x - 1, y, z + 1) == LabStuffMain.blockGasChamberPort) {
+				if (access.getBlock(x + 1, y, z + 1) == LabStuffMain.blockGasChamberPort && side == 5) {
+					return icons[0][0];
+				}
+				if (access.getBlock(x - 1, y, z + 1) == LabStuffMain.blockGasChamberPort && side == 4) {
 					return icons[0][2];
+				}
+				if (access.getBlock(x - 1, y, z + 1) == LabStuffMain.blockGasChamberPort && side == 5) {
+					return icons[0][0];
 				}
 				if (access.getBlock(x + 1, y, z) == LabStuffMain.blockGasChamberPort) {
 					return icons[0][1];
@@ -299,11 +376,17 @@ public class BlockGasChamberWall extends Block
 				if (access.getBlock(x - 1, y, z) == LabStuffMain.blockGasChamberPort) {
 					return icons[0][1];
 				}
-				if (access.getBlock(x - 1, y, z - 1) == LabStuffMain.blockGasChamberPort) {
+				if (access.getBlock(x - 1, y, z - 1) == LabStuffMain.blockGasChamberPort && side == 4) {
 					return icons[0][0];
 				}
-				if (access.getBlock(x + 1, y, z - 1) == LabStuffMain.blockGasChamberPort) {
+				if (access.getBlock(x - 1, y, z - 1) == LabStuffMain.blockGasChamberPort && side == 5) {
+					return icons[0][2];
+				}
+				if (access.getBlock(x + 1, y, z - 1) == LabStuffMain.blockGasChamberPort && side == 4) {
 					return icons[0][0];
+				}
+				if (access.getBlock(x + 1, y, z - 1) == LabStuffMain.blockGasChamberPort && side == 5) {
+					return icons[0][2];
 				}
 			}
 			/*

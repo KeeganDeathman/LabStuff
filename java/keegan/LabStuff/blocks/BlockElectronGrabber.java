@@ -66,6 +66,10 @@ public class BlockElectronGrabber extends Block implements ITileEntityProvider
 						{
 							((BlockGasChamberWall) multiblocks[i][j][k]).setMultiBlockState(false, null);
 						}
+						else if (multiblocks[i][j][k] != null && multiblocks[i][j][k] == LabStuffMain.blockGasChamberPort) 
+						{
+							((BlockGasChamberPort) multiblocks[i][j][k]).setInputState(false);
+						}
 					}
 				}
 			}

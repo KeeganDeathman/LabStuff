@@ -31,12 +31,12 @@ public class TileEntityElectronGrabber extends TileEntity
 		{
 			coreX = xCoord;
 			coreY = yCoord;
-			coreZ = zCoord - 2;
+			coreZ = zCoord - 1;
 		}
 		
 		if(blockMetadata == 1)
 		{
-			coreX = xCoord - 2;
+			coreX = xCoord - 1;
 			coreY = yCoord;
 			coreZ = zCoord;
 		}
@@ -45,12 +45,12 @@ public class TileEntityElectronGrabber extends TileEntity
 		{
 			coreX = xCoord;
 			coreY = yCoord;
-			coreZ = zCoord + 2;
+			coreZ = zCoord + 1;
 		}
 		
 		if(blockMetadata == 3)
 		{
-			coreX = xCoord + 2;
+			coreX = xCoord + 1;
 			coreY = yCoord;
 			coreZ = zCoord;
 		}
@@ -124,11 +124,10 @@ public class TileEntityElectronGrabber extends TileEntity
 							((BlockGasChamberWall) multiblocks[i][j][k])
 									.setMultiBlockState(true, multiblocks,
 											coords, worldObj);
-						} else if (multiblocks[i][j][k] != null
-								&& multiblocks[i][j][k] == LabStuffMain.blockGasChamberPort
-								&& i == 0) {
-							((BlockGasChamberPort) multiblocks[i][j][k]).input = true;
 						}
+						
+						((BlockGasChamberPort) multiblocks[0][1][1]).setInputState(true);
+						((BlockGasChamberPort) multiblocks[2][1][1]).setInputState(false);
 					}
 					else
 					{

@@ -42,12 +42,21 @@ public class BlockGasChamberPort extends Block implements ITileEntityProvider
 		return this.side2;
 	}
 	
+	public void setInputState(boolean state)
+	{
+		input = state;
+	}
+	public boolean getInputState()
+	{
+		return input;
+	}
+	
 	@Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par5, float par6, float par7, float par8)
     {
     	if(!world.isRemote)
     	{
-    		//player.openGui(LabStuffMain.instance, 5, world, x, y, z);
+    		player.openGui(LabStuffMain.instance, 5, world, x, y, z);
     		return true;
     	}
     	return false;
@@ -56,7 +65,7 @@ public class BlockGasChamberPort extends Block implements ITileEntityProvider
 	@Override
 	public TileEntity createNewTileEntity(World arg0, int arg1) {
 		//return new TileEntityGasChamberPort();
-		return null;
+		return new TileEntityGasChamberPort();
 	}
 
 }

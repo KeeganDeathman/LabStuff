@@ -13,7 +13,7 @@ import net.minecraft.world.World;
 
 public class TileEntityCircuitDesignTable extends TileEntity implements IInventory
 {
-	private ItemStack[] inv  = new ItemStack[1];
+	private ItemStack[] chestContents  = new ItemStack[1];
 	public String circuitDesign = "";
 	private World world;
 	
@@ -27,9 +27,9 @@ public class TileEntityCircuitDesignTable extends TileEntity implements IInvento
 	public void writeToNBT(NBTTagCompound tagCompound)
 	{
 		NBTTagList itemList = new NBTTagList();
-		for (int i = 0; i < inv.length; i++) 
+		for (int i = 0; i < chestContents.length; i++) 
 		{
-			ItemStack stack = inv[i];
+			ItemStack stack = chestContents[i];
 			if (stack != null) {
 			NBTTagCompound tag = new NBTTagCompound();
 			tag.setByte("Slot", (byte) i);
@@ -112,9 +112,9 @@ public class TileEntityCircuitDesignTable extends TileEntity implements IInvento
 		{
 			NBTTagCompound tag = (NBTTagCompound) tagList.getCompoundTagAt(i);
 			byte slot = tag.getByte("Slot");
-			if (slot >= 0 && slot < inv.length) 
+			if (slot >= 0 && slot < chestContents.length) 
 			{
-				inv[slot] = ItemStack.loadItemStackFromNBT(tag);
+				chestContents[slot] = ItemStack.loadItemStackFromNBT(tag);
 			}
 		}
 		this.circuitDesign = tagCompound.getString("Design");
@@ -124,14 +124,14 @@ public class TileEntityCircuitDesignTable extends TileEntity implements IInvento
 	public int getSizeInventory() 
 	{
 		// TODO Auto-generated method stub
-		return inv.length;
+		return chestContents.length;
 	}
 
 	@Override
 	public ItemStack getStackInSlot(int slot) 
 	{
 		// TODO Auto-generated method stub
-		return inv[slot];
+		return chestContents[slot];
 	}
 
 	@Override
@@ -171,7 +171,7 @@ public class TileEntityCircuitDesignTable extends TileEntity implements IInvento
 	@Override
 	public void setInventorySlotContents(int slot, ItemStack itemstack) 
 	{
-		inv[slot] = itemstack;
+		chestContents[slot] = itemstack;
 		if(itemstack != null && itemstack.stackSize > getInventoryStackLimit())
 		{
 			itemstack.stackSize = getInventoryStackLimit();
