@@ -21,13 +21,13 @@ public class BlockPlasmaPipe extends Block implements ITileEntityProvider {
 	@Override
 	public TileEntity createNewTileEntity(World arg0, int arg1) {
 		// TODO Auto-generated method stub
-		return new TileEntityPlasmaPipe();
+		return new TileEntityPlasmaPipe(arg0);
 	}
 	
 	@Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par5, float par6, float par7, float par8)
     {
-    	if(world.isRemote)
+    	if(!world.isRemote)
     	{
     		TileEntity tile = world.getTileEntity(x, y, z);
     		if(tile instanceof TileEntityPlasmaPipe)
@@ -50,12 +50,6 @@ public class BlockPlasmaPipe extends Block implements ITileEntityProvider {
 	{
 		return false;
 	}
-    
-    @Override
-    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack)
-    {
-    	super.onBlockPlacedBy(world, x, y, z, player, stack);
-    	((TileEntityPlasmaPipe)world.getTileEntity(z, y, z)).equalize();
-    }
+
 
 }

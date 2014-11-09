@@ -1,36 +1,48 @@
 package keegan.labstuff.tileentity;
 
-import keegan.labstuff.LabStuffMain;
+import keegan.labstuff.blocks.BlockPlasmaPipe;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 
 
 public class TileEntityPlasmaPipe extends TileEntityPlasma	
 {
 	private int plasma;
 	
-	public TileEntityPlasmaPipe()
+	public TileEntityPlasmaPipe(World world)
 	{
 		plasmaInt = this.getPlasma();
+		this.worldObj = world;
+		this.equalize();
 	}
 	
-	@Override
-	public void writeToNBT(NBTTagCompound tag)
-	{
-		super.writeToNBT(tag);
-		tag.setInteger("plasma", this.plasmaInt);
-	}
 	
-	@Override
-	public void readFromNBT(NBTTagCompound tag)
-	{
-		super.readFromNBT(tag);
-		plasmaInt = tag.getInteger("plasma");
-	}
-	
-	@Override
-	public void equalize()
-	{
-		super.equalize();
-	}
+	//ONLY call when the block is added!
+		public void equalize()
+		{
+			if (getPlasma() == 0) {
+				if (worldObj.getBlock(xCoord + 1, yCoord, zCoord) != null) {
+					eqaulizeWith(xCoord + 1, yCoord, zCoord);
+				} else if (worldObj.getBlock(xCoord - 1, yCoord, zCoord) != null) {
+					eqaulizeWith(xCoord - 1, yCoord, zCoord);
+				} else if (worldObj.getBlock(xCoord, yCoord + 1, zCoord) != null) {
+					eqaulizeWith(xCoord, yCoord + 1, zCoord);
+				} else if (worldObj.getBlock(xCoord, yCoord - 1, zCoord) != null) {
+					eqaulizeWith(xCoord, yCoord - 1, zCoord);
+				} else if (worldObj.getBlock(xCoord, yCoord, zCoord + 1) != null) {
+					eqaulizeWith(xCoord, yCoord, zCoord + 1);
+				} else if (worldObj.getBlock(xCoord, yCoord, zCoord - 1) != null) {
+					eqaulizeWith(xCoord, yCoord, zCoord - 1);
+				}
+			}
+		}
+		
+		private void eqaulizeWith(int x, int y, int z)
+		{
+			if(worldObj.getBlock(x,y,z) instanceof BlockPlasmaPipe)
+			{
+				TileEntityPlasmaPipe tile = (TileEntityPlasmaPipe)worldObj.getTileEntity(x,y,z);
+				plasmaInt = tile.getPlasma();
+			}
+		}
 }

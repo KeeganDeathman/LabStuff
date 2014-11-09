@@ -6,6 +6,9 @@ import keegan.labstuff.blocks.BlockGasChamberPort;
 import keegan.labstuff.blocks.BlockGasChamberWall;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 
 public class TileEntityElectronGrabber extends TileEntity 
@@ -16,6 +19,18 @@ public class TileEntityElectronGrabber extends TileEntity
 	
 	public TileEntityElectronGrabber() 
 	{
+	}
+	
+	@Override
+	public void writeToNBT(NBTTagCompound tagCompound)
+	{
+		tagCompound.setInteger("blockMeta", blockMetadata);
+	}
+	
+	@Override
+	public void readFromNBT(NBTTagCompound tag)
+	{
+		worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, tag.getInteger("blockMeta"), 2);
 	}
 
 	@Override

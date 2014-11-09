@@ -26,24 +26,7 @@ public class TileEntityPlasmaTank extends TileEntityPlasma
 		return;
 	}
 	
-	public int getPlasma()
-	{
-		return plasmaInt;
-	}
-	
-	@Override
-	public void writeToNBT(NBTTagCompound tag)
-	{
-		super.writeToNBT(tag);
-		tag.setInteger("plasma", plasmaInt);
-	}
-	
-	@Override
-	public void readFromNBT(NBTTagCompound tag)
-	{
-		super.readFromNBT(tag);
-		plasmaInt = tag.getInteger("plasma");
-	}
+
 	
 	
 }

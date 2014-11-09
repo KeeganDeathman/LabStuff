@@ -26,7 +26,7 @@ public class TileEntityGasChamberPort extends TileEntity implements IInventory
 		//get input.output state
 		System.out.println("Let's do this.");
 		this.input = ((BlockGasChamberPort)worldObj.getBlock(xCoord, yCoord, zCoord)).getInputState() || worldObj.getBlock(xCoord, yCoord - 2, zCoord) instanceof BlockGasChamberPort;
-		if(input)
+		if(input && worldObj.getBlock(xCoord, yCoord - 2, zCoord) instanceof BlockGasChamberPort)
 		{
 			remoteTile = (TileEntityGasChamberPort)worldObj.getTileEntity(xCoord, yCoord-2, zCoord);
 			if (this.getStackInSlot(0) != null) 

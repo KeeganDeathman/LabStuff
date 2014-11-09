@@ -63,6 +63,7 @@ public class LabStuffMain
 	public static Block blockGasChamberWall;
 	public static Block blockGasChamberPort;
 	public static Block blockPlasmaTank;
+	public static Block blockPlasmaNetworkMonitor;
 			
 	//Items
 	public static Item itemFiberGlass;
@@ -118,6 +119,7 @@ public class LabStuffMain
 		blockElectronCannon = new BlockElectronCannon(Material.iron).setBlockName("blockElectronCannon").setCreativeTab(tabLabStuff);
 		blockGasChamberPort = new BlockGasChamberPort(Material.iron).setBlockName("blockGasChamberPort").setCreativeTab(tabLabStuff).setBlockTextureName("labstuff:gaschamberPort");
 		blockPlasmaTank = new BlockPlasmaTank(Material.glass).setBlockName("blockPlasmaTank").setCreativeTab(tabLabStuff).setBlockTextureName("labstuff:blockPlasmaTank");
+		blockPlasmaNetworkMonitor = new BlockPlasmaNetworkMonitor(Material.iron).setBlockName("plasmaMonitor").setBlockTextureName("plasmaMonitor").setCreativeTab(tabLabStuff);
 		//Items
 		itemFiberGlass = new ItemFiberGlass(600).setUnlocalizedName("itemFiberGlass").setCreativeTab(tabLabStuff);
 		itemCopperIngot = new ItemCopperIngot(601).setUnlocalizedName("itemCopperIngot").setCreativeTab(tabLabStuff);
@@ -154,6 +156,7 @@ public class LabStuffMain
 		GameRegistry.registerBlock(blockGasChamberPort, "blockGasChamberPort");
 		GameRegistry.registerBlock(blockElectronGrabber, "blockElectronGrabber");
 		GameRegistry.registerBlock(blockPlasmaTank, "blockPlasmaTank");
+		GameRegistry.registerBlock(blockPlasmaNetworkMonitor, "plasmaMonitor");
 		
 		//Items
 		GameRegistry.registerItem(itemFiberGlass, "FiberGlass");
@@ -224,9 +227,10 @@ public class LabStuffMain
 		GameRegistry.registerTileEntity(TileEntityComputer.class, "TileEntityComputer");
 		GameRegistry.registerTileEntity(TileEntityElectrifier.class, "TileEntityElectrifier");
 		GameRegistry.registerTileEntity(TileEntityPlasmaPipe.class, "TileEntityPlasmaPipe");
+		GameRegistry.registerTileEntity(TileEntityPlasma.class, "TileEntityPlasma");
 		GameRegistry.registerTileEntity(TileEntityElectronGrabber.class, "TileEntityElectronGrabber");
 		GameRegistry.registerTileEntity(TileEntityGasChamberPort.class, "TileEntityGasChamberPort");
-		
+		GameRegistry.registerTileEntity(TileEntityPlasmaNetworkMonitor.class, "TileEntityPlasmaNetworkMonitor");
 		//Packets
 		packetPipeline.initalise();
 		packetPipeline.registerPacket(PacketCircuitDesignTable.class);
