@@ -87,37 +87,25 @@ public class BlockPowerFurnace extends Block implements ITileEntityProvider
 			case 0: case 1:
 				return this.side1;
 			case 2:
-				switch(metadata)
-				{
-					case(2):
-						return this.side3;
-					default:
-						return this.side2;
-				}
+				if(metadata == 2)
+					return side3;
+				else
+					return side2;
 			case 3:
-				switch(metadata)
-				{
-					case(0):
-						return this.side3;
-					default:
-						return this.side2;
-				}
+				if(metadata == 0)
+					return side3;
+				else
+					return side2;
 			case 4:
-				switch(metadata)
-				{
-					case 1:
-						return this.side3;
-					default:
-						return this.side2;
-				}
+				if(metadata == 1)
+					return side3;
+				else
+					return side2;
 			case 5:
-				switch(metadata)
-				{
-					case 3:
-						return this.side3;
-					default:
-						return this.side2;
-				}
+				if(metadata == 3)
+					return side3;
+				else
+					return side2;
 			default:
 				return this.side1;
 		}
@@ -130,37 +118,25 @@ public class BlockPowerFurnace extends Block implements ITileEntityProvider
 			case 0: case 1:
 				return this.side1;
 			case 2:
-				switch(metadata)
-				{
-					case 6:
-						return this.side3;
-					default:
-						return this.side2;
-				}
+				if(metadata == 6)
+					return side3On;
+				else
+					return side2;
 			case 3:
-				switch(metadata)
-				{
-					case 4:
-						return this.side3;
-					default:
-						return this.side2;
-				}
+				if(metadata == 4)
+					return side3On;
+				else
+					return side2;
 			case 4:
-				switch(metadata)
-				{
-					case 5:
-						return this.side3;
-					default:
-						return this.side2;
-				}
+				if(metadata == 5)
+					return side3On;
+				else
+					return side2;
 			case 5:
-				switch(metadata)
-				{
-					case 7:
-						return this.side3;
-					default:
-						return this.side2;
-				}
+				if(metadata == 7)
+					return side3On;
+				else
+					return side2;
 			default:
 				return this.side1;
 		}

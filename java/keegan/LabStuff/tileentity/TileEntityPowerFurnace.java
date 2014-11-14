@@ -61,28 +61,27 @@ public class TileEntityPowerFurnace extends TileEntityPower implements IInventor
 	{
 		if(worldObj.isRemote == false)
 		{
-			if(getBurnTime() > 0)
+			switch(getBurnTime())
 			{
-				System.out.println("Burn time " + getBurnTime());
-				setBurnTime(getBurnTime() - 1);
-				TileEntity tileAbove = worldObj.getTileEntity(xCoord, yCoord + 1, zCoord);
-				if(tileAbove instanceof TileEntityPower)
-					((TileEntityPower)tileAbove).addPower(1, this);
-				((BlockPowerFurnace)worldObj.getBlock(xCoord, yCoord, zCoord)).setOn(worldObj, xCoord, yCoord, zCoord, true);
-				System.out.println("Burn time " + getBurnTime());
-			}
-			else if(getBurnTime() == 0)
-			{
-				System.out.println("Burn time " + getBurnTime());
-				if(getStackInSlot(0) != null)
-				{
-					setBurnTime(getBurnTime() + TileEntityFurnace.getItemBurnTime(getStackInSlot(0)));
-					decrStackSize(0, 1);
+				default:
+					System.out.println("Burn time " + getBurnTime());
+					setBurnTime(getBurnTime() - 1);
+					TileEntity tileAbove = worldObj.getTileEntity(xCoord, yCoord + 1, zCoord);
+					if(tileAbove instanceof TileEntityPower)
+						((TileEntityPower)tileAbove).addPower(1, this);
 					((BlockPowerFurnace)worldObj.getBlock(xCoord, yCoord, zCoord)).setOn(worldObj, xCoord, yCoord, zCoord, true);
-				}
-				else
-					((BlockPowerFurnace)worldObj.getBlock(xCoord, yCoord, zCoord)).setOn(worldObj, xCoord, yCoord, zCoord, false);
-				System.out.println("Burn time " + getBurnTime());
+					System.out.println("Burn time " + getBurnTime());
+				case 0:
+					System.out.println("Burn time " + getBurnTime());
+					if(getStackInSlot(0) != null)
+					{
+						setBurnTime(getBurnTime() + TileEntityFurnace.getItemBurnTime(getStackInSlot(0)));
+						decrStackSize(0, 1);
+						((BlockPowerFurnace)worldObj.getBlock(xCoord, yCoord, zCoord)).setOn(worldObj, xCoord, yCoord, zCoord, true);
+					}
+					else
+						((BlockPowerFurnace)worldObj.getBlock(xCoord, yCoord, zCoord)).setOn(worldObj, xCoord, yCoord, zCoord, false);
+					System.out.println("Burn time " + getBurnTime());				
 			}
 		}
 		
