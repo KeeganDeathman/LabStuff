@@ -40,8 +40,8 @@ public class GuiCircuitMaker extends GuiContainer
 	{
 		super.initGui();
 		this.buttonList.clear();
-		this.buttonList.add(this.drill = new GuiButton(0, xSize - 228 + 2, ySize - 149 + 2, 100, 20, "Drill"));
-		this.buttonList.add(this.etch = new GuiButton(1, xSize - 190 + 2, ySize - 98 + 2, 100, 20, "Etch"));
+		this.buttonList.add(this.drill = new GuiButton(0, 62, 180, 100, 20, "Drill"));
+		this.buttonList.add(this.etch = new GuiButton(1, 96, 219, 100, 20, "Etch"));
 	}
 
 	@Override
@@ -59,16 +59,36 @@ public class GuiCircuitMaker extends GuiContainer
 	{
 		if(button.id == 0)
 		{
-			if(tile.getStackInSlot(0).getItem() == LabStuffMain.itemBasicCircuitDesign)
+			if(tile.getStackInSlot(0) != null && tile.getStackInSlot(1) != null)
 			{
-				if(tile.getStackInSlot(1).getItem() == LabStuffMain.itemCircuitBoardPlate || tile.getStackInSlot(1).getItem() == LabStuffMain.itemBasicEtchedCircuitBoard)
+				if(tile.getStackInSlot(0).getItem() == LabStuffMain.itemBasicCircuitDesign || tile.getStackInSlot(0).getItem() == LabStuffMain.itemComputerCircuitDesign)
 				{
-					drill();
+					if(tile.getStackInSlot(1).getItem() == LabStuffMain.itemCircuitBoardPlate || tile.getStackInSlot(1).getItem() == LabStuffMain.itemBasicEtchedCircuitBoard || tile.getStackInSlot(1).getItem() == LabStuffMain.itemComputerEtchedCircuitBoard  )
+					{
+						drill();
+					}
+				}
+				else
+				{
+					System.out.println("I got nothing");
 				}
 			}
-			else
+		}
+		else if(button.id == 1)
+		{
+			if(tile.getStackInSlot(0) != null && tile.getStackInSlot(3) != null)
 			{
-				System.out.println("I got nothing");
+				if(tile.getStackInSlot(0).getItem() == LabStuffMain.itemBasicCircuitDesign || tile.getStackInSlot(0).getItem() == LabStuffMain.itemComputerCircuitDesign)
+				{
+					if(tile.getStackInSlot(3).getItem() == LabStuffMain.itemCircuitBoardPlate || tile.getStackInSlot(3).getItem() == LabStuffMain.itemBasicDrilledCircuitBoard || tile.getStackInSlot(3).getItem() == LabStuffMain.itemComputerDrilledCircuitBoard  )
+					{
+						etch();
+					}
+				}
+				else
+				{
+					System.out.println("I got nothing");
+				}
 			}
 		}
 	}
@@ -81,15 +101,29 @@ public class GuiCircuitMaker extends GuiContainer
 	
 	private void drill()
 	{
-		for(int progress = 4; progress < 18; progress++)
+		/*for(int progress = 4; progress < 18; progress++)
 		{
 			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 			this.mc.renderEngine.bindTexture(new ResourceLocation("labstuff:textures/gui/CircuitMakerDrill.png"));
 			int x = 76;
 			int y = 145;
 			this.drawTexturedModalRect(x, y, 46, 128, progress, 17);
-		}
+		}*/
+		System.out.println("Sending packet now.");
 		LabStuffMain.packetPipeline.sendToServer(new PacketCircuitMaker(tile.xCoord, tile.yCoord, tile.zCoord, "Drill"));
 	}
 	
+	private void etch()
+	{
+		/*for(int progress = 4; progress < 18; progress++)
+		{
+			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+			this.mc.renderEngine.bindTexture(new ResourceLocation("labstuff:textures/gui/CircuitMakerDrill.png"));
+			int x = 76;
+			int y = 145;
+			this.drawTexturedModalRect(x, y, 46, 128, progress, 17);
+		}*/
+		System.out.println("Sending packet now.");
+		LabStuffMain.packetPipeline.sendToServer(new PacketCircuitMaker(tile.xCoord, tile.yCoord, tile.zCoord, "Etch"));
+	}
 }

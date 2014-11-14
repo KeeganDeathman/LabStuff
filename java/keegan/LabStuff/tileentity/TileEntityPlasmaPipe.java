@@ -1,5 +1,6 @@
 package keegan.labstuff.tileentity;
 
+import keegan.labstuff.LabStuffMain;
 import keegan.labstuff.blocks.BlockPlasmaPipe;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
@@ -7,42 +8,57 @@ import net.minecraft.world.World;
 
 public class TileEntityPlasmaPipe extends TileEntityPlasma	
 {
-	private int plasma;
+	
+	private boolean networked;
+	
+	public TileEntityPlasmaPipe()
+	{
+		super();
+		networked = false;
+	}
 	
 	public TileEntityPlasmaPipe(World world)
 	{
+		super();
 		plasmaInt = this.getPlasma();
 		this.worldObj = world;
-		this.equalize();
 	}
 	
+	@Override
+	public void updateEntity()
+	{
+		if(!networked)
+			equalize();
+	}
 	
 	//ONLY call when the block is added!
-		public void equalize()
-		{
-			if (getPlasma() == 0) {
-				if (worldObj.getBlock(xCoord + 1, yCoord, zCoord) != null) {
-					eqaulizeWith(xCoord + 1, yCoord, zCoord);
-				} else if (worldObj.getBlock(xCoord - 1, yCoord, zCoord) != null) {
-					eqaulizeWith(xCoord - 1, yCoord, zCoord);
-				} else if (worldObj.getBlock(xCoord, yCoord + 1, zCoord) != null) {
+	public void equalize()
+	{
+		if(!worldObj.isRemote) {
+			if (worldObj.getBlock(xCoord + 1, yCoord, zCoord) != null && getPlasma() == 0) {
+				eqaulizeWith(xCoord + 1, yCoord, zCoord);
+			}if (worldObj.getBlock(xCoord - 1, yCoord, zCoord) != null && getPlasma() == 0) {
+				eqaulizeWith(xCoord - 1, yCoord, zCoord);
+			}if (worldObj.getBlock(xCoord, yCoord + 1, zCoord) != null && getPlasma() == 0) {
 					eqaulizeWith(xCoord, yCoord + 1, zCoord);
-				} else if (worldObj.getBlock(xCoord, yCoord - 1, zCoord) != null) {
-					eqaulizeWith(xCoord, yCoord - 1, zCoord);
-				} else if (worldObj.getBlock(xCoord, yCoord, zCoord + 1) != null) {
-					eqaulizeWith(xCoord, yCoord, zCoord + 1);
-				} else if (worldObj.getBlock(xCoord, yCoord, zCoord - 1) != null) {
-					eqaulizeWith(xCoord, yCoord, zCoord - 1);
-				}
+			}if (worldObj.getBlock(xCoord, yCoord - 1, zCoord) != null && getPlasma() == 0) {
+				 eqaulizeWith(xCoord, yCoord - 1, zCoord);
+			}if (worldObj.getBlock(xCoord, yCoord, zCoord + 1) != null && getPlasma() == 0) {
+				 eqaulizeWith(xCoord, yCoord, zCoord + 1);
+			}if (worldObj.getBlock(xCoord, yCoord, zCoord - 1) != null && getPlasma() == 0) {
+				 eqaulizeWith(xCoord, yCoord, zCoord - 1);
 			}
 		}
-		
-		private void eqaulizeWith(int x, int y, int z)
+	}
+	
+	private void eqaulizeWith(int x, int y, int z)
+	{
+		if(worldObj.getBlock(x,y,z) == LabStuffMain.blockPlasmaPipe)
 		{
-			if(worldObj.getBlock(x,y,z) instanceof BlockPlasmaPipe)
-			{
-				TileEntityPlasmaPipe tile = (TileEntityPlasmaPipe)worldObj.getTileEntity(x,y,z);
-				plasmaInt = tile.getPlasma();
-			}
+			TileEntityPlasmaPipe tile = (TileEntityPlasmaPipe)worldObj.getTileEntity(x,y,z);
+			plasmaInt = tile.getPlasma();
+			if(getPlasma() > 0)
+				networked = true;
 		}
+	}
 }

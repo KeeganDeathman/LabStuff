@@ -1,39 +1,30 @@
 package keegan.labstuff.container;
 
-import keegan.labstuff.slot.SlotCircuitMakerCircuitBoardOutput;
-import keegan.labstuff.slot.SlotCircuitMakerCircuitDesignInput;
-import keegan.labstuff.slot.SlotCircuitMakerCircuitPlateInput;
-import keegan.labstuff.tileentity.TileEntityCircuitMaker;
+import keegan.labstuff.slot.SlotPowerFurnace;
+import keegan.labstuff.tileentity.TileEntityPowerFurnace;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-public class ContainerCircuitMaker extends Container {
-
-protected TileEntityCircuitMaker tileEntity;
+public class ContainerPowerFurnace extends Container 
+{
+	TileEntityPowerFurnace tile;
 	
-	public ContainerCircuitMaker(InventoryPlayer invPlayer, TileEntityCircuitMaker te)
+	public ContainerPowerFurnace(InventoryPlayer inv, TileEntityPowerFurnace tileEntity)
 	{
-		tileEntity = te;
+		tile = tileEntity;
 		
-		this.bindPlayerInventory(invPlayer);
-		
-		this.addSlotToContainer(new SlotCircuitMakerCircuitDesignInput(this, te, 0, 189, 155));
-		//Drill
-		this.addSlotToContainer(new SlotCircuitMakerCircuitPlateInput(this, te, 1, 29, 128));
-		this.addSlotToContainer(new SlotCircuitMakerCircuitBoardOutput(this, te, 2, 77, 128));
-		//Etcher
-		this.addSlotToContainer(new SlotCircuitMakerCircuitPlateInput(this, te, 3, 66, 173));
-		this.addSlotToContainer(new SlotCircuitMakerCircuitBoardOutput(this, te, 4, 107, 173));
+		this.bindPlayerInventory(inv);
+		this.addSlotToContainer(new SlotPowerFurnace(tile, 0, 106, 205));
 		
 	}
 	
 	@Override
 	public boolean canInteractWith(EntityPlayer entityplayer) 
 	{
-		return this.tileEntity.isUseableByPlayer(entityplayer);
+		return this.tile.isUseableByPlayer(entityplayer);
 	}
 	
 	protected void bindPlayerInventory(InventoryPlayer inventoryPlayer)
@@ -87,4 +78,7 @@ protected TileEntityCircuitMaker tileEntity;
             }
             return stack;
     }
+
+
+
 }

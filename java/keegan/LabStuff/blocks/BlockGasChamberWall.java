@@ -1,7 +1,6 @@
 package keegan.labstuff.blocks;
 
 import keegan.labstuff.LabStuffMain;
-import keegan.labstuff.tileentity.TileEntityElectronCannon;
 import keegan.labstuff.tileentity.TileEntityElectronGrabber;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -44,14 +43,13 @@ public class BlockGasChamberWall extends Block
 			if(world.getTileEntity(tileX, tileY, tileZ) != null)
 			{
 				TileEntity tile = world.getTileEntity(tileX, tileY, tileZ);
-				if(tile != null && (tile instanceof TileEntityElectronGrabber || tile instanceof TileEntityElectronCannon))
+				if(tile != null && tile instanceof TileEntityElectronGrabber)
 				{
 					tileEntityPresent = true;
 				}
 				else
 				{
 					tileEntityPresent = false;
-					System.out.println("Tile entity not found");
 				}
 			}
 		}
@@ -74,7 +72,6 @@ public class BlockGasChamberWall extends Block
 		multiblock = state;
 		multiblocks = array;
 		coordsGiven = false;
-		System.out.println("Multiblock? " + isMultiBlock());
 	}
 	
 	public void setMultiBlockState(boolean state, Block[][][] array, int[] tileCoords, World worldObj)
@@ -86,7 +83,6 @@ public class BlockGasChamberWall extends Block
 		tileZ = tileCoords[2];
 		this.world = worldObj;
 		coordsGiven = true;
-		System.out.println("Multiblock? " + isMultiBlock());
 	}
 	
 	private IIcon blank;

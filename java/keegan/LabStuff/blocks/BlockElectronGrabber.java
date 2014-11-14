@@ -57,6 +57,7 @@ public class BlockElectronGrabber extends Block implements ITileEntityProvider
 
         if (l == 3)
         	world.setBlockMetadataWithNotify(x, y, z, 3, 2);
+        
     }
 	
 	

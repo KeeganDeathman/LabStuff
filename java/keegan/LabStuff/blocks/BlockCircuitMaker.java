@@ -1,7 +1,7 @@
 package keegan.labstuff.blocks;
 
+import keegan.labstuff.LabStuffMain;
 import keegan.labstuff.tileentity.TileEntityCircuitMaker;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
@@ -101,20 +101,30 @@ public class BlockCircuitMaker extends Block implements ITileEntityProvider
 		return this.side1;
 	}
 	
-	public void onBlockPlacedBy(World par1World, int x, int y, int z, EntityLivingBase par5EntityLivingBase, ItemStack par6ItemStack)
-	{
-		int whichDirectionFacing = MathHelper.floor_double((double)(par5EntityLivingBase.rotationYaw * 4.0F / 360.0F) + 2.5D) & 3;
-	    par1World.setBlockMetadataWithNotify(x, y, z, whichDirectionFacing, 2);
-	    System.out.println(whichDirectionFacing);
-	}
+	@Override
+    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack)
+    {
+    	int l = MathHelper.floor_double((double)(player.rotationYaw * 4.0F / 360.0F) + 2.5D) & 3;
+    	if (l == 0)
+    		world.setBlockMetadataWithNotify(x, y, z, 0, 2);
+
+    	if (l == 1)
+    		world.setBlockMetadataWithNotify(x, y, z, 1, 2);
+
+        if (l == 2)
+        	world.setBlockMetadataWithNotify(x, y, z, 2, 2);
+
+        if (l == 3)
+        	world.setBlockMetadataWithNotify(x, y, z, 3, 2);
+    }
 	
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par5, float par6, float par7, float par8)
 	{
 		System.out.println("Hello!");
-		if(world.isRemote == true)
+		if(!world.isRemote)
 		{
-			player.addChatMessage(new ChatComponentTranslation("text.broken.idiot"));
+			player.openGui(LabStuffMain.instance, 6, world, x, y, z);
 			return true;
 		}
 		return false;
@@ -123,7 +133,7 @@ public class BlockCircuitMaker extends Block implements ITileEntityProvider
 	@Override
 	public TileEntity createNewTileEntity(World world, int arg1)
 	{
-		return new TileEntityCircuitMaker(world);
+		return new TileEntityCircuitMaker();
 	}
 
 

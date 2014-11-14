@@ -1,25 +1,23 @@
 package keegan.labstuff.tileentity;
 
-import keegan.labstuff.LabStuffMain;
-import keegan.labstuff.items.ItemCircuitBoard;
-import keegan.labstuff.items.ItemPartialCircuitBoard;
+import keegan.labstuff.blocks.BlockPowerFurnace;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityFurnace;
 
-public class TileEntityCircuitMaker extends TileEntity implements IInventory
+public class TileEntityPowerFurnace extends TileEntityPower implements IInventory
 {
-	private ItemStack[] chestContents  = new ItemStack[5];
 	
+	private ItemStack[] chestContents = new ItemStack[1];
+	private int burnTime;
 	
-	public TileEntityCircuitMaker()
+	public TileEntityPowerFurnace()
 	{
-		
 	}
-	
 	
 	@Override
 	public void writeToNBT(NBTTagCompound tagCompound)
@@ -38,9 +36,8 @@ public class TileEntityCircuitMaker extends TileEntity implements IInventory
 			}
 		}
 		tagCompound.setTag("Inventory", itemList);
+		tagCompound.setInteger("burnTime", getBurnTime());
 	}
-	
-
 	
 	@Override
 	public void readFromNBT(NBTTagCompound tagCompound)
@@ -56,6 +53,31 @@ public class TileEntityCircuitMaker extends TileEntity implements IInventory
 				chestContents[slot] = ItemStack.loadItemStackFromNBT(tag);
 			}
 		}
+		setBurnTime(tagCompound.getInteger("burnTime"));
+	}
+	
+	@Override
+	public void updateEntity()
+	{
+		if(getBurnTime() > 0)
+		{
+			setBurnTime(getBurnTime() - 1);
+			TileEntity tileAbove = worldObj.getTileEntity(xCoord, yCoord + 1, zCoord);
+			if(tileAbove instanceof TileEntityPower)
+				((TileEntityPower)tileAbove).addPower(1, this);
+			((BlockPowerFurnace)worldObj.getBlock(xCoord, yCoord, zCoord)).setOn(worldObj, xCoord, yCoord, zCoord, true);
+		}
+		if(getBurnTime() == 0)
+		{
+			((BlockPowerFurnace)worldObj.getBlock(xCoord, yCoord, zCoord)).setOn(worldObj, xCoord, yCoord, zCoord, false);
+			if(getStackInSlot(0) != null)
+			{
+				setBurnTime(getBurnTime() + TileEntityFurnace.getItemBurnTime(getStackInSlot(0)));
+				decrStackSize(0, 1);
+			}
+				
+		}
+		
 	}
 
 	@Override
@@ -121,7 +143,7 @@ public class TileEntityCircuitMaker extends TileEntity implements IInventory
 	public int getInventoryStackLimit() 
 	{
 		// TODO Auto-generated method stub
-		return 1;
+		return 64;
 	}
 
 	@Override
@@ -136,7 +158,7 @@ public class TileEntityCircuitMaker extends TileEntity implements IInventory
 	@Override
 	public String getInventoryName() {
 		// TODO Auto-generated method stub
-		return "Electrifier";
+		return "Power Furnace";
 	}
 
 
@@ -164,12 +186,17 @@ public class TileEntityCircuitMaker extends TileEntity implements IInventory
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int slot, ItemStack stack) {
-		if(stack.getItem() instanceof ItemPartialCircuitBoard || stack.getItem() == LabStuffMain.itemCircuitBoardPlate || stack.getItem() instanceof ItemCircuitBoard)
-		{
-			
-		}
-		return false;
+	public boolean isItemValidForSlot(int slot, ItemStack item) 
+	{
+		return TileEntityFurnace.isItemFuel(item);
 	}
-	
+
+	public int getBurnTime() {
+		return burnTime;
+	}
+
+	public void setBurnTime(int burnTime) {
+		this.burnTime = burnTime;
+	}
+
 }

@@ -1,7 +1,10 @@
 package keegan.labstuff.tileentity;
 
-import keegan.labstuff.LabStuffMain;
+import java.util.ArrayList;
 
+import keegan.labstuff.LabStuffMain;
+import keegan.labstuff.recipes.CircuitDesign;
+import keegan.labstuff.recipes.Recipes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
@@ -9,78 +12,47 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
 
 public class TileEntityCircuitDesignTable extends TileEntity implements IInventory
 {
 	private ItemStack[] chestContents  = new ItemStack[1];
 	public String circuitDesign = "";
-	private World world;
 	
 	
-	public TileEntityCircuitDesignTable(World world)
+	public TileEntityCircuitDesignTable()
 	{
-		this.world = world;
 	}
 	
-	
+	@Override
 	public void writeToNBT(NBTTagCompound tagCompound)
 	{
+		super.writeToNBT(tagCompound);
 		NBTTagList itemList = new NBTTagList();
 		for (int i = 0; i < chestContents.length; i++) 
 		{
 			ItemStack stack = chestContents[i];
-			if (stack != null) {
-			NBTTagCompound tag = new NBTTagCompound();
-			tag.setByte("Slot", (byte) i);
-			stack.writeToNBT(tag);
-			itemList.appendTag(tag);
+			if (stack != null) 
+			{
+				NBTTagCompound tag = new NBTTagCompound();
+				tag.setByte("Slot", (byte) i);
+				stack.writeToNBT(tag);
+				itemList.appendTag(tag);
 			}
-			}
-			tagCompound.setTag("Inventory", itemList);
-			tagCompound.setString("Design", circuitDesign);
+		}
+		tagCompound.setTag("Inventory", itemList);
+		tagCompound.setString("Design", circuitDesign);
 	}
 	
 	public void drawCircuit(String design)
 	{
-		if(world.isRemote == true)
+		ArrayList<CircuitDesign> designs = Recipes.getCircuitDeisgns();
+		if(worldObj.isRemote == true)
 		{
 			System.out.println("Drawing begun");
-			if(design.equals("Basic"))
+			for(int i=0; i < designs.size(); i++)
 			{
-				ItemStack basicDesign = new ItemStack(LabStuffMain.itemBasicCircuitDesign);
-				setInventorySlotContents(0, basicDesign);
-				System.out.println("Circuit Drawn");
-			}
-			else if(design.equals("Computer"))
-			{
-				ItemStack compDesign = new ItemStack(LabStuffMain.itemComputerCircuitDesign);
-				setInventorySlotContents(0, compDesign);
-				System.out.println("Circuit Drawn");
-			}
-			else
-			{
-				System.out.println("We found the unregonized design: " + design);
-			}
-		}
-		else
-		{
-			System.out.println("Drawing begun");
-			if(design.equals("Basic"))
-			{
-				ItemStack basicDesign = new ItemStack(LabStuffMain.itemBasicCircuitDesign);
-				setInventorySlotContents(0, basicDesign);
-				System.out.println("Circuit Drawn");
-			}
-			else if(design.equals("Computer"))
-			{
-				ItemStack compDesign = new ItemStack(LabStuffMain.itemComputerCircuitDesign);
-				setInventorySlotContents(0, compDesign);
-				System.out.println("Circuit Drawn");
-			}
-			else
-			{
-				System.out.println("We found the unregonized design: " + design);
+				if(design.equals(designs.get(i).getName()))
+					setInventorySlotContents(0, new ItemStack(designs.get(i).getDesignSheet(), getStackInSlot(0).stackSize));
 			}
 		}
 	}
@@ -104,9 +76,10 @@ public class TileEntityCircuitDesignTable extends TileEntity implements IInvento
 //        this.drawCircuit(circuitDesign);
 //   }
 	
-
+	@Override
 	public void readFromNBT(NBTTagCompound tagCompound)
 	{
+		super.readFromNBT(tagCompound);
 		NBTTagList tagList = tagCompound.getTagList("Inventory", 10);
 		for (int i = 0; i < tagList.tagCount(); i++) 
 		{

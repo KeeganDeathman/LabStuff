@@ -14,6 +14,19 @@ import net.minecraft.world.World;
 public class BlockGasChamberPort extends Block implements ITileEntityProvider
 {
 
+	
+	public boolean multiblock = false;
+	public boolean visibility = true;
+	private World world;
+	private int xCoord;
+	private int yCoord;
+	private int zCoord;
+	private int tileX;
+	private int tileY;
+	private int tileZ;
+	private boolean coordsGiven = false;
+	private Block[][][] multiblocks;
+	
 	public BlockGasChamberPort(Material p_i45394_1_) {
 		super(p_i45394_1_);
 		// TODO Auto-generated constructor stub
@@ -66,6 +79,22 @@ public class BlockGasChamberPort extends Block implements ITileEntityProvider
 	public TileEntity createNewTileEntity(World arg0, int arg1) {
 		//return new TileEntityGasChamberPort();
 		return new TileEntityGasChamberPort();
+	}
+
+	public void setMultiBlockState(boolean state, Block[][][] array, int[] tileCoords, World worldObj)
+	{
+		multiblock = state;
+		multiblocks = array;
+		tileX = tileCoords[0];
+		tileY = tileCoords[1];
+		tileZ = tileCoords[2];
+		this.world = worldObj;
+		coordsGiven = true;
+	}
+	
+	public boolean isMultiBlock()
+	{
+		return multiblock;
 	}
 
 }

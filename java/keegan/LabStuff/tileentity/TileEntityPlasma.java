@@ -10,6 +10,11 @@ public class TileEntityPlasma extends TileEntity
 	
 	protected int plasmaInt = 0;
 	
+	public TileEntityPlasma()
+	{
+		super();
+	}
+	
 	
 	public void addPlasma(int addition, TileEntity issuer)
 	{

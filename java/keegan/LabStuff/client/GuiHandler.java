@@ -1,18 +1,8 @@
 package keegan.labstuff.client;
 
-import keegan.labstuff.client.gui.GuiPlasmaNetworkMonitor;
-import keegan.labstuff.container.ContainerCircuitDesignTable;
-import keegan.labstuff.container.ContainerCircuitMaker;
-import keegan.labstuff.container.ContainerComputer;
-import keegan.labstuff.container.ContainerElectrifier;
-import keegan.labstuff.container.ContainerGasChamberPort;
-import keegan.labstuff.container.ContainerPlasmaNetworkMonitor;
-import keegan.labstuff.tileentity.TileEntityCircuitDesignTable;
-import keegan.labstuff.tileentity.TileEntityCircuitMaker;
-import keegan.labstuff.tileentity.TileEntityComputer;
-import keegan.labstuff.tileentity.TileEntityElectrifier;
-import keegan.labstuff.tileentity.TileEntityGasChamberPort;
-import keegan.labstuff.tileentity.TileEntityPlasmaNetworkMonitor;
+
+import keegan.labstuff.container.*;
+import keegan.labstuff.tileentity.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -45,9 +35,9 @@ public class GuiHandler implements IGuiHandler
 		{
 			return new ContainerGasChamberPort(player.inventory, (TileEntityGasChamberPort) tileEntity);
 		}
-		if(tileEntity instanceof TileEntityPlasmaNetworkMonitor)
+		if(tileEntity instanceof TileEntityPowerFurnace)
 		{
-			return new ContainerPlasmaNetworkMonitor(player.inventory, (TileEntityPlasmaNetworkMonitor) tileEntity);
+			return new ContainerPowerFurnace(player.inventory, (TileEntityPowerFurnace) tileEntity);
 		}
 		return null;
 	}
@@ -81,9 +71,10 @@ public class GuiHandler implements IGuiHandler
 		{
 			return new GuiGasChamberPort(player.inventory, (TileEntityGasChamberPort) tileEntity, world);
 		}
-		if(tileEntity instanceof TileEntityPlasmaNetworkMonitor)
-			return new GuiPlasmaNetworkMonitor(player.inventory, (TileEntityPlasmaNetworkMonitor) tileEntity);
-		
+		if(tileEntity instanceof TileEntityPowerFurnace)
+		{
+			return new GuiPowerFurnace(player.inventory, (TileEntityPowerFurnace) tileEntity);
+		}
 		return null;
 	}
 

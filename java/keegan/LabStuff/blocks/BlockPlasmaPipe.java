@@ -21,7 +21,7 @@ public class BlockPlasmaPipe extends Block implements ITileEntityProvider {
 	@Override
 	public TileEntity createNewTileEntity(World arg0, int arg1) {
 		// TODO Auto-generated method stub
-		return new TileEntityPlasmaPipe(arg0);
+		return new TileEntityPlasmaPipe();
 	}
 	
 	@Override

@@ -5,6 +5,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.biome.BiomeCache.Block;
 
 public class TileEntityGasChamberPort extends TileEntity implements IInventory
 {
@@ -24,8 +25,8 @@ public class TileEntityGasChamberPort extends TileEntity implements IInventory
 	public void updateEntity()
 	{
 		//get input.output state
-		System.out.println("Let's do this.");
-		this.input = ((BlockGasChamberPort)worldObj.getBlock(xCoord, yCoord, zCoord)).getInputState() || worldObj.getBlock(xCoord, yCoord - 2, zCoord) instanceof BlockGasChamberPort;
+		BlockGasChamberPort me = (BlockGasChamberPort) worldObj.getBlock(xCoord, yCoord, zCoord);
+		this.input = me.getInputState() || worldObj.getBlock(xCoord, yCoord - 2, zCoord) instanceof BlockGasChamberPort;
 		if(input && worldObj.getBlock(xCoord, yCoord - 2, zCoord) instanceof BlockGasChamberPort)
 		{
 			remoteTile = (TileEntityGasChamberPort)worldObj.getTileEntity(xCoord, yCoord-2, zCoord);
@@ -43,7 +44,7 @@ public class TileEntityGasChamberPort extends TileEntity implements IInventory
 			{
 				TileEntityPlasmaPipe pipe = (TileEntityPlasmaPipe)worldObj.getTileEntity(xCoord, yCoord-1, zCoord);
 				remoteTile = (TileEntityGasChamberPort)worldObj.getTileEntity(xCoord, yCoord+2, zCoord);
-				if(testtubes > 0)
+				if(testtubes > 0 && me.isMultiBlock())
 				{
 					pipe.addPlasma(20, this);
 					remoteTile.decrStackSize(0, 1);

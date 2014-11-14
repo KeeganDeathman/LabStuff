@@ -9,6 +9,7 @@ import keegan.labstuff.client.*;
 import keegan.labstuff.common.*;
 import keegan.labstuff.handlers.*;
 import keegan.labstuff.items.*;
+import keegan.labstuff.recipes.Recipes;
 import keegan.labstuff.tileentity.*;
 import keegan.labstuff.world.*;
 import net.minecraft.block.Block;
@@ -62,8 +63,7 @@ public class LabStuffMain
 	public static Block blockElectronGrabber;
 	public static Block blockGasChamberWall;
 	public static Block blockGasChamberPort;
-	public static Block blockPlasmaTank;
-	public static Block blockPlasmaNetworkMonitor;
+	public static Block blockPowerFurnace;
 			
 	//Items
 	public static Item itemFiberGlass;
@@ -73,6 +73,8 @@ public class LabStuffMain
 	public static Item itemComputerCircuitDesign;
 	public static Item itemBasicDrilledCircuitBoard;
 	public static Item itemBasicEtchedCircuitBoard;
+	public static Item itemComputerDrilledCircuitBoard;
+	public static Item itemComputerEtchedCircuitBoard;
 	public static Item itemBasicCircuitBoard;
 	public static Item itemComputerCircuitBoard;
 	public static Item itemMonitor;
@@ -86,7 +88,7 @@ public class LabStuffMain
 	public static Item itemZinc;
 	public static Item itemBattery;
 	public static Item itemDeadBattery;
-	public static Item itemPlasmaBucket;
+	public static Item itemSteel;
 	
 	//Other
 	public static CreativeTabs tabLabStuff = new TabLabStuff("tabLabStuff");
@@ -116,16 +118,16 @@ public class LabStuffMain
 		blockPlasmaPipe = new BlockPlasmaPipe(Material.iron).setBlockName("plasmaPipe").setCreativeTab(tabLabStuff);
 		blockGasChamberWall = new BlockGasChamberWall(Material.iron).setBlockName("blockGasChamberWall").setCreativeTab(tabLabStuff);
 		blockElectronGrabber = new BlockElectronGrabber(Material.iron).setBlockName("blockElectronGrabber").setCreativeTab(tabLabStuff);
-		blockElectronCannon = new BlockElectronCannon(Material.iron).setBlockName("blockElectronCannon").setCreativeTab(tabLabStuff);
 		blockGasChamberPort = new BlockGasChamberPort(Material.iron).setBlockName("blockGasChamberPort").setCreativeTab(tabLabStuff).setBlockTextureName("labstuff:gaschamberPort");
-		blockPlasmaTank = new BlockPlasmaTank(Material.glass).setBlockName("blockPlasmaTank").setCreativeTab(tabLabStuff).setBlockTextureName("labstuff:blockPlasmaTank");
-		blockPlasmaNetworkMonitor = new BlockPlasmaNetworkMonitor(Material.iron).setBlockName("plasmaMonitor").setBlockTextureName("plasmaMonitor").setCreativeTab(tabLabStuff);
+		blockPowerFurnace = new BlockPowerFurnace(Material.iron).setBlockName("blockPowerFurnace").setCreativeTab(tabLabStuff).setBlockTextureName("labstuff:blockCircuitMaker");
 		//Items
 		itemFiberGlass = new ItemFiberGlass(600).setUnlocalizedName("itemFiberGlass").setCreativeTab(tabLabStuff);
 		itemCopperIngot = new ItemCopperIngot(601).setUnlocalizedName("itemCopperIngot").setCreativeTab(tabLabStuff);
 		itemCircuitBoardPlate = new ItemCircuitBoardPlate(602).setUnlocalizedName("itemCircuitBoardPlate").setCreativeTab(tabLabStuff).setTextureName("labstuff:itemCircuitBoardPlate");
 		itemBasicDrilledCircuitBoard = new ItemPartialCircuitBoard().setUnlocalizedName("itemBasicDrilledCircuitBoard").setTextureName("labstuff:itemDrilledCircuitBoard").setCreativeTab(tabLabStuff);
-		itemBasicEtchedCircuitBoard = new ItemPartialCircuitBoard().setUnlocalizedName("itemEtchedCircuitBoard").setTextureName("labstuff:itemEtchedCircuitBoard").setCreativeTab(tabLabStuff);
+		itemBasicEtchedCircuitBoard = new ItemPartialCircuitBoard().setUnlocalizedName("itemBasicEtchedCircuitBoard").setTextureName("labstuff:itemEtchedCircuitBoard").setCreativeTab(tabLabStuff);
+		itemComputerDrilledCircuitBoard = new ItemPartialCircuitBoard().setUnlocalizedName("itemComputerDrilledCircuitBoard").setTextureName("labstuff:itemDrilledCircuitBoard").setCreativeTab(tabLabStuff);
+		itemComputerEtchedCircuitBoard = new ItemPartialCircuitBoard().setUnlocalizedName("itemComputerEtchedCircuitBoard").setTextureName("labstuff:itemEtchedCircuitBoard").setCreativeTab(tabLabStuff);
 		itemBasicCircuitBoard = new ItemCircuitBoard().setUnlocalizedName("itemBasicCircuitboard").setTextureName("labstuff:itemCircuitBoard").setCreativeTab(tabLabStuff);
 		itemComputerCircuitBoard = new ItemCircuitBoard().setUnlocalizedName("itemComputerCircuitboard").setTextureName("labstuff:itemCircuitBoard").setCreativeTab(tabLabStuff);
 		itemBasicCircuitDesign = new ItemCircuitDesign(603).setUnlocalizedName("itemBasicCircuitDesign").setCreativeTab(tabLabStuff);
@@ -141,6 +143,7 @@ public class LabStuffMain
 		itemTestTube = new ItemTestTube().setCreativeTab(tabLabStuff).setTextureName("labstuff:itemTestTube").setUnlocalizedName("itemTestTube");
 		itemHydrogenTestTube = new ItemTestTube().setCreativeTab(tabLabStuff).setTextureName("labstuff:itemHydrogenTestTube").setUnlocalizedName("itemHydrogenTestTube");
 		itemOxygenTestTube = new ItemTestTube().setCreativeTab(tabLabStuff).setTextureName("labstuff:itemOxygenTestTube").setUnlocalizedName("itemOxygenTestTube");
+		itemSteel = new ItemLabIngot().setCreativeTab(tabLabStuff).setTextureName("labstuff:itemSteel").setUnlocalizedName("itemSteel");
 		//Registries
 		//Blocks
 		GameRegistry.registerBlock(blockCopperOre, blockCopperOre.getUnlocalizedName().substring(5));
@@ -155,9 +158,7 @@ public class LabStuffMain
 		GameRegistry.registerBlock(blockGasChamberWall, "blockGasChamberWall");
 		GameRegistry.registerBlock(blockGasChamberPort, "blockGasChamberPort");
 		GameRegistry.registerBlock(blockElectronGrabber, "blockElectronGrabber");
-		GameRegistry.registerBlock(blockPlasmaTank, "blockPlasmaTank");
-		GameRegistry.registerBlock(blockPlasmaNetworkMonitor, "plasmaMonitor");
-		
+		GameRegistry.registerBlock(blockPowerFurnace, "blockPowerFurnace");
 		//Items
 		GameRegistry.registerItem(itemFiberGlass, "FiberGlass");
 		GameRegistry.registerItem(itemCopperIngot, "CopperIngot");
@@ -166,6 +167,8 @@ public class LabStuffMain
 		GameRegistry.registerItem(itemCircuitBoardPlate, "CircuitBoardPlate");
 		GameRegistry.registerItem(itemBasicDrilledCircuitBoard, "BasicDrilledCircuitBoard");
 		GameRegistry.registerItem(itemBasicEtchedCircuitBoard, "BasicEtchedCircuitBoard");
+		GameRegistry.registerItem(itemComputerDrilledCircuitBoard, "ComputerDrilledCircuitBoard");
+		GameRegistry.registerItem(itemComputerEtchedCircuitBoard, "ComputerEtchedCircuitBoard");
 		GameRegistry.registerItem(itemBasicCircuitBoard, "BasicCircuitBoard");
 		GameRegistry.registerItem(itemComputerCircuitBoard, "CompuuterCircuitBoard");
 		GameRegistry.registerItem(itemMonitor, "Monitor");
@@ -179,18 +182,20 @@ public class LabStuffMain
 		GameRegistry.registerItem(itemTestTube, "itemTestTube");
 		GameRegistry.registerItem(itemHydrogenTestTube, "itemHydrogenTestTube");
 		GameRegistry.registerItem(itemOxygenTestTube, "itemOxygenTestTube");
+		GameRegistry.registerItem(itemSteel, "itemSteel");
 		
-		//Plasma
+		/*
+		Plasma liquid
 		plasma.setLuminosity(13);
 		plasma.setTemperature(20000000);
 		FluidRegistry.registerFluid(plasma);
 		blockPlasmaBlock = new BlockPlasma(plasma, Material.lava).setBlockName("blockPlasma");
 		GameRegistry.registerBlock(blockPlasmaBlock, "blockPlasma");
-		itemPlasmaBucket = new ItemPlasmaBucket(blockPlasmaBlock).setUnlocalizedName("itemPlasmaBucket").setTextureName("labstuff:itemPlasmaBucket").setCreativeTab(tabLabStuff);
 		//GameRegistry.registerItem(itemPlasmaBucket, "plasmaBucket");
 		//FluidContainerRegistry.registerFluidContainer(FluidRegistry.getFluidStack("plasma", FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(itemPlasmaBucket), new ItemStack(Items.bucket));
 		//BucketHandler.INSTANCE.buckets.put(blockPlasmaBlock, itemPlasmaBucket);
 		//MinecraftForge.EVENT_BUS.register(BucketHandler.INSTANCE);
+		*/
 
 	}
 	
@@ -205,22 +210,13 @@ public class LabStuffMain
 		proxy.registerRenders();
 		
 		//Crafting Recipes
-		GameRegistry.addShapelessRecipe(new ItemStack(LabStuffMain.itemFiberGlass), new ItemStack(Items.bread), new ItemStack(Blocks.glass_pane));
-		CraftingManager.getInstance().getRecipeList().add(new ShapelessOreRecipe(new ItemStack(this.itemBasicCircuitBoard), new ItemStack(this.itemBasicCircuitDesign), "ingotCopper", "ingotCopper", "ingotCopper", "ingotCopper", new ItemStack(this.itemCircuitBoardPlate)));
-		CraftingManager.getInstance().getRecipeList().add(new ShapelessOreRecipe(new ItemStack(this.itemComputerCircuitBoard), new ItemStack(this.itemComputerCircuitDesign), "ingotCopper", "ingotCopper", "ingotCopper", "ingotCopper", new ItemStack(this.itemCircuitBoardPlate)));
-		//GameRegistry.addShapelessRecipe(new ItemStack(this.itemBasicCircuitBoard), new ItemStack(this.itemBasicCircuitDesign), "ingotCopper", "ingotCopper", "ingotCopper", "ingotCopper", new ItemStack(this.itemCircuitBoardPlate));
-		//GameRegistry.addShapelessRecipe(new ItemStack(this.itemComputerCircuitBoard), new ItemStack(this.itemComputerCircuitDesign), "ingotCopper", "ingotCopper", "ingotCopper", "ingotCopper", new ItemStack(this.itemCircuitBoardPlate));
-		CraftingManager.getInstance().getRecipeList().add(new ShapedOreRecipe(new ItemStack(this.itemCircuitBoardPlate), "x", "y", "x", 'x', new ItemStack(this.itemFiberGlass), 'y', "ingotCopper"));
-		CraftingManager.getInstance().getRecipeList().add(new ShapedOreRecipe(new ItemStack(blockComputer), " x "," yi", 'x', new ItemStack(itemMonitor), 'y', new ItemStack(itemComputerTower), 'i', new ItemStack(itemKeyboard)));
-		CraftingManager.getInstance().getRecipeList().add(new ShapedOreRecipe(new ItemStack(itemMonitor), "iii","ibg","ici",'i',new ItemStack(Items.iron_ingot), 'b', "circuitBasic", 'g', new ItemStack(Blocks.glass_pane), 'c', "ingotCopper"));
-		CraftingManager.getInstance().getRecipeList().add(new ShapedOreRecipe(new ItemStack(itemComputerTower), "iii","ibi","iii",'i',new ItemStack(Items.iron_ingot), 'b', "circuitComputer"));
-		CraftingManager.getInstance().getRecipeList().add(new ShapedOreRecipe(new ItemStack(itemKeyboard), "ppp","cbp","ppp", 'p', new ItemStack(itemPlastic), 'b', "circuitBasic", 'c', new ItemStack(itemCopperIngot)));
-		CraftingManager.getInstance().getRecipeList().add(new ShapedOreRecipe(new ItemStack(itemBattery), "pzp", "pmp", "pzp", 'p', new ItemStack(Items.paper), 'z', "ingotZinc", 'm', "ingotMaganese"));
+		Recipes.registerShaplessCrafting();
+		Recipes.registerShapedCrafting();
 		//Smelting recipes
-		GameRegistry.addSmelting(blockCopperOre, new ItemStack(this.itemCopperIngot, 2), 3);
-		GameRegistry.addSmelting(blockPlasticOre, new ItemStack(this.itemPlastic, 2), 3);
-		GameRegistry.addSmelting(blockZincOre, new ItemStack(itemZinc, 2), 3);
-		GameRegistry.addSmelting(blockMangOre, new ItemStack(itemManganese, 2), 3);
+		Recipes.registerSmelting();
+		//Circuit Deisgns
+		Recipes.addCircuitDesign("Basic", itemBasicCircuitDesign);
+		Recipes.addCircuitDesign("Computer", itemComputerCircuitDesign);
 		//Tile Entities
 		GameRegistry.registerTileEntity(TileEntityCircuitDesignTable.class, "TileEntityCircuitDesignTable");
 		GameRegistry.registerTileEntity(TileEntityCircuitMaker.class, "TileEntityCircuitMaker");
@@ -230,12 +226,14 @@ public class LabStuffMain
 		GameRegistry.registerTileEntity(TileEntityPlasma.class, "TileEntityPlasma");
 		GameRegistry.registerTileEntity(TileEntityElectronGrabber.class, "TileEntityElectronGrabber");
 		GameRegistry.registerTileEntity(TileEntityGasChamberPort.class, "TileEntityGasChamberPort");
-		GameRegistry.registerTileEntity(TileEntityPlasmaNetworkMonitor.class, "TileEntityPlasmaNetworkMonitor");
+		GameRegistry.registerTileEntity(TileEntityPower.class, "TileEntityPower");
+		GameRegistry.registerTileEntity(TileEntityPowerFurnace.class, "TileEntityPowerFurnace");
 		//Packets
 		packetPipeline.initalise();
 		packetPipeline.registerPacket(PacketCircuitDesignTable.class);
 		packetPipeline.registerPacket(PacketComputer.class);
 		packetPipeline.registerPacket(PacketElectrifier.class);
+		packetPipeline.registerPacket(PacketCircuitMaker.class);
 	    NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
 	    
 	    GameRegistry.registerWorldGenerator(new LabStuffOreGen(), 0);
@@ -251,6 +249,7 @@ public class LabStuffMain
 		OreDictionary.registerOre("ingotZinc", new ItemStack(itemZinc));
 		OreDictionary.registerOre("circuitBasic", new ItemStack(itemBasicCircuitBoard));
 		OreDictionary.registerOre("circuitComputer", new ItemStack(itemComputerCircuitBoard));
+		OreDictionary.registerOre("ingotSteel", new ItemStack(itemSteel));
 	}
 	
 	@EventHandler

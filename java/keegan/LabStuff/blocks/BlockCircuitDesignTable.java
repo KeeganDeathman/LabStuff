@@ -2,7 +2,6 @@ package keegan.labstuff.blocks;
 
 import keegan.labstuff.LabStuffMain;
 import keegan.labstuff.tileentity.TileEntityCircuitDesignTable;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
@@ -36,9 +35,21 @@ public class BlockCircuitDesignTable extends Block implements ITileEntityProvide
 		return false;
 	}
     
-    public void onBlockPlacedBy(World par1World, int par2, int par3, int par4, EntityLivingBase par5EntityLivingBase, ItemStack par6ItemStack, int l)
+    @Override
+    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack)
     {
-        par1World.setBlockMetadataWithNotify(par2, par3, par4, l, 2);
+    	int l = MathHelper.floor_double((double)(player.rotationYaw * 4.0F / 360.0F) + 2.5D) & 3;
+    	if (l == 0)
+    		world.setBlockMetadataWithNotify(x, y, z, 0, 2);
+
+    	if (l == 1)
+    		world.setBlockMetadataWithNotify(x, y, z, 1, 2);
+
+        if (l == 2)
+        	world.setBlockMetadataWithNotify(x, y, z, 2, 2);
+
+        if (l == 3)
+        	world.setBlockMetadataWithNotify(x, y, z, 3, 2);
     }
     
     @Override
@@ -57,7 +68,7 @@ public class BlockCircuitDesignTable extends Block implements ITileEntityProvide
 	@Override
 	public TileEntity createNewTileEntity(World var1, int var2) {
 		// TODO Auto-generated method stub
-		return new TileEntityCircuitDesignTable(var1);
+		return new TileEntityCircuitDesignTable();
 	}
 
 }

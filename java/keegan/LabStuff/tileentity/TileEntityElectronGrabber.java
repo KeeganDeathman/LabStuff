@@ -97,7 +97,6 @@ public class TileEntityElectronGrabber extends TileEntity
 		multiblocks[2][2][0] = worldObj.getBlock(coreX + 1, coreY - 1, coreZ - 1);
 		multiblocks[2][2][1] = worldObj.getBlock(coreX, coreY - 1, coreZ - 1);
 		multiblocks[2][2][2] = worldObj.getBlock(coreX - 1, coreY - 1, coreZ - 1);
-		System.out.println("Array created.");
 		for(int i = 0; i < 3; i++)
 		{
 			for(int j = 0; j < 3; j++)
@@ -132,10 +131,8 @@ public class TileEntityElectronGrabber extends TileEntity
 					&& multiblocks[2][2][1] == LabStuffMain.blockGasChamberWall
 					&& multiblocks[2][2][2] == LabStuffMain.blockGasChamberWall) 
 					{
-						System.out.println("Array verified.");
 						if (multiblocks[i][j][k] != null
 								&& multiblocks[i][j][k] == LabStuffMain.blockGasChamberWall) {
-							System.out.println("Lets a go!");
 							((BlockGasChamberWall) multiblocks[i][j][k])
 									.setMultiBlockState(true, multiblocks,
 											coords, worldObj);
@@ -143,10 +140,27 @@ public class TileEntityElectronGrabber extends TileEntity
 						
 						((BlockGasChamberPort) multiblocks[0][1][1]).setInputState(true);
 						((BlockGasChamberPort) multiblocks[2][1][1]).setInputState(false);
+						((BlockGasChamberPort) multiblocks[0][1][1]).setMultiBlockState(true, multiblocks, coords, worldObj);
+						((BlockGasChamberPort) multiblocks[2][1][1]).setMultiBlockState(true, multiblocks, coords, worldObj);
 					}
 					else
 					{
-						System.out.println("Something is not right.");
+						if (multiblocks[i][j][k] != null
+								&& multiblocks[i][j][k] == LabStuffMain.blockGasChamberWall) {
+							((BlockGasChamberWall) multiblocks[i][j][k])
+									.setMultiBlockState(false, multiblocks,
+											coords, worldObj);
+						}
+						if(multiblocks[0][1][1] == LabStuffMain.blockGasChamberPort)
+						{
+							((BlockGasChamberPort) multiblocks[0][1][1]).setInputState(false);
+							((BlockGasChamberPort) multiblocks[0][1][1]).setMultiBlockState(false, multiblocks, coords, worldObj);
+						}
+						if(multiblocks[2][1][1] == LabStuffMain.blockGasChamberPort)
+						{
+							((BlockGasChamberPort) multiblocks[2][1][1]).setInputState(false);
+							((BlockGasChamberPort) multiblocks[2][1][1]).setMultiBlockState(false, multiblocks, coords, worldObj);
+						}
 					}
 				}
 			}

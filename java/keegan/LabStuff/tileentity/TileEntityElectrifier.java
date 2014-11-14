@@ -14,33 +14,36 @@ import net.minecraft.world.World;
 
 public class TileEntityElectrifier extends TileEntity implements IInventory
 {
-	public static ResourceLocation Tex = new ResourceLocation("labstuff:textures/models/Electrifier.png");
-	private ItemStack[] chestContents;
+	private ItemStack[] chestContents  = new ItemStack[4];
 	public boolean electrifing = false;
 	
 	public TileEntityElectrifier()
 	{
-		chestContents  = new ItemStack[4];
 	}
 	
+	@Override
 	public void writeToNBT(NBTTagCompound tagCompound)
 	{
+		super.writeToNBT(tagCompound);
 		NBTTagList itemList = new NBTTagList();
 		for (int i = 0; i < chestContents.length; i++) 
 		{
 			ItemStack stack = chestContents[i];
-			if (stack != null) {
-			NBTTagCompound tag = new NBTTagCompound();
-			tag.setByte("Slot", (byte) i);
-			stack.writeToNBT(tag);
-			itemList.appendTag(tag);
+			if (stack != null) 
+			{
+				NBTTagCompound tag = new NBTTagCompound();
+				tag.setByte("Slot", (byte) i);
+				stack.writeToNBT(tag);
+				itemList.appendTag(tag);
 			}
-			}
-			tagCompound.setTag("Inventory", itemList);
+		}
+		tagCompound.setTag("Inventory", itemList);
 	}
 	
+	@Override
 	public void readFromNBT(NBTTagCompound tagCompound)
 	{
+		super.readFromNBT(tagCompound);
 		NBTTagList tagList = tagCompound.getTagList("Inventory", 10);
 		for (int i = 0; i < tagList.tagCount(); i++) 
 		{

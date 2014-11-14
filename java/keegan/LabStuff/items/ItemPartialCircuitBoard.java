@@ -44,5 +44,9 @@ public class ItemPartialCircuitBoard extends Item
 		{
 			par3List.add("Circuit Type: BASIC");
 		}
+		else if(this.getUnlocalizedName().contains("Computer"))
+		{
+			par3List.add("Circuit Type: COMPUTER");
+		}
 	}
 }
