@@ -72,136 +72,98 @@ public class BlockPowerFurnace extends Block implements ITileEntityProvider
 	{
 		if(isOn(metadata))
 		{
-			System.out.println("Furnace is on, metadata " + metadata);
 			return getIconOn(side, metadata);
 		}
 		else
 		{
-			System.out.println("Furnace is off, metadata " + metadata);
 			return getIconOff(side, metadata);
 		}
 	}
 	
 	private IIcon getIconOff(int side, int metadata)
 	{
-		if(side == 0|| side == 1)
+		switch(side)
 		{
-			return this.side1;
+			case 0: case 1:
+				return this.side1;
+			case 2:
+				switch(metadata)
+				{
+					case(2):
+						return this.side3;
+					default:
+						return this.side2;
+				}
+			case 3:
+				switch(metadata)
+				{
+					case(0):
+						return this.side3;
+					default:
+						return this.side2;
+				}
+			case 4:
+				switch(metadata)
+				{
+					case 1:
+						return this.side3;
+					default:
+						return this.side2;
+				}
+			case 5:
+				switch(metadata)
+				{
+					case 3:
+						return this.side3;
+					default:
+						return this.side2;
+				}
+			default:
+				return this.side1;
 		}
-		else if(side == 4 && (metadata != 1 && metadata != 3))
-		{
-			return this.side2;
-		}
-		else if(side == 5 && (metadata != 1 && metadata !=3))
-		{
-			return this.side2;
-		}
-		else if(side == 2 && (metadata != 2 && metadata !=0))
-		{
-			return this.side2;
-		}
-		else if(side == 3 && (metadata != 0 && metadata !=2))
-		{
-			return this.side2;
-		}
-		//South
-		else if(side == 2 && metadata == 2)
-		{
-			return this.side3;
-		}
-		else if(side == 3 && metadata == 2)
-		{
-			return this.side2;
-		}
-		//North
-		else if(side == 3 && metadata == 0)
-		{
-			return this.side3;
-		}
-		else if(side == 2 && metadata == 0)
-		{
-			return this.side2;
-		}
-		//West
-		else if(side == 5 && metadata == 3)
-		{
-			return this.side3;
-		}
-		else if(side == 4 && metadata == 3)
-		{
-			return this.side2;
-		}
-		//East
-		else if(side == 4 && metadata == 1)
-		{
-			return this.side3;
-		}
-		else if(side == 5 && metadata == 1)
-		{
-			return this.side2;
-		}
-		return this.side1;
 	}
 
 	private IIcon getIconOn(int side, int metadata)
 	{
-		if(side == 4|| side == 5)
+		switch(side)
 		{
-			return this.side1;
+			case 0: case 1:
+				return this.side1;
+			case 2:
+				switch(metadata)
+				{
+					case 6:
+						return this.side3;
+					default:
+						return this.side2;
+				}
+			case 3:
+				switch(metadata)
+				{
+					case 4:
+						return this.side3;
+					default:
+						return this.side2;
+				}
+			case 4:
+				switch(metadata)
+				{
+					case 5:
+						return this.side3;
+					default:
+						return this.side2;
+				}
+			case 5:
+				switch(metadata)
+				{
+					case 7:
+						return this.side3;
+					default:
+						return this.side2;
+				}
+			default:
+				return this.side1;
 		}
-		else if(side == 4 && (metadata != 5 && metadata != 7))
-		{
-			return this.side2;
-		}
-		else if(side == 5 && (metadata != 5 && metadata !=7))
-		{
-			return this.side2;
-		}
-		else if(side == 2 && (metadata != 6 && metadata !=4))
-		{
-			return this.side2;
-		}
-		else if(side == 3 && (metadata != 4 && metadata !=6))
-		{
-			return this.side2;
-		}
-		//South
-		else if(side == 2 && metadata == 6)
-		{
-			return this.side3On;
-		}
-		else if(side == 3 && metadata == 6)
-		{
-			return this.side2;
-		}
-		//North
-		else if(side == 3 && metadata == 8)
-		{
-			return this.side3On;
-		}
-		else if(side == 2 && metadata == 8)
-		{
-			return this.side2;
-		}
-		//West
-		else if(side == 5 && metadata == 7)
-		{
-			return this.side3On;
-		}
-		else if(side == 4 && metadata == 7)
-		{
-			return this.side2;
-		}
-		//East
-		else if(side == 4 && metadata == 5)
-		{
-			return this.side3On;
-		}
-		else if(side == 5 && metadata == 5)
-		{
-			return this.side2;
-		}
-		return this.side1;
 	}
 
 	
