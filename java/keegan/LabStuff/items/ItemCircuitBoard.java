@@ -9,15 +9,8 @@ import net.minecraft.item.ItemStack;
 public class ItemCircuitBoard extends Item 
 {
 	@Override
-	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean par4)
+	public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4)
 	{
-		if(this.getUnlocalizedName().contains("Basic"))
-		{
-			list.add("Circuit Type: BASIC");
-		}
-		else if(this.getUnlocalizedName().contains("Computer"))
-		{
-			list.add("Circuit Type: COMPUTER");
-		}
+		par3List.add("Circuit Type: " + this.getUnlocalizedName().replace("item", "").replace("CircuitBoard", "").toUpperCase());
 	}
 }

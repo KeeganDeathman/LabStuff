@@ -164,12 +164,12 @@ public class TileEntityCircuitMaker extends TileEntity implements IInventory
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int slot, ItemStack stack) {
+	public boolean isItemValidForSlot(int slot, ItemStack stack) 
+	{
 		if(stack.getItem() instanceof ItemPartialCircuitBoard || stack.getItem() == LabStuffMain.itemCircuitBoardPlate || stack.getItem() instanceof ItemCircuitBoard)
-		{
-			
-		}
-		return false;
+			return true;
+		else
+			return false;
 	}
 	
 }

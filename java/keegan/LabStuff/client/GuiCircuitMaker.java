@@ -1,11 +1,14 @@
 package keegan.labstuff.client;
 
+import java.util.ArrayList;
+
 import keegan.labstuff.LabStuffMain;
 import keegan.labstuff.PacketHandling.PacketCircuitDesignTable;
 import keegan.labstuff.PacketHandling.PacketCircuitMaker;
 import keegan.labstuff.container.ContainerCircuitMaker;
+import keegan.labstuff.recipes.CircuitCreation;
+import keegan.labstuff.recipes.Recipes;
 import keegan.labstuff.tileentity.TileEntityCircuitMaker;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -59,18 +62,18 @@ public class GuiCircuitMaker extends GuiContainer
 	{
 		if(button.id == 0)
 		{
-			if(tile.getStackInSlot(0) != null && tile.getStackInSlot(1) != null)
+			if(tile.getStackInSlot(0) != null && tile.getStackInSlot(1) != null);
 			{
-				if(tile.getStackInSlot(0).getItem() == LabStuffMain.itemBasicCircuitDesign || tile.getStackInSlot(0).getItem() == LabStuffMain.itemComputerCircuitDesign)
+				ArrayList<CircuitCreation> recipes = Recipes.getCircuitCreations();
+				for(int i = 0; i < recipes.size(); i++)
 				{
-					if(tile.getStackInSlot(1).getItem() == LabStuffMain.itemCircuitBoardPlate || tile.getStackInSlot(1).getItem() == LabStuffMain.itemBasicEtchedCircuitBoard || tile.getStackInSlot(1).getItem() == LabStuffMain.itemComputerEtchedCircuitBoard  )
+					if(tile.getStackInSlot(0).getItem().getUnlocalizedName().contains(recipes.get(i).getDesignName()))
 					{
-						drill();
+						if(tile.getStackInSlot(1).getItem() == LabStuffMain.itemCircuitBoardPlate || tile.getStackInSlot(1).getItem().equals(recipes.get(i).getEtched()))
+						{
+							drill();
+						}
 					}
-				}
-				else
-				{
-					System.out.println("I got nothing");
 				}
 			}
 		}
@@ -78,16 +81,16 @@ public class GuiCircuitMaker extends GuiContainer
 		{
 			if(tile.getStackInSlot(0) != null && tile.getStackInSlot(3) != null)
 			{
-				if(tile.getStackInSlot(0).getItem() == LabStuffMain.itemBasicCircuitDesign || tile.getStackInSlot(0).getItem() == LabStuffMain.itemComputerCircuitDesign)
+				ArrayList<CircuitCreation> recipes = Recipes.getCircuitCreations();
+				for(int i = 0; i < recipes.size(); i++)
 				{
-					if(tile.getStackInSlot(3).getItem() == LabStuffMain.itemCircuitBoardPlate || tile.getStackInSlot(3).getItem() == LabStuffMain.itemBasicDrilledCircuitBoard || tile.getStackInSlot(3).getItem() == LabStuffMain.itemComputerDrilledCircuitBoard  )
+					if(tile.getStackInSlot(0).getItem().getUnlocalizedName().contains(recipes.get(i).getDesignName()))
 					{
-						etch();
+						if(tile.getStackInSlot(3).getItem() == LabStuffMain.itemCircuitBoardPlate || tile.getStackInSlot(3).getItem().equals(recipes.get(i).getDrilled()))
+						{
+							etch();
+						}
 					}
-				}
-				else
-				{
-					System.out.println("I got nothing");
 				}
 			}
 		}

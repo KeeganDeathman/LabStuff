@@ -10,12 +10,15 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public class Recipes
 {
-	
+	//Circuit Design Table
 	public static ArrayList<CircuitDesign> cicruitDesigns = new ArrayList<CircuitDesign>();
+	//Circuit Maker
+	public static ArrayList<CircuitCreation> cicruitCreations = new ArrayList<CircuitCreation>();
 
 	
 	public static void registerShaplessCrafting()
@@ -25,6 +28,13 @@ public class Recipes
 		//GameRegistry.addShapelessRecipe(new ItemStack(LabStuffMain.itemComputerCircuitBoard), new ItemStack(LabStuffMain.itemComputerCircuitDesign), "ingotCopper", "ingotCopper", "ingotCopper", "ingotCopper", new ItemStack(LabStuffMain.itemCircuitBoardPlate));
 		GameRegistry.addShapelessRecipe(new ItemStack(LabStuffMain.itemSteel), new ItemStack(Items.iron_ingot), new ItemStack(Items.coal));
 		CraftingManager.getInstance().getRecipeList().add(new ShapelessOreRecipe(new ItemStack(LabStuffMain.itemBattery), "ingotZinc", "ingotZinc", "ingotManganese", "ingotManganese", "ingotCopper", "ingotCopper"));
+		if(Loader.isModLoaded("ThermalFoundation"))
+		{
+			CraftingManager.getInstance().getRecipeList().add(new ShapelessOreRecipe(new ItemStack(LabStuffMain.blockRFToLVConverter), new ItemStack(LabStuffMain.blockLVToRFConverter)));
+		}
+		GameRegistry.addShapelessRecipe(new ItemStack(LabStuffMain.itemSiliconCrystalSeed), new ItemStack(LabStuffMain.itemSiliconIngot));
+		GameRegistry.addShapelessRecipe(new ItemStack(LabStuffMain.itemRodMountedSiliconSeed), new ItemStack(LabStuffMain.itemSteelRod), new ItemStack(LabStuffMain.itemSiliconCrystalSeed));
+		GameRegistry.addShapelessRecipe(new ItemStack(LabStuffMain.itemSiliconWafer, 64), new ItemStack(LabStuffMain.itemSiliconBoule), new ItemStack(LabStuffMain.itemSaw));
 	}
 	
 	public static void registerShapedCrafting()
@@ -44,6 +54,16 @@ public class Recipes
 		CraftingManager.getInstance().getRecipeList().add(new ShapedOreRecipe(new ItemStack(LabStuffMain.blockElectronGrabber), "spr", "spr", "spr", 's', "ingotSteel", 'p', new ItemStack(LabStuffMain.blockPlasmaPipe), 'r', "dustRedstone"));
 		CraftingManager.getInstance().getRecipeList().add(new ShapedOreRecipe(new ItemStack(LabStuffMain.itemTestTube), "gwg", "g g", "ggg", 'g', "paneGlass", 'w', "plankWood"));
 		CraftingManager.getInstance().getRecipeList().add(new ShapedOreRecipe(new ItemStack(LabStuffMain.blockPowerFurnace), "scs",  "sfs", "scs", 's', "ingotSteel", 'c', "ingotCopper", 'f', new ItemStack(Blocks.furnace)));
+		CraftingManager.getInstance().getRecipeList().add(new ShapedOreRecipe(new ItemStack(LabStuffMain.blockPowerCable), "www", "ccc", "www", 'w', new ItemStack(Blocks.wool), 'c', "ingotCopper"));
+		if(Loader.isModLoaded("ThermalFoundation"))
+		{
+			CraftingManager.getInstance().getRecipeList().add(new ShapedOreRecipe(new ItemStack(LabStuffMain.blockLVToRFConverter), "sss", "psr", "sss", 's', "ingotSteel", 'p', new ItemStack(LabStuffMain.blockPowerCable), 'r', new ItemStack(Items.redstone)));
+		}
+		CraftingManager.getInstance().getRecipeList().add(new ShapedOreRecipe(new ItemStack(LabStuffMain.itemSteelRod), " s ", " s ", "   ", 's', "ingotSteel"));
+		CraftingManager.getInstance().getRecipeList().add(new ShapedOreRecipe(new ItemStack(LabStuffMain.blockCzochralskistor), "qbq", "qcq", "qtq", 'q', new ItemStack(Items.quartz), 'b', "circuitTintermediate", 't', new ItemStack(LabStuffMain.itemTestTube), 'c', "ingotCopper"));
+		CraftingManager.getInstance().getRecipeList().add(new ShapedOreRecipe(new ItemStack(LabStuffMain.itemSaw), " ss", "sii", "   ", 's', new ItemStack(Items.stick), 'i', new ItemStack(Items.iron_ingot)));
+		CraftingManager.getInstance().getRecipeList().add(new ShapedOreRecipe(new ItemStack(LabStuffMain.itemSolarCell, 3), "ggg", "ccc", "sss", 'g', "paneGlass", 'c', new ItemStack(LabStuffMain.itemSiliconWafer), 's', "ingotSteel"));
+		CraftingManager.getInstance().getRecipeList().add(new ShapedOreRecipe(new ItemStack(LabStuffMain.blockSolarPanel), "ccc", " w ", "sss", 'c', new ItemStack(LabStuffMain.itemSolarCell), 'w', "ingotCopper", 's', "ingotSteel"));
 	}
 	
 	public static void registerSmelting()
@@ -52,6 +72,7 @@ public class Recipes
 		GameRegistry.addSmelting(LabStuffMain.blockPlasticOre, new ItemStack(LabStuffMain.itemPlastic, 2), 3);
 		GameRegistry.addSmelting(LabStuffMain.blockZincOre, new ItemStack(LabStuffMain.itemZinc, 2), 3);
 		GameRegistry.addSmelting(LabStuffMain.blockMangOre, new ItemStack(LabStuffMain.itemManganese, 2), 3);
+		GameRegistry.addSmelting(LabStuffMain.blockSiliconOre, new ItemStack(LabStuffMain.itemSiliconIngot), 6);
 	}
 	
 	public static void addCircuitDesign(String name, Item output)
@@ -63,6 +84,17 @@ public class Recipes
 	public static ArrayList<CircuitDesign> getCircuitDeisgns()
 	{
 		return cicruitDesigns;
+	}
+	
+	public static void addCircuitCreation(String name, Item etched, Item drilled, Item output)
+	{
+		CircuitCreation creation = new CircuitCreation(name, drilled, etched, output);
+		cicruitCreations.add(creation);
+	}
+	
+	public static ArrayList<CircuitCreation> getCircuitCreations()
+	{
+		return cicruitCreations;
 	}
 	
 }

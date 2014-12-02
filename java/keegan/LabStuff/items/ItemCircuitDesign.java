@@ -11,7 +11,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemCircuitDesign extends Item {
 
-	public ItemCircuitDesign(int par1) {
+	public ItemCircuitDesign() {
 		super();
 	}
 	
@@ -24,14 +24,7 @@ public class ItemCircuitDesign extends Item {
 	@Override
 	public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4)
 	{
-		if(this.getUnlocalizedName().contains("Basic"))
-		{
-			par3List.add("Circuit Type: BASIC");
-		}
-		else if(this.getUnlocalizedName().contains("Computer"))
-		{
-			par3List.add("Circuit Type: COMPUTER");
-		}
+		par3List.add("Circuit Type: " + this.getUnlocalizedName().replace("item", "").replace("CircuitDesign", "").toUpperCase());
 	}
 
 }

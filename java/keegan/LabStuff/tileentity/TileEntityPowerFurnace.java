@@ -9,7 +9,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
 
-public class TileEntityPowerFurnace extends TileEntityPower implements IInventory
+public class TileEntityPowerFurnace extends TileEntity implements IInventory
 {
 	
 	private ItemStack[] chestContents = new ItemStack[1];
@@ -66,13 +66,10 @@ public class TileEntityPowerFurnace extends TileEntityPower implements IInventor
 				default:
 					System.out.println("Burn time " + getBurnTime());
 					setBurnTime(getBurnTime() - 1);
-					TileEntity tileAbove = worldObj.getTileEntity(xCoord, yCoord + 1, zCoord);
-					if(tileAbove instanceof TileEntityPower)
-						((TileEntityPower)tileAbove).addPower(1, this);
+					if(worldObj.getTileEntity(xCoord, yCoord+1, zCoord) instanceof TileEntityPower)
+						((TileEntityPower)worldObj.getTileEntity(xCoord, yCoord+1, zCoord)).addPower(10, this);
 					((BlockPowerFurnace)worldObj.getBlock(xCoord, yCoord, zCoord)).setOn(worldObj, xCoord, yCoord, zCoord, true);
-					System.out.println("Burn time " + getBurnTime());
 				case 0:
-					System.out.println("Burn time " + getBurnTime());
 					if(getStackInSlot(0) != null)
 					{
 						setBurnTime(getBurnTime() + TileEntityFurnace.getItemBurnTime(getStackInSlot(0)));
@@ -81,7 +78,6 @@ public class TileEntityPowerFurnace extends TileEntityPower implements IInventor
 					}
 					else
 						((BlockPowerFurnace)worldObj.getBlock(xCoord, yCoord, zCoord)).setOn(worldObj, xCoord, yCoord, zCoord, false);
-					System.out.println("Burn time " + getBurnTime());				
 			}
 		}
 		

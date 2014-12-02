@@ -1,10 +1,8 @@
 package keegan.labstuff.slot;
 
 import keegan.labstuff.LabStuffMain;
-import keegan.labstuff.container.ContainerCircuitDesignTable;
 import keegan.labstuff.container.ContainerCircuitMaker;
-
-import net.minecraft.init.Items;
+import keegan.labstuff.items.ItemPartialCircuitBoard;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -20,7 +18,7 @@ public class SlotCircuitMakerCircuitPlateInput extends Slot
 	@Override
 	public boolean isItemValid(ItemStack par1ItemStack)
 	{
-		if(par1ItemStack.getItem() == LabStuffMain.itemCircuitBoardPlate || par1ItemStack.getItem() == LabStuffMain.itemBasicDrilledCircuitBoard || par1ItemStack.getItem() == LabStuffMain.itemBasicEtchedCircuitBoard)
+		if(par1ItemStack.getItem() == LabStuffMain.itemCircuitBoardPlate || par1ItemStack.getItem() instanceof ItemPartialCircuitBoard)
 		{
 			return true;
 		}

@@ -39,6 +39,10 @@ public class GuiHandler implements IGuiHandler
 		{
 			return new ContainerPowerFurnace(player.inventory, (TileEntityPowerFurnace) tileEntity);
 		}
+		if(tileEntity instanceof TileEntityCzo)
+		{
+			return new ContainerCzo(player.inventory, (TileEntityCzo) tileEntity);
+		}
 		return null;
 	}
 
@@ -74,6 +78,10 @@ public class GuiHandler implements IGuiHandler
 		if(tileEntity instanceof TileEntityPowerFurnace)
 		{
 			return new GuiPowerFurnace(player.inventory, (TileEntityPowerFurnace) tileEntity);
+		}
+		if(tileEntity instanceof TileEntityCzo)
+		{
+			return new GuiCzo(player.inventory, (TileEntityCzo) tileEntity);
 		}
 		return null;
 	}

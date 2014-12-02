@@ -26,11 +26,11 @@ public class ItemPartialCircuitBoard extends Item
 	@Override
 	public IIcon getIcon(ItemStack stack, int pass)
 	{
-		if(this.getUnlocalizedName().equals("itemBasicDrilledCircuitBoard"))
+		if(this.getUnlocalizedName().contains("Drilled"))
 		{
 			return this.drilledBoard;
 		}
-		else if(this.getUnlocalizedName().equals("itemBasicEtchedCircuitBoard"))
+		else if(this.getUnlocalizedName().contains("Etched"))
 		{
 			return this.etchedBoard;
 		}
@@ -40,13 +40,6 @@ public class ItemPartialCircuitBoard extends Item
 	@Override
 	public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4)
 	{
-		if(this.getUnlocalizedName().contains("Basic"))
-		{
-			par3List.add("Circuit Type: BASIC");
-		}
-		else if(this.getUnlocalizedName().contains("Computer"))
-		{
-			par3List.add("Circuit Type: COMPUTER");
-		}
+			par3List.add("Circuit Type: " + this.getUnlocalizedName().replace("item", "").replace("Circuit", "").replace("Drilled", "").replace("Etched", "").toUpperCase());
 	}
 }

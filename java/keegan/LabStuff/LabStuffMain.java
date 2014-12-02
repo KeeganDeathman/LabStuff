@@ -5,28 +5,20 @@ import java.io.File;
 
 import keegan.labstuff.PacketHandling.*;
 import keegan.labstuff.blocks.*;
-import keegan.labstuff.client.*;
+import keegan.labstuff.client.GuiHandler;
 import keegan.labstuff.common.*;
-import keegan.labstuff.handlers.*;
 import keegan.labstuff.items.*;
-import keegan.labstuff.recipes.Recipes;
+import keegan.labstuff.recipes.*;
 import keegan.labstuff.tileentity.*;
 import keegan.labstuff.world.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.CraftingManager;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidContainerRegistry;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.oredict.OreDictionary;
-import net.minecraftforge.oredict.ShapedOreRecipe;
-import net.minecraftforge.oredict.ShapelessOreRecipe;
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -35,6 +27,7 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.common.network.handshake.FMLHandshakeMessage.ModList;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.FMLInjectionData;
 
@@ -64,7 +57,15 @@ public class LabStuffMain
 	public static Block blockGasChamberWall;
 	public static Block blockGasChamberPort;
 	public static Block blockPowerFurnace;
-			
+	public static Block blockPowerCable;
+	public static Block blockRFToLVConverter;
+	public static Block blockLVToRFConverter;
+	public static Block blockSolarPanel;
+	public static Block blockSolarGag;
+	public static Block blockCzochralskistor;
+	public static Block blockSiliconOre;
+	public static Block blockWindTurbine;
+	public static Block blockWindGag;
 	//Items
 	public static Item itemFiberGlass;
 	public static Item itemCopperIngot;
@@ -89,6 +90,18 @@ public class LabStuffMain
 	public static Item itemBattery;
 	public static Item itemDeadBattery;
 	public static Item itemSteel;
+	public static Item itemSiliconIngot;
+	public static Item itemSiliconCrystalSeed;
+	public static Item itemSteelRod;
+	public static Item itemRodMountedSiliconSeed;
+	public static Item itemSiliconBoule;
+	public static Item itemInterCircuitDesign;
+	public static Item itemInterDrilledCircuitBoard;
+	public static Item itemInterEtchedCircuitBoard;
+	public static Item itemInterCircuitBoard;
+	public static Item itemSiliconWafer;
+	public static Item itemSolarCell;
+	public static Item itemSaw;
 	
 	//Other
 	public static CreativeTabs tabLabStuff = new TabLabStuff("tabLabStuff");
@@ -120,6 +133,15 @@ public class LabStuffMain
 		blockElectronGrabber = new BlockElectronGrabber(Material.iron).setBlockName("blockElectronGrabber").setCreativeTab(tabLabStuff);
 		blockGasChamberPort = new BlockGasChamberPort(Material.iron).setBlockName("blockGasChamberPort").setCreativeTab(tabLabStuff).setBlockTextureName("labstuff:gaschamberPort");
 		blockPowerFurnace = new BlockPowerFurnace(Material.iron).setBlockName("blockPowerFurnace").setCreativeTab(tabLabStuff).setBlockTextureName("labstuff:blockCircuitMaker");
+		blockPowerCable = new BlockPowerCable(Material.cloth).setBlockName("blockPowerCable").setCreativeTab(tabLabStuff);
+		blockRFToLVConverter = new BlockRFtoLV(Material.iron).setBlockName("blockRFtoLV").setBlockTextureName("labstuff:blockRFToLv").setCreativeTab(tabLabStuff);
+		blockLVToRFConverter = new BlockLVToRF(Material.iron).setBlockName("blockLVToRF").setBlockTextureName("labstuff:blockLVtoRF").setCreativeTab(tabLabStuff);
+		blockSolarPanel = new BlockSolarPanel(Material.iron).setBlockName("blockSolarPanel").setCreativeTab(tabLabStuff);
+		blockSolarGag = new BlockSolarGag(Material.iron).setBlockName("blockSolarGag");
+		blockCzochralskistor = new BlockCzo(Material.iron).setBlockName("blockCzo").setCreativeTab(tabLabStuff);
+		blockSiliconOre = new BlockLabOre().setBlockName("blockSiliconOre").setBlockTextureName("coal_ore").setCreativeTab(tabLabStuff);
+		blockWindTurbine = new BlockWindTurbine(Material.iron).setBlockName("blockWindTurbine").setCreativeTab(tabLabStuff);
+		blockWindGag = new BlockWindGag(Material.iron).setBlockName("blockWindGag");
 		//Items
 		itemFiberGlass = new ItemFiberGlass(600).setUnlocalizedName("itemFiberGlass").setCreativeTab(tabLabStuff);
 		itemCopperIngot = new ItemCopperIngot(601).setUnlocalizedName("itemCopperIngot").setCreativeTab(tabLabStuff);
@@ -130,8 +152,8 @@ public class LabStuffMain
 		itemComputerEtchedCircuitBoard = new ItemPartialCircuitBoard().setUnlocalizedName("itemComputerEtchedCircuitBoard").setTextureName("labstuff:itemEtchedCircuitBoard").setCreativeTab(tabLabStuff);
 		itemBasicCircuitBoard = new ItemCircuitBoard().setUnlocalizedName("itemBasicCircuitboard").setTextureName("labstuff:itemCircuitBoard").setCreativeTab(tabLabStuff);
 		itemComputerCircuitBoard = new ItemCircuitBoard().setUnlocalizedName("itemComputerCircuitboard").setTextureName("labstuff:itemCircuitBoard").setCreativeTab(tabLabStuff);
-		itemBasicCircuitDesign = new ItemCircuitDesign(603).setUnlocalizedName("itemBasicCircuitDesign").setCreativeTab(tabLabStuff);
-		itemComputerCircuitDesign = new ItemCircuitDesign(603).setUnlocalizedName("itemComputerCircuitDesign").setCreativeTab(tabLabStuff);
+		itemBasicCircuitDesign = new ItemCircuitDesign().setUnlocalizedName("itemBasicCircuitDesign").setCreativeTab(tabLabStuff);
+		itemComputerCircuitDesign = new ItemCircuitDesign().setUnlocalizedName("itemComputerCircuitDesign").setCreativeTab(tabLabStuff);
 		itemMonitor = new ItemComputerPart().setUnlocalizedName("itemMonitor").setTextureName("labstuff:itemMonitor").setCreativeTab(tabLabStuff);
 		itemComputerTower = new ItemComputerPart().setUnlocalizedName("itemComputerTower").setTextureName("labstuff:itemComputerTower").setCreativeTab(tabLabStuff);
 		itemKeyboard = new ItemComputerPart().setUnlocalizedName("itemKeyboard").setTextureName("labstuff:itemKeyboard").setCreativeTab(tabLabStuff);
@@ -144,6 +166,18 @@ public class LabStuffMain
 		itemHydrogenTestTube = new ItemTestTube().setCreativeTab(tabLabStuff).setTextureName("labstuff:itemHydrogenTestTube").setUnlocalizedName("itemHydrogenTestTube");
 		itemOxygenTestTube = new ItemTestTube().setCreativeTab(tabLabStuff).setTextureName("labstuff:itemOxygenTestTube").setUnlocalizedName("itemOxygenTestTube");
 		itemSteel = new ItemLabIngot().setCreativeTab(tabLabStuff).setTextureName("labstuff:itemSteel").setUnlocalizedName("itemSteel");
+		itemInterCircuitDesign = new ItemCircuitDesign().setCreativeTab(tabLabStuff).setUnlocalizedName("itemIntermediateCircuitDesgin");
+		itemInterDrilledCircuitBoard = new ItemPartialCircuitBoard().setUnlocalizedName("itemIntermediateDrilledCircuitBoard").setTextureName("labstuff:itemDrilledCircuitBoard").setCreativeTab(tabLabStuff);
+		itemInterEtchedCircuitBoard = new ItemPartialCircuitBoard().setUnlocalizedName("itemIntermediateEtchedCircuitBoard").setTextureName("labstuff:itemEtchedCircuitBoard").setCreativeTab(tabLabStuff);
+		itemInterCircuitBoard = new ItemCircuitBoard().setUnlocalizedName("itemIntermediateCircuitboard").setTextureName("labstuff:itemCircuitBoard").setCreativeTab(tabLabStuff);
+		itemSiliconIngot = new ItemLabIngot().setUnlocalizedName("itemSiliconIngot").setTextureName("labstuff:itemSilicon").setCreativeTab(tabLabStuff);
+		itemSiliconCrystalSeed = new ItemSiliconBoulePart().setUnlocalizedName("siliconSeed").setCreativeTab(tabLabStuff).setTextureName("labstuff:itemSiliconSeed");
+		itemSteelRod = new ItemSiliconBoulePart().setUnlocalizedName("itemSteelRod").setCreativeTab(tabLabStuff).setTextureName("labstuff:itemSteelRod");
+		itemRodMountedSiliconSeed = new ItemSiliconBoulePart().setUnlocalizedName("itemRodMountedSiliconSeed").setTextureName("labstuff:itemRodMountedSiliconSeed").setCreativeTab(tabLabStuff);
+		itemSiliconBoule = new ItemSiliconBoule().setUnlocalizedName("itemSiliconBoule").setCreativeTab(tabLabStuff).setTextureName("labstuff:itemSiliconBoule");
+		itemSaw = new ItemSaw().setUnlocalizedName("saw").setCreativeTab(tabLabStuff).setTextureName("labstuff:itemSaw");
+		itemSiliconWafer = new ItemSolarPanelPart().setUnlocalizedName("itemSiliconWafer").setCreativeTab(tabLabStuff).setTextureName("labstuff:itemSiliconWafer");
+		itemSolarCell = new ItemSolarPanelPart().setUnlocalizedName("itemSolarCell").setTextureName("labstuff:solarCell").setCreativeTab(tabLabStuff);
 		//Registries
 		//Blocks
 		GameRegistry.registerBlock(blockCopperOre, blockCopperOre.getUnlocalizedName().substring(5));
@@ -159,6 +193,19 @@ public class LabStuffMain
 		GameRegistry.registerBlock(blockGasChamberPort, "blockGasChamberPort");
 		GameRegistry.registerBlock(blockElectronGrabber, "blockElectronGrabber");
 		GameRegistry.registerBlock(blockPowerFurnace, "blockPowerFurnace");
+		GameRegistry.registerBlock(blockPowerCable, "blockPowerCable");
+		if(Loader.isModLoaded("ThermalFoundation"))
+		{
+			GameRegistry.registerBlock(blockRFToLVConverter, "blockRFToLV");
+			GameRegistry.registerBlock(blockLVToRFConverter, "blockLVToRF");
+		}
+		GameRegistry.registerBlock(blockSolarPanel, "blockSolarPanel");
+		GameRegistry.registerBlock(blockSolarGag, "blockSolarGag");
+		GameRegistry.registerBlock(blockCzochralskistor, "blockCzo");
+		GameRegistry.registerBlock(blockSiliconOre, "blockSiliconOre");
+		GameRegistry.registerBlock(blockWindTurbine, "blockWindTurbine");
+		GameRegistry.registerBlock(blockWindGag, "blockWindGag");
+		
 		//Items
 		GameRegistry.registerItem(itemFiberGlass, "FiberGlass");
 		GameRegistry.registerItem(itemCopperIngot, "CopperIngot");
@@ -183,6 +230,19 @@ public class LabStuffMain
 		GameRegistry.registerItem(itemHydrogenTestTube, "itemHydrogenTestTube");
 		GameRegistry.registerItem(itemOxygenTestTube, "itemOxygenTestTube");
 		GameRegistry.registerItem(itemSteel, "itemSteel");
+		GameRegistry.registerItem(itemInterCircuitDesign, "itemInterCircuitDesign");
+		GameRegistry.registerItem(itemInterEtchedCircuitBoard, "InterEtchedCircuitBoard");
+		GameRegistry.registerItem(itemInterDrilledCircuitBoard, "InterDrilledCircuitBoard");
+		GameRegistry.registerItem(itemInterCircuitBoard, "InterCircuitBoard");
+		GameRegistry.registerItem(itemSiliconIngot, "itemSiliconIngot");
+		GameRegistry.registerItem(itemSiliconCrystalSeed, "siliconSeed");
+		GameRegistry.registerItem(itemSteelRod, "itemSteelRod");
+		GameRegistry.registerItem(itemRodMountedSiliconSeed, "siliconOnRod");
+		GameRegistry.registerItem(itemSiliconBoule, "siliconBoule");
+		GameRegistry.registerItem(itemSaw, "saw");
+		GameRegistry.registerItem(itemSiliconWafer, "itemSiliconWafer");
+		GameRegistry.registerItem(itemSolarCell, "itemSolarCell");
+		
 		
 		/*
 		Plasma liquid
@@ -216,7 +276,12 @@ public class LabStuffMain
 		Recipes.registerSmelting();
 		//Circuit Deisgns
 		Recipes.addCircuitDesign("Basic", itemBasicCircuitDesign);
+		Recipes.addCircuitDesign("Intermediate", itemInterCircuitDesign);
 		Recipes.addCircuitDesign("Computer", itemComputerCircuitDesign);
+		//CircuitMaker
+		Recipes.addCircuitCreation("Basic", itemBasicEtchedCircuitBoard, itemBasicDrilledCircuitBoard, itemBasicCircuitBoard);
+		Recipes.addCircuitCreation("Computer", itemComputerEtchedCircuitBoard, itemComputerDrilledCircuitBoard, itemComputerCircuitBoard);
+		Recipes.addCircuitCreation("Intermediate", itemInterEtchedCircuitBoard, itemInterDrilledCircuitBoard, itemInterCircuitBoard);
 		//Tile Entities
 		GameRegistry.registerTileEntity(TileEntityCircuitDesignTable.class, "TileEntityCircuitDesignTable");
 		GameRegistry.registerTileEntity(TileEntityCircuitMaker.class, "TileEntityCircuitMaker");
@@ -228,6 +293,15 @@ public class LabStuffMain
 		GameRegistry.registerTileEntity(TileEntityGasChamberPort.class, "TileEntityGasChamberPort");
 		GameRegistry.registerTileEntity(TileEntityPower.class, "TileEntityPower");
 		GameRegistry.registerTileEntity(TileEntityPowerFurnace.class, "TileEntityPowerFurnace");
+		GameRegistry.registerTileEntity(TileEntityPowerCable.class, "TileEntityPowerCable");
+		GameRegistry.registerTileEntity(TileEntitySolarPanel.class, "TileEntitySolarPanel");
+		if(Loader.isModLoaded("Thermalfoundation"))
+		{
+			GameRegistry.registerTileEntity(TileEntityRFToLV.class, "TileEntityRFToLV");
+			GameRegistry.registerTileEntity(TileEntityLVToRF.class, "TileEntityLVToRF");
+
+		}
+		GameRegistry.registerTileEntity(TileEntityCzo.class, "TileEntityCzo");
 		//Packets
 		packetPipeline.initalise();
 		packetPipeline.registerPacket(PacketCircuitDesignTable.class);

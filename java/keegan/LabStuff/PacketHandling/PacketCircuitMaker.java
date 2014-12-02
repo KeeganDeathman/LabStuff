@@ -1,10 +1,14 @@
 package keegan.labstuff.PacketHandling;
 
-import keegan.labstuff.LabStuffMain;
-import keegan.labstuff.tileentity.TileEntityCircuitMaker;
-
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
+
+import java.util.ArrayList;
+
+import keegan.labstuff.LabStuffMain;
+import keegan.labstuff.recipes.CircuitCreation;
+import keegan.labstuff.recipes.Recipes;
+import keegan.labstuff.tileentity.TileEntityCircuitMaker;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -59,6 +63,7 @@ public class PacketCircuitMaker extends AbstractPacket {
 	{
 		World world = player.worldObj;
 		TileEntity te = world.getTileEntity(x,y,z);
+		ArrayList<CircuitCreation> recipes = Recipes.getCircuitCreations();
 		System.out.println("Validating tile entity.");
 		if(te instanceof TileEntityCircuitMaker)
 		{
@@ -66,64 +71,53 @@ public class PacketCircuitMaker extends AbstractPacket {
 			if(message.equals("Drill"))
 			{
 				System.out.println("Checking design");
-				if(((TileEntityCircuitMaker) te).getStackInSlot(0).getItem() == LabStuffMain.itemBasicCircuitDesign)
+				for(int i = 0; i < recipes.size(); i++)
 				{
-					System.out.println("Drilling basic.");
-					if(((TileEntityCircuitMaker) te).getStackInSlot(1).getItem() == LabStuffMain.itemCircuitBoardPlate)
+					if(((TileEntityCircuitMaker) te).getStackInSlot(0).getItem().getUnlocalizedName().contains(recipes.get(i).getDesignName()))
 					{
-						((TileEntityCircuitMaker) te).decrStackSize(1, 1);
-						((TileEntityCircuitMaker) te).setInventorySlotContents(2, new ItemStack(LabStuffMain.itemBasicDrilledCircuitBoard));
-					}
-					else if(((TileEntityCircuitMaker) te).getStackInSlot(1).getItem() == LabStuffMain.itemBasicEtchedCircuitBoard)
-					{
-						((TileEntityCircuitMaker) te).decrStackSize(1, 1);
-						((TileEntityCircuitMaker) te).setInventorySlotContents(2, new ItemStack(LabStuffMain.itemBasicCircuitBoard));
-					}
-				}
-				else if(((TileEntityCircuitMaker) te).getStackInSlot(0).getItem() == LabStuffMain.itemComputerCircuitDesign)
-				{
-					System.out.println("Drilling computer.");
-					if(((TileEntityCircuitMaker) te).getStackInSlot(1).getItem() == LabStuffMain.itemCircuitBoardPlate)
-					{
-						((TileEntityCircuitMaker) te).decrStackSize(1, 1);
-						((TileEntityCircuitMaker) te).setInventorySlotContents(2, new ItemStack(LabStuffMain.itemComputerDrilledCircuitBoard));
-					}
-					else if(((TileEntityCircuitMaker) te).getStackInSlot(1).getItem() == LabStuffMain.itemComputerEtchedCircuitBoard)
-					{
-						((TileEntityCircuitMaker) te).decrStackSize(1, 1);
-						((TileEntityCircuitMaker) te).setInventorySlotContents(2, new ItemStack(LabStuffMain.itemBasicCircuitBoard));
+						System.out.println("Drilling " + recipes.get(i).getDesignName());
+						if(((TileEntityCircuitMaker) te).getStackInSlot(1).getItem() == LabStuffMain.itemCircuitBoardPlate)
+						{
+							((TileEntityCircuitMaker) te).decrStackSize(1, 1);
+							if(((TileEntityCircuitMaker) te).getStackInSlot(2) == null)
+								((TileEntityCircuitMaker) te).setInventorySlotContents(2, new ItemStack(recipes.get(i).getDrilled()));
+							else
+								((TileEntityCircuitMaker) te).setInventorySlotContents(2, new ItemStack(recipes.get(i).getDrilled(), ((TileEntityCircuitMaker)te).getStackInSlot(2).stackSize));
+						}
+						else if(((TileEntityCircuitMaker) te).getStackInSlot(1).getItem() == recipes.get(i).getEtched())
+						{
+							((TileEntityCircuitMaker) te).decrStackSize(1, 1);
+							if(((TileEntityCircuitMaker) te).getStackInSlot(2) == null)
+								((TileEntityCircuitMaker) te).setInventorySlotContents(2, new ItemStack(recipes.get(i).getCircuit()));
+							else
+								((TileEntityCircuitMaker) te).setInventorySlotContents(2, new ItemStack(recipes.get(i).getCircuit(), ((TileEntityCircuitMaker)te).getStackInSlot(2).stackSize));
+						}
 					}
 				}
 			}
 			if(message.equals("Etch"))
 			{
 				System.out.println("Checking design");
-				if(((TileEntityCircuitMaker) te).getStackInSlot(0).getItem() == LabStuffMain.itemBasicCircuitDesign)
+				for(int i = 0; i < recipes.size(); i++)
 				{
-					System.out.println("Etching basic.");
-					if(((TileEntityCircuitMaker) te).getStackInSlot(3).getItem() == LabStuffMain.itemCircuitBoardPlate)
+					if(((TileEntityCircuitMaker) te).getStackInSlot(0).getItem().getUnlocalizedName().contains(recipes.get(i).getDesignName()))
 					{
-						((TileEntityCircuitMaker) te).decrStackSize(3, 1);
-						((TileEntityCircuitMaker) te).setInventorySlotContents(4, new ItemStack(LabStuffMain.itemBasicEtchedCircuitBoard));
-					}
-					else if(((TileEntityCircuitMaker) te).getStackInSlot(3).getItem() == LabStuffMain.itemBasicDrilledCircuitBoard)
-					{
-						((TileEntityCircuitMaker) te).setInventorySlotContents(3, null);
-						((TileEntityCircuitMaker) te).setInventorySlotContents(4, new ItemStack(LabStuffMain.itemBasicCircuitBoard));
-					}
-				}
-				else if(((TileEntityCircuitMaker) te).getStackInSlot(0).getItem() == LabStuffMain.itemComputerCircuitDesign)
-				{
-					System.out.println("Etching computer.");
-					if(((TileEntityCircuitMaker) te).getStackInSlot(3).getItem() == LabStuffMain.itemCircuitBoardPlate)
-					{
-						((TileEntityCircuitMaker) te).decrStackSize(3, 1);
-						((TileEntityCircuitMaker) te).setInventorySlotContents(4, new ItemStack(LabStuffMain.itemComputerEtchedCircuitBoard));
-					}
-					else if(((TileEntityCircuitMaker) te).getStackInSlot(3).getItem() == LabStuffMain.itemComputerDrilledCircuitBoard)
-					{
-						((TileEntityCircuitMaker) te).decrStackSize(3, 1);
-						((TileEntityCircuitMaker) te).setInventorySlotContents(4, new ItemStack(LabStuffMain.itemComputerCircuitBoard));
+						System.out.println("Drilling " + recipes.get(i).getDesignName());
+						if(((TileEntityCircuitMaker) te).getStackInSlot(3).getItem() == LabStuffMain.itemCircuitBoardPlate)
+						{
+							((TileEntityCircuitMaker) te).decrStackSize(3, 1);
+							if(((TileEntityCircuitMaker) te).getStackInSlot(4) == null)
+								((TileEntityCircuitMaker) te).setInventorySlotContents(4, new ItemStack(recipes.get(i).getEtched()));
+							else
+								((TileEntityCircuitMaker) te).setInventorySlotContents(4, new ItemStack(recipes.get(i).getEtched(), ((TileEntityCircuitMaker)te).getStackInSlot(2).stackSize));
+						}
+						else if(((TileEntityCircuitMaker) te).getStackInSlot(3).getItem() == recipes.get(i).getDrilled())
+						{
+							((TileEntityCircuitMaker) te).decrStackSize(3, 1);
+							if(((TileEntityCircuitMaker) te).getStackInSlot(4) == null)
+								((TileEntityCircuitMaker) te).setInventorySlotContents(4, new ItemStack(recipes.get(i).getCircuit()));
+							else
+								((TileEntityCircuitMaker) te).setInventorySlotContents(4, new ItemStack(recipes.get(i).getCircuit(), ((TileEntityCircuitMaker)te).getStackInSlot(2).stackSize));						}
 					}
 				}
 			}

@@ -46,6 +46,30 @@ public class LabStuffOreGen implements IWorldGenerator
             // Max Vein Size
             new WorldGenMinable(LabStuffMain.blockPlasticOre, 5).generate(world, rand, Xcoord, Ycoord, Zcoord);
         }
+        for (int x = 0; x < 50; x++)
+        {
+            int Xcoord = baseX + rand.nextInt(16);
+            int Zcoord = baseZ + rand.nextInt(16);
+            int Ycoord = rand.nextInt(20) + 30;
+            // Max Vein Size
+            new WorldGenMinable(LabStuffMain.blockZincOre, 5).generate(world, rand, Xcoord, Ycoord, Zcoord);
+        }
+        for (int x = 0; x < 50; x++)
+        {
+            int Xcoord = baseX + rand.nextInt(16);
+            int Zcoord = baseZ + rand.nextInt(16);
+            int Ycoord = rand.nextInt(20) + 30;
+            // Max Vein Size
+            new WorldGenMinable(LabStuffMain.blockMangOre, 5).generate(world, rand, Xcoord, Ycoord, Zcoord);
+        }
+        for (int x = 0; x < 50; x++)
+        {
+            int Xcoord = baseX + rand.nextInt(16);
+            int Zcoord = baseZ + rand.nextInt(16);
+            int Ycoord = rand.nextInt(20) + 30;
+            // Max Vein Size
+            new WorldGenMinable(LabStuffMain.blockSiliconOre, 5).generate(world, rand, Xcoord, Ycoord, Zcoord);
+        }
         
     }
 

@@ -56,7 +56,7 @@ public class GuiGasChamberPort extends GuiContainer
 		}
 		else
 		{
-			if(tile.getStackInSlot(0).stackSize > 0)
+			if(tile.getStackInSlot(0) != null)
 				this.mc.renderEngine.bindTexture(new ResourceLocation("labstuff:textures/gui/gaschamberportinputfull.png"));
 			else
 				this.mc.renderEngine.bindTexture(new ResourceLocation("labstuff:textures/gui/gaschamberportinput.png"));

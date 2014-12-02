@@ -72,6 +72,7 @@ public class ContainerPowerFurnace extends Container
         }
         this.lastBurnTime = tile.getBurnTime();
     }
+    
 	
 	@SideOnly(Side.CLIENT)
     public void updateProgressBar(int p_75137_1_, int p_75137_2_)
