@@ -18,7 +18,7 @@ public class TileEntityDataCable extends TileEntity
 		devices.add(device);
 	}
 	
-	public DataConnectedDevice getDeviceById(int id)
+	public DataConnectedDevice getDeviceById(String id)
 	{
 		for(DataConnectedDevice device:devices)
 		{
@@ -37,11 +37,11 @@ public class TileEntityDataCable extends TileEntity
 		return null;
 	}
 	
-	public void removeDeviceById(int id)
+	public void removeDeviceById(String id)
 	{
 		for(DataConnectedDevice device:devices)
 		{
-			if(device.getId() == id)
+			if(device.getId().equals(id))
 			{
 				devices.remove(device);
 			}

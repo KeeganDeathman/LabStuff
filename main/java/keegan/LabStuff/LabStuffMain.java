@@ -31,7 +31,7 @@ import cpw.mods.fml.common.network.handshake.FMLHandshakeMessage.ModList;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.FMLInjectionData;
 
-@Mod(modid= "labstuff", name="LabStuff", version="2.4")
+@Mod(modid= "labstuff", name="LabStuff", version="2.5")
 public class LabStuffMain 
 {
 	@SidedProxy(clientSide = "keegan.labstuff.client.LabStuffClientProxy", serverSide = "keegan.labstuff.common.LabStuffCommonProxy")
