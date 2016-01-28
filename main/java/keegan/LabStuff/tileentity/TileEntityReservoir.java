@@ -1,6 +1,5 @@
 package keegan.labstuff.tileentity;
 
-import keegan.labstuff.tileentity.FluidHandler;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -14,12 +13,12 @@ public class TileEntityReservoir extends TileEntity implements IFluidHandler
 	@Override
 	public void updateEntity()
 	{
-		if(worldObj.getTileEntity(xCoord, yCoord-1, zCoord) instanceof FluidHandler)
+		if(worldObj.getTileEntity(xCoord, yCoord-1, zCoord) instanceof IFluidHandler)
 		{
-			FluidHandler pipe = (FluidHandler)worldObj.getTileEntity(xCoord, yCoord-1, zCoord);
+			IFluidHandler pipe = (IFluidHandler)worldObj.getTileEntity(xCoord, yCoord-1, zCoord);
 			if(tank.getFluidAmount() > 0)
 			{
-				if((tank.getFluid().equals(pipe.tank.getFluid()) || pipe.tank.getFluid() == null))
+				if((tank.getFluid().equals(pipe.getTankInfo(ForgeDirection.UP)[0].fluid) || pipe.getTankInfo(ForgeDirection.UP)[0].fluid == null))
 				{
 					pipe.fill(ForgeDirection.UP, drain(null, new FluidStack(tank.getFluid(), FluidContainerRegistry.BUCKET_VOLUME), true), true);
 				}

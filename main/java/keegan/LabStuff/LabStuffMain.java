@@ -347,8 +347,7 @@ public class LabStuffMain
 		GameRegistry.registerTileEntity(TileEntityPowerConnection.class, "TileEntityPowerConnection");
 		//GameRegistry.registerTileEntity(TileEntityPlasmaConnection.class, "TileEntityPlasmaConnection");
 		GameRegistry.registerTileEntity(TileEntityReservoir.class, "Reservoir");
-		GameRegistry.registerTileEntity(TileEntityLiquidPipe.class, "LiquidPipe");
-		GameRegistry.registerTileEntity(FluidHandler.class, "FluidHandler");
+		GameRegistry.registerTileEntity(TileEntityLiquid.class, "LiquidPipe");
 		GameRegistry.registerTileEntity(TileEntityRedstonePipe.class, "RedstonePipe");
 		GameRegistry.registerTileEntity(TileEntityDataPipe.class, "DataPipe");
 		//Packets

@@ -7,6 +7,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.*;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class BlockLiquidPipe extends Block implements ITileEntityProvider
 {
@@ -21,7 +22,7 @@ public class BlockLiquidPipe extends Block implements ITileEntityProvider
 	public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_)
 	{
 		// TODO Auto-generated method stub
-		return new TileEntityLiquidPipe();
+		return new TileEntityLiquid();
 	}
 	
 	@Override
@@ -41,11 +42,12 @@ public class BlockLiquidPipe extends Block implements ITileEntityProvider
     	if(!world.isRemote)
     	{
     		TileEntity tile = world.getTileEntity(x, y, z);
-    		if(tile instanceof TileEntityLiquidPipe)
+    		if(tile instanceof TileEntityLiquid && ((TileEntityLiquid)tile).tank.getFluid() != null)
     		{
-    			player.addChatMessage(new ChatComponentText("Network is holding " + ((TileEntityLiquidPipe)tile).tank.getFluidAmount()));
+    			player.addChatMessage(new ChatComponentText("Network is holding " + ((TileEntityLiquid)tile).getTankInfo(ForgeDirection.UNKNOWN)[0].fluid.amount));
     			return true;
     		}
+    		player.addChatMessage(new ChatComponentText("Error! Maybe it's empty?"));
     		return false;
     	}
     	return false;
