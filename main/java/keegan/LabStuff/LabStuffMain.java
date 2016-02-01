@@ -166,7 +166,7 @@ public class LabStuffMain
 		blockDataCable = new BlockDataCable(Material.cloth).setBlockName("blockDataCable").setCreativeTab(tabLabStuff);
 		blockIndustrialMotor = new BlockIndustrialMotor(Material.iron).setBlockName("blockIndustrialMotor").setCreativeTab(tabLabStuff).setBlockTextureName("labstuff:blockIndustrialMotor");
 		blockIndustrialMotorShaft = new BlockIndustrialMotorShaft(Material.iron).setBlockName("blockindustrialMotorShaft").setCreativeTab(tabLabStuff).setBlockTextureName("labstuff:blockIndustrialMotorShaft");
-		blockIndustrialMotorContact = new BlockIndustrialMotorContact(Material.iron).setBlockName("blockIndustrialMotorContact").setBlockTextureName("labstuff:blockIndustrialMotorContact");
+		blockIndustrialMotorContact = new BlockIndustrialMotorContact(Material.iron).setCreativeTab(tabLabStuff).setBlockName("blockIndustrialMotorContact").setBlockTextureName("labstuff:blockIndustrialMotorContact");
 		blockFusionSolenoidAxel = new BlockSolenoidAxel(Material.iron).setBlockName("blockFusionSolenoidAxel").setBlockTextureName("labstuff:blockSolenoidAxel").setCreativeTab(tabLabStuff);
 		blockLiquidPipe = new BlockLiquidPipe(Material.iron).setBlockName("blockLiquidPipe").setCreativeTab(tabLabStuff);
 		blockReservoir=new BlockReservoir(Material.iron).setBlockName("blockReservoir").setCreativeTab(tabLabStuff);
@@ -350,6 +350,8 @@ public class LabStuffMain
 		GameRegistry.registerTileEntity(TileEntityLiquid.class, "LiquidPipe");
 		GameRegistry.registerTileEntity(TileEntityRedstonePipe.class, "RedstonePipe");
 		GameRegistry.registerTileEntity(TileEntityDataPipe.class, "DataPipe");
+		GameRegistry.registerTileEntity(TileEntityIndustrialMotorContact.class, "IndustrialMotorContact");
+		GameRegistry.registerTileEntity(TileEntityIndustrialMotorShaft.class, "IndustrialMotorShaft");
 		//Packets
 		packetPipeline.initalise();
 		packetPipeline.registerPacket(PacketCircuitDesignTable.class);

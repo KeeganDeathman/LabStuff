@@ -29,54 +29,12 @@ public class TileEntityRenderLiquidPipe extends TileEntitySpecialRenderer implem
 	private boolean east = false;
 	private boolean south = false;
 	private boolean west = false;
+	private RenderBlocks renderer;
 	
 	public void renderPipe(TileEntityLiquid entity, double x, double y, double z, float tick)
 	{
 		 int i = entity.blockMetadata;
 
-		 	if(entity.tank.getFluid() != null)
-		 	{
-		 		GL11.glPushMatrix();
-			 	GL11.glEnable(GL11.GL_BLEND);
-				OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ZERO);
-				FluidStack fluidStack = entity.tank.getFluid();
-				Fluid fluid = fluidStack.getFluid();
-
-	            GL11.glColor3f(1, 1, 1);
-	            Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationBlocksTexture);
-	            mc.renderEngine.bindTexture(mc.renderEngine.getResourceLocation(fluid.getSpriteNumber()));
-	            //fillAreaWithIcon(fluidIcon, 0, 0, 16, 16);
-		        GL11.glTranslatef((float) x, (float) y, (float) z);
-		        GL11.glTranslatef(0.5F, 1.5F, 0.5F);
-		        // Use this or else model renders upside-down.
-		        GL11.glRotatef(180, 180F, 0F, 1F);
-		        short rotate = 0;
-		        
-		        if (i == 0)
-		            rotate = 0;
-
-		        if (i == 1)
-		            rotate = 90;
-
-		        if (i == 2)
-		            rotate = 180;
-
-		        if (i == 3)
-		            rotate = -90;
-		        GL11.glRotatef(rotate, 0F, 1F, 0F);
-		        
-		        this.configureSides(entity);
-		        
-		        
-		        renderer.setRenderBounds(0,0,0,1,1,1);
-		        renderer.renderAllFaces = true;
-		        renderer.renderStandardBlock(fluid.getBlock(), entity.xCoord, entity.yCoord, entity.zCoord);
-		        renderer.renderAllFaces = false;
-
-		        GL11.glDisable(GL11.GL_BLEND);
-		        
-		        GL11.glPopMatrix();
-		 	}
 
 		 	
 			// Binds the texture
@@ -110,6 +68,56 @@ public class TileEntityRenderLiquidPipe extends TileEntitySpecialRenderer implem
 	        
 	        GL11.glPopMatrix();
 	        
+	        if(entity.tank.getFluid() != null)
+		 	{
+		 		GL11.glPushMatrix();
+			 	GL11.glEnable(GL11.GL_BLEND);
+				OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ZERO);
+				FluidStack fluidStack = entity.tank.getFluid();
+				Fluid fluid = fluidStack.getFluid();
+
+	            GL11.glColor3f(1, 1, 1);
+	            //Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationBlocksTexture);
+	            mc.renderEngine.bindTexture(mc.renderEngine.getResourceLocation(fluid.getSpriteNumber()));
+	            //fillAreaWithIcon(fluidIcon, 0, 0, 16, 16);
+		        GL11.glTranslatef((float) x, (float) y, (float) z);
+		        GL11.glTranslatef(0.5F, 1.5F, 0.5F);
+		        // Use this or else model renders upside-down.
+		        GL11.glRotatef(180, 180F, 0F, 1F);
+		        
+		        if (i == 0)
+		            rotate = 0;
+
+		        if (i == 1)
+		            rotate = 90;
+
+		        if (i == 2)
+		            rotate = 180;
+
+		        if (i == 3)
+		            rotate = -90;
+		        GL11.glRotatef(rotate, 0F, 1F, 0F);
+		        
+		        this.configureSides(entity);
+		        
+		        
+		        renderer.setRenderBounds(0,0,0,1,1,1);
+		        renderer.renderAllFaces = true;
+		        renderer.renderStandardBlock(fluid.getBlock(), entity.xCoord, entity.yCoord, entity.zCoord);
+		        //renderer.renderBlockLiquid(fluid.getBlock(), entity.xCoord, entity.yCoord, entity.zCoord);
+		        //renderer.renderAllFaces = false;
+		        GL11.glDisable(GL11.GL_BLEND);
+		        
+		        GL11.glPopMatrix();
+		 	}
+	        
+	}
+	
+	@Override
+	public void func_147496_a(World world)
+	{
+		this.renderer = new RenderBlocks(world);
+		System.out.println("Renderer set.");
 	}
 	
 	
@@ -147,6 +155,7 @@ public class TileEntityRenderLiquidPipe extends TileEntitySpecialRenderer implem
         // Binds the texture
         mc.renderEngine.bindTexture(tex);
 
+        
         GL11.glRotatef(180, 0F, 1F, 0F);
         GL11.glTranslatef(0F, 0.5F, 0F);
         GL11.glScalef(scale, scale, scale);

@@ -21,46 +21,86 @@ public class TileEntityIndustrialMotorShaft extends TileEntityRotary
 		}
 	}
 	
-	private boolean isMultiblock()
+	public boolean isMultiblock()
 	{
 		if(worldObj.getBlock(xCoord-1, yCoord-1, zCoord-1) instanceof BlockIndustrialMotor
 				&&worldObj.getBlock(xCoord-1, yCoord-1, zCoord) instanceof BlockIndustrialMotor
 				&&worldObj.getBlock(xCoord-1, yCoord-1, zCoord+1) instanceof BlockIndustrialMotor
 				&&worldObj.getBlock(xCoord, yCoord-1, zCoord-1) instanceof BlockIndustrialMotor
 				&&worldObj.getBlock(xCoord, yCoord-1, zCoord) instanceof BlockIndustrialMotorContact
-				&&worldObj.getBlock(xCoord, yCoord-1, zCoord) instanceof BlockIndustrialMotor
+				&&worldObj.getBlock(xCoord, yCoord-1, zCoord+1) instanceof BlockIndustrialMotor
 				&&worldObj.getBlock(xCoord+1, yCoord-1, zCoord-1) instanceof BlockIndustrialMotor
 				&&worldObj.getBlock(xCoord+1, yCoord-1, zCoord) instanceof BlockIndustrialMotor
-				&&worldObj.getBlock(xCoord+1, yCoord-1, zCoord) instanceof BlockIndustrialMotor
+				&&worldObj.getBlock(xCoord+1, yCoord-1, zCoord+1) instanceof BlockIndustrialMotor
 				&&worldObj.getBlock(xCoord-1, yCoord, zCoord-1) instanceof BlockIndustrialMotor
 				&&worldObj.getBlock(xCoord-1, yCoord, zCoord) instanceof BlockIndustrialMotor
 				&&worldObj.getBlock(xCoord-1, yCoord, zCoord+1) instanceof BlockIndustrialMotor
 				&&worldObj.getBlock(xCoord, yCoord, zCoord-1) instanceof BlockIndustrialMotor
-				&&worldObj.getBlock(xCoord, yCoord, zCoord) instanceof BlockIndustrialMotor
+				&&worldObj.getBlock(xCoord, yCoord, zCoord+1) instanceof BlockIndustrialMotor
 				//&&worldObj.getBlock(xCoord, yCoord, zCoord) instanceof BlockIndustrialMotor
 				&&worldObj.getBlock(xCoord+1, yCoord, zCoord-1) instanceof BlockIndustrialMotor
 				&&worldObj.getBlock(xCoord+1, yCoord, zCoord) instanceof BlockIndustrialMotor
-				&&worldObj.getBlock(xCoord+1, yCoord, zCoord) instanceof BlockIndustrialMotor
+				&&worldObj.getBlock(xCoord+1, yCoord, zCoord+1) instanceof BlockIndustrialMotor
 				&&worldObj.getBlock(xCoord-1, yCoord+1, zCoord-1) instanceof BlockIndustrialMotor
 				&&worldObj.getBlock(xCoord-1, yCoord+1, zCoord) instanceof BlockIndustrialMotor
 				&&worldObj.getBlock(xCoord-1, yCoord+1, zCoord+1) instanceof BlockIndustrialMotor
 				&&worldObj.getBlock(xCoord, yCoord+1, zCoord-1) instanceof BlockIndustrialMotor
 				&&worldObj.getBlock(xCoord, yCoord+1, zCoord) instanceof BlockIndustrialMotorShaft
-				&&worldObj.getBlock(xCoord, yCoord+1, zCoord) instanceof BlockIndustrialMotor
+				&&worldObj.getBlock(xCoord, yCoord+1, zCoord+1) instanceof BlockIndustrialMotor
 				&&worldObj.getBlock(xCoord+1, yCoord+1, zCoord-1) instanceof BlockIndustrialMotor
 				&&worldObj.getBlock(xCoord+1, yCoord+1, zCoord) instanceof BlockIndustrialMotor
-				&&worldObj.getBlock(xCoord+1, yCoord+1, zCoord) instanceof BlockIndustrialMotor
+				&&worldObj.getBlock(xCoord+1, yCoord+1, zCoord+1) instanceof BlockIndustrialMotor
 				&&worldObj.getBlock(xCoord-1, yCoord+2, zCoord-1) instanceof BlockIndustrialMotor
 				&&worldObj.getBlock(xCoord-1, yCoord+2, zCoord) instanceof BlockIndustrialMotor
 				&&worldObj.getBlock(xCoord-1, yCoord+2, zCoord+1) instanceof BlockIndustrialMotor
 				&&worldObj.getBlock(xCoord, yCoord+2, zCoord-1) instanceof BlockIndustrialMotor
 				&&worldObj.getBlock(xCoord, yCoord+2, zCoord) instanceof BlockIndustrialMotorShaft
-				&&worldObj.getBlock(xCoord, yCoord+2, zCoord) instanceof BlockIndustrialMotor
+				&&worldObj.getBlock(xCoord, yCoord+2, zCoord+1) instanceof BlockIndustrialMotor
 				&&worldObj.getBlock(xCoord+1, yCoord+2, zCoord-1) instanceof BlockIndustrialMotor
 				&&worldObj.getBlock(xCoord+1, yCoord+2, zCoord) instanceof BlockIndustrialMotor
-				&&worldObj.getBlock(xCoord+1, yCoord+2, zCoord) instanceof BlockIndustrialMotor
+				&&worldObj.getBlock(xCoord+1, yCoord+2, zCoord+1) instanceof BlockIndustrialMotor
 				&&worldObj.getBlock(xCoord, yCoord+3, zCoord) instanceof BlockIndustrialMotorShaft)
-					return true;
+		{
+			
+			worldObj.setBlockMetadataWithNotify(xCoord-1, yCoord-1, zCoord-1, 1, 1+2);
+			worldObj.setBlockMetadataWithNotify(xCoord-1, yCoord-1, zCoord, 1, 1+2);
+			worldObj.setBlockMetadataWithNotify(xCoord-1, yCoord-1, zCoord+1, 1, 1+2);
+			worldObj.setBlockMetadataWithNotify(xCoord, yCoord-1, zCoord-1, 1, 1+2);
+			worldObj.setBlockMetadataWithNotify(xCoord, yCoord-1, zCoord, 1, 1+2);
+			worldObj.setBlockMetadataWithNotify(xCoord, yCoord-1, zCoord+1, 1, 1+2);
+			worldObj.setBlockMetadataWithNotify(xCoord+1, yCoord-1, zCoord-1, 1, 1+2);
+			worldObj.setBlockMetadataWithNotify(xCoord+1, yCoord-1, zCoord, 1, 1+2);
+			worldObj.setBlockMetadataWithNotify(xCoord+1, yCoord-1, zCoord+1, 1, 1+2);
+			worldObj.setBlockMetadataWithNotify(xCoord-1, yCoord, zCoord-1, 1, 1+2);
+			worldObj.setBlockMetadataWithNotify(xCoord-1, yCoord, zCoord, 1, 1+2);
+			worldObj.setBlockMetadataWithNotify(xCoord-1, yCoord, zCoord+1, 1, 1+2);
+			worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord-1, 1, 1+2);
+			worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, 1, 1+2);
+			worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord+1, 1, 1+2);
+			worldObj.setBlockMetadataWithNotify(xCoord+1, yCoord, zCoord-1, 1, 1+2);
+			worldObj.setBlockMetadataWithNotify(xCoord+1, yCoord, zCoord, 1, 1+2);
+			worldObj.setBlockMetadataWithNotify(xCoord+1, yCoord, zCoord+1, 1, 1+2);
+			worldObj.setBlockMetadataWithNotify(xCoord-1, yCoord+1, zCoord-1, 1, 1+2);
+			worldObj.setBlockMetadataWithNotify(xCoord-1, yCoord+1, zCoord, 1, 1+2);
+			worldObj.setBlockMetadataWithNotify(xCoord-1, yCoord+1, zCoord+1, 1, 1+2);
+			worldObj.setBlockMetadataWithNotify(xCoord, yCoord+1, zCoord-1, 1, 1+2);
+			worldObj.setBlockMetadataWithNotify(xCoord, yCoord+1, zCoord, 1, 1+2);
+			worldObj.setBlockMetadataWithNotify(xCoord, yCoord+1, zCoord+1, 1, 1+2);
+			worldObj.setBlockMetadataWithNotify(xCoord+1, yCoord+1, zCoord-1, 1, 1+2);
+			worldObj.setBlockMetadataWithNotify(xCoord+1, yCoord+1, zCoord, 1, 1+2);
+			worldObj.setBlockMetadataWithNotify(xCoord+1, yCoord+1, zCoord+1, 1, 1+2);
+			worldObj.setBlockMetadataWithNotify(xCoord-1, yCoord+2, zCoord-1, 1, 1+2);
+			worldObj.setBlockMetadataWithNotify(xCoord-1, yCoord+2, zCoord, 1, 1+2);
+			worldObj.setBlockMetadataWithNotify(xCoord-1, yCoord+2, zCoord+1, 1, 1+2);
+			worldObj.setBlockMetadataWithNotify(xCoord, yCoord+2, zCoord-1, 1, 1+2);
+			worldObj.setBlockMetadataWithNotify(xCoord, yCoord+2, zCoord, 1, 1+2);
+			worldObj.setBlockMetadataWithNotify(xCoord, yCoord+2, zCoord+1, 1, 1+2);
+			worldObj.setBlockMetadataWithNotify(xCoord+1, yCoord+2, zCoord-1, 1, 1+2);
+			worldObj.setBlockMetadataWithNotify(xCoord+1, yCoord+2, zCoord, 1, 1+2);
+			worldObj.setBlockMetadataWithNotify(xCoord+1, yCoord+2, zCoord+1, 1, 1+2);
+			worldObj.setBlockMetadataWithNotify(xCoord, yCoord+3, zCoord, 1, 1+2);
+				return true;
+		}
 		return false;	
 
 	}
