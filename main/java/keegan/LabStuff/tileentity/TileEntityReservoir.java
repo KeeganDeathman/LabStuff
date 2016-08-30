@@ -16,9 +16,9 @@ public class TileEntityReservoir extends TileEntity implements IFluidHandler
 		if(worldObj.getTileEntity(xCoord, yCoord-1, zCoord) instanceof IFluidHandler)
 		{
 			IFluidHandler pipe = (IFluidHandler)worldObj.getTileEntity(xCoord, yCoord-1, zCoord);
-			if(tank.getFluidAmount() > 0)
+			if(tank.getFluidAmount() > 0 && pipe.getTankInfo(ForgeDirection.UP).length >= 1)
 			{
-				if((tank.getFluid().equals(pipe.getTankInfo(ForgeDirection.UP)[0].fluid) || pipe.getTankInfo(ForgeDirection.UP)[0].fluid == null))
+				if((tank.getFluid().equals(pipe.getTankInfo(ForgeDirection.UP)[0].fluid) || pipe.getTankInfo(ForgeDirection.UP)[0].fluid == null) && !worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord))
 				{
 					pipe.fill(ForgeDirection.UP, drain(null, new FluidStack(tank.getFluid(), FluidContainerRegistry.BUCKET_VOLUME), true), true);
 				}
@@ -62,14 +62,16 @@ public class TileEntityReservoir extends TileEntity implements IFluidHandler
 	public boolean canFill(ForgeDirection from, Fluid fluid)
 	{
 		// TODO Auto-generated method stub
-		return true;
+		return worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
 	}
 
 	@Override
 	public boolean canDrain(ForgeDirection from, Fluid fluid)
 	{
 		// TODO Auto-generated method stub
-		return true;
+		if(from.equals(ForgeDirection.DOWN))
+			return !worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
+		return false;
 	}
 
 	@Override

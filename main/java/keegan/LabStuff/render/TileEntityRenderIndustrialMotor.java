@@ -19,7 +19,7 @@ public class TileEntityRenderIndustrialMotor extends TileEntitySpecialRenderer i
 	//This method is called when minecraft renders a tile entity
 
 	public static Minecraft mc = Minecraft.getMinecraft();
-	public IModelCustom model = AdvancedModelLoader.loadModel(new ResourceLocation("labstuff:models/industrialmotor.obj"));
+	public IModelCustom model = AdvancedModelLoader.loadModel(new ResourceLocation("labstuff","models/industrialmotor.obj"));
 	
 	public TileEntityRenderIndustrialMotor()
 	{
@@ -35,10 +35,10 @@ public class TileEntityRenderIndustrialMotor extends TileEntitySpecialRenderer i
 			 	mc.renderEngine.bindTexture(new ResourceLocation("labstuff:textures/models/industrialmotor.png"));
 			 	GL11.glPushMatrix();
 			 	GL11.glTranslatef((float) x + 1 , (float) y, (float) z);
-		        //GL11.glTranslatef(0.5F, 1.5F, 0.5F);
+		        GL11.glTranslatef(0.5F, 0F, 1.5F);
 		        
 		        //GL11.glRotatef(rotate, 0F, 1F, 0F);
-		        GL11.glTranslatef(-.25f, -1f, .25f);
+		        GL11.glTranslatef(-1f, -1f, -1f);
 		        //GL11.glScalef(20f, 20f, 20f);
 		        //GL11.glScalef(45f, 45f, 45f);
 		        //GL11.glScalef(0f, 0f, 1/3f);

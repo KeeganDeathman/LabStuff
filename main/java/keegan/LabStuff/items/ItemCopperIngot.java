@@ -7,7 +7,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemCopperIngot extends Item {
 
-	public ItemCopperIngot(int par1) {
+	public ItemCopperIngot() {
 		super();
 	}
 	

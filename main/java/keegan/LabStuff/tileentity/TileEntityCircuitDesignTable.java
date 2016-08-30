@@ -51,7 +51,7 @@ public class TileEntityCircuitDesignTable extends TileEntity implements IInvento
 			System.out.println("Drawing begun");
 			for(int i=0; i < designs.size(); i++)
 			{
-				if(design.equals(designs.get(i).getName()))
+				if(design.equals(designs.get(i).getName()) && getStackInSlot(0) != null)
 					setInventorySlotContents(0, new ItemStack(designs.get(i).getDesignSheet(), getStackInSlot(0).stackSize));
 			}
 		}

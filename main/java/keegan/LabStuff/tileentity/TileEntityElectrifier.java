@@ -1,16 +1,12 @@
 package keegan.labstuff.tileentity;
 
 import keegan.labstuff.LabStuffMain;
-import keegan.labstuff.PacketHandling.PacketElectrifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.*;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
 
 public class TileEntityElectrifier extends TileEntity implements IInventory
 {
@@ -113,6 +109,8 @@ public class TileEntityElectrifier extends TileEntity implements IInventory
 			itemstack.stackSize = getInventoryStackLimit();
 		}
 		
+		electrify();
+		
 	}
 
 	@Override
@@ -163,40 +161,32 @@ public class TileEntityElectrifier extends TileEntity implements IInventory
 
 	@Override
 	public boolean isItemValidForSlot(int slot, ItemStack item) {
-		if(slot == 0 && (item.getItem() == Items.water_bucket || item.getItem() == Items.bucket))
+		if(slot == 0 && (item.getItem().equals(Items.water_bucket) || item.getItem().equals(Items.bucket)))
 			return true;
-		if(slot == 1 && item.getItem() == LabStuffMain.itemBattery)
+		if(slot == 1 && (item.getItem().equals(LabStuffMain.itemBattery) || item.getItem().equals(LabStuffMain.itemDeadBattery)))
 			return true;
-		if(slot == 2 && (item.getItem() == LabStuffMain.itemTestTube || item.getItem() == LabStuffMain.itemHydrogenTestTube))
+		if(slot == 2 && (item.getItem().equals(LabStuffMain.itemTestTube) || item.getItem().equals(LabStuffMain.itemHydrogenTestTube)))
 			return  true;
-		if(slot == 3 && (item.getItem() == LabStuffMain.itemTestTube || item.getItem() == LabStuffMain.itemOxygenTestTube))
+		if(slot == 3 && (item.getItem().equals(LabStuffMain.itemTestTube) || item.getItem().equals(LabStuffMain.itemOxygenTestTube)))
 			return  true;
 		return false;
 	}
 
-	
-	public void electrify(World world, boolean done)
+	public void electrify()
 	{
 		if (this.getStackInSlot(0) != null && this.getStackInSlot(1) != null && this.getStackInSlot(2) != null && this.getStackInSlot(3) != null) 
 		{
-			System.out.println("slot 0:" + this.getStackInSlot(0).getUnlocalizedName());
-			System.out.println("slot 1:" + this.getStackInSlot(1).getUnlocalizedName());
-			System.out.println("slot 2:" + this.getStackInSlot(2).getUnlocalizedName());
-			System.out.println("slot 3:" + this.getStackInSlot(3).getUnlocalizedName());
-			if (!done) {
-				if (this.getStackInSlot(0).getItem() == Items.water_bucket
-						&& this.getStackInSlot(1).getItem() == LabStuffMain.itemBattery
-						&& this.getStackInSlot(2).getItem() == LabStuffMain.itemTestTube
-						&& this.getStackInSlot(3).getItem() == LabStuffMain.itemTestTube
-						&& !electrifing) {
-					electrifing = true;
-					System.out.println("ZAP!");
-					this.setInventorySlotContents(0, new ItemStack(Items.bucket, 1));
-					this.setInventorySlotContents(1, new ItemStack(LabStuffMain.itemDeadBattery, 1));
-					this.setInventorySlotContents(2, new ItemStack(LabStuffMain.itemOxygenTestTube, 1));
-					this.setInventorySlotContents(3, new ItemStack(LabStuffMain.itemHydrogenTestTube, 1));
-					System.out.println("ZAPPED!");
-				}
+			if (this.getStackInSlot(0).getItem() == Items.water_bucket
+					&& this.getStackInSlot(1).getItem() == LabStuffMain.itemBattery
+					&& this.getStackInSlot(2).getItem() == LabStuffMain.itemTestTube
+					&& this.getStackInSlot(3).getItem() == LabStuffMain.itemTestTube) 
+			{
+				System.out.println("ZAP!");
+				this.setInventorySlotContents(0, new ItemStack(Items.bucket, 1));
+				this.setInventorySlotContents(1, new ItemStack(LabStuffMain.itemDeadBattery, 1));
+				this.setInventorySlotContents(2, new ItemStack(LabStuffMain.itemOxygenTestTube, 1));
+				this.setInventorySlotContents(3, new ItemStack(LabStuffMain.itemHydrogenTestTube, 1));
+				System.out.println("ZAPPED!");
 			}
 		}
 	}

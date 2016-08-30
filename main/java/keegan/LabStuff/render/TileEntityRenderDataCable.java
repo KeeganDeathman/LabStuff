@@ -29,7 +29,7 @@ public class TileEntityRenderDataCable extends TileEntitySpecialRenderer impleme
 
 	public static Minecraft mc = Minecraft.getMinecraft();
 	public static ModelPlasmaPipe model = new ModelPlasmaPipe();
-	public static ResourceLocation tex = new ResourceLocation("labstuff:textures/models/DataCable.png");
+	public static ResourceLocation tex = new ResourceLocation("labstuff:textures/models/datacable.png");
 	
 	
 	private boolean up = false;

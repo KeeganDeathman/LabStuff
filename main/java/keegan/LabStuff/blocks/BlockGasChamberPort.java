@@ -33,7 +33,6 @@ public class BlockGasChamberPort extends Block implements ITileEntityProvider
 	}
 	
 	private IIcon side1;
-	private IIcon side2;
 	public boolean input = false;
 	
 	@Override
@@ -41,8 +40,8 @@ public class BlockGasChamberPort extends Block implements ITileEntityProvider
     public void registerBlockIcons(IIconRegister par1IconRegister)
     {
         // blockIcon - blockIcon
-        this.side1 = this.blockIcon = par1IconRegister.registerIcon("labstuff:gaschamberPort");
-        this.side2 = par1IconRegister.registerIcon("labstuff:gaschamber9");
+        this.side1 = this.blockIcon = par1IconRegister.registerIcon("labstuff:gaschamberport");
+
     }
 	
 	@Override
@@ -52,7 +51,7 @@ public class BlockGasChamberPort extends Block implements ITileEntityProvider
 		{
 			return this.side1;
 		}
-		return this.side2;
+		return this.side1;
 	}
 	
 	public void setInputState(boolean state)

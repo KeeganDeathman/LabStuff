@@ -1,11 +1,9 @@
 package keegan.labstuff.tileentity;
 
+import cofh.api.energy.*;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
-import cofh.api.energy.EnergyStorage;
-import cofh.api.energy.IEnergyHandler;
-import cofh.api.energy.IEnergyProvider;
 
 public class TileEntityLVToRF extends TileEntityPowerConnection implements IEnergyProvider
 {
@@ -14,6 +12,7 @@ public class TileEntityLVToRF extends TileEntityPowerConnection implements IEner
 	public TileEntityLVToRF()
 	{
 		storage = new EnergyStorage(1000);
+		storage.setMaxReceive(500);
 	}
 	
 	@Override
@@ -49,7 +48,7 @@ public class TileEntityLVToRF extends TileEntityPowerConnection implements IEner
 			{
 				if(((TileEntityPower)getPowerSource()).subtractPower(storage.receiveEnergy(storage.getMaxReceive(), true)*2, this))
 				{
-					((IEnergyHandler)connectedTEs[i]).receiveEnergy(getDirectionOfConnection(connectedTEs[i], this), ((IEnergyHandler)connectedTEs[i]).getMaxEnergyStored(calcDirection(connectedTEs[i])), false);
+					((IEnergyHandler)connectedTEs[i]).receiveEnergy(calcDirection(connectedTEs[i]).getOpposite(), storage.getMaxReceive(), false);
 				}
 			}
 		}

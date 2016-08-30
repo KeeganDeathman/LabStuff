@@ -170,6 +170,7 @@ public class TileEntityCzo extends TileEntityPowerConnection implements IInvento
 		if (spinning.equals("Still")) {
 			if (getStackInSlot(0) != null && getStackInSlot(0).isItemEqual(new ItemStack(LabStuffMain.itemRodMountedSiliconSeed)) && getStackInSlot(1) != null && getStackInSlot(1).isItemEqual(new ItemStack(LabStuffMain.itemSiliconIngot))) 
 			{
+				powerSource.subtractPower(500, this);
 				spinning = "spinning";
 				System.out.println("Beginning spin " + spinning);
 				worldObj.scheduleBlockUpdate(xCoord, yCoord, zCoord, getBlockType(), 6000);

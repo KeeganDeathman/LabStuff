@@ -21,7 +21,7 @@ public class ItemRenderDataCable implements IItemRenderer
 	public ItemRenderDataCable()
 	{
 		plasmaPipeModel = new ModelPlasmaPipe();
-		Tex = new ResourceLocation("labstuff:textures/models/DataCable.png");
+		Tex = new ResourceLocation("labstuff","textures/models/datacable.png");
 	}
 	
 	@Override

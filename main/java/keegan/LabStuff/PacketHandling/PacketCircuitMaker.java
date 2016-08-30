@@ -67,16 +67,14 @@ public class PacketCircuitMaker extends AbstractPacket {
 		System.out.println("Validating tile entity.");
 		if(te instanceof TileEntityCircuitMaker)
 		{
-			System.out.println("Checking command.");
 			if(message.equals("Drill"))
 			{
-				System.out.println("Checking design");
 				for(int i = 0; i < recipes.size(); i++)
 				{
-					if(((TileEntityCircuitMaker) te).getStackInSlot(0).getItem().getUnlocalizedName().contains(recipes.get(i).getDesignName()))
+					if(((TileEntityCircuitMaker) te).getStackInSlot(0) != null && ((TileEntityCircuitMaker) te).getStackInSlot(0).getItem().getUnlocalizedName().contains(recipes.get(i).getDesignName()))
 					{
 						System.out.println("Drilling " + recipes.get(i).getDesignName());
-						if(((TileEntityCircuitMaker) te).getStackInSlot(1).getItem() == LabStuffMain.itemCircuitBoardPlate)
+						if( ((TileEntityCircuitMaker)te).getStackInSlot(1) != null && ((TileEntityCircuitMaker) te).getStackInSlot(1).getItem() == LabStuffMain.itemCircuitBoardPlate)
 						{
 							((TileEntityCircuitMaker) te).decrStackSize(1, 1);
 							if(((TileEntityCircuitMaker) te).getStackInSlot(2) == null)
@@ -84,7 +82,7 @@ public class PacketCircuitMaker extends AbstractPacket {
 							else
 								((TileEntityCircuitMaker) te).setInventorySlotContents(2, new ItemStack(recipes.get(i).getDrilled(), ((TileEntityCircuitMaker)te).getStackInSlot(2).stackSize));
 						}
-						else if(((TileEntityCircuitMaker) te).getStackInSlot(1).getItem() == recipes.get(i).getEtched())
+						else if(((TileEntityCircuitMaker)te).getStackInSlot(1) != null && ((TileEntityCircuitMaker) te).getStackInSlot(1).getItem() == recipes.get(i).getEtched())
 						{
 							((TileEntityCircuitMaker) te).decrStackSize(1, 1);
 							if(((TileEntityCircuitMaker) te).getStackInSlot(2) == null)
@@ -97,13 +95,11 @@ public class PacketCircuitMaker extends AbstractPacket {
 			}
 			if(message.equals("Etch"))
 			{
-				System.out.println("Checking design");
 				for(int i = 0; i < recipes.size(); i++)
 				{
-					if(((TileEntityCircuitMaker) te).getStackInSlot(0).getItem().getUnlocalizedName().contains(recipes.get(i).getDesignName()))
+					if(((TileEntityCircuitMaker) te).getStackInSlot(0) != null && ((TileEntityCircuitMaker) te).getStackInSlot(0).getItem().getUnlocalizedName().contains(recipes.get(i).getDesignName()))
 					{
-						System.out.println("Drilling " + recipes.get(i).getDesignName());
-						if(((TileEntityCircuitMaker) te).getStackInSlot(3).getItem() == LabStuffMain.itemCircuitBoardPlate)
+						if(((TileEntityCircuitMaker)te).getStackInSlot(3) != null && ((TileEntityCircuitMaker) te).getStackInSlot(3).getItem() == LabStuffMain.itemCircuitBoardPlate)
 						{
 							((TileEntityCircuitMaker) te).decrStackSize(3, 1);
 							if(((TileEntityCircuitMaker) te).getStackInSlot(4) == null)
@@ -111,7 +107,7 @@ public class PacketCircuitMaker extends AbstractPacket {
 							else
 								((TileEntityCircuitMaker) te).setInventorySlotContents(4, new ItemStack(recipes.get(i).getEtched(), ((TileEntityCircuitMaker)te).getStackInSlot(2).stackSize));
 						}
-						else if(((TileEntityCircuitMaker) te).getStackInSlot(3).getItem() == recipes.get(i).getDrilled())
+						else if(((TileEntityCircuitMaker)te).getStackInSlot(3) != null && ((TileEntityCircuitMaker) te).getStackInSlot(3).getItem() == recipes.get(i).getDrilled())
 						{
 							((TileEntityCircuitMaker) te).decrStackSize(3, 1);
 							if(((TileEntityCircuitMaker) te).getStackInSlot(4) == null)

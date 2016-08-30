@@ -1,99 +1,40 @@
 package keegan.labstuff.tileentity;
 
+import java.util.ArrayList;
+
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatComponentText;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.*;
 
-public class TileEntityLiquidPipe extends FluidHandler
+public class TileEntityLiquidPipe extends TileEntity implements IFluidHandler
 {
+	public FluidTank tank;
 	
 	
 	
+	private IFluidHandler source;
 
 	public TileEntityLiquidPipe()
 	{
-		tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
-		network = new FluidNetwork(this);
+		tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 4);
+		source = null;
 	}
-	
+
 	@Override
-	public void updateEntity()
+	public void writeToNBT(NBTTagCompound tag)
 	{
-		for(int x = -1; x < 2; x++)
-		{
-			TileEntity tile = worldObj.getTileEntity(xCoord+x, yCoord, zCoord);
-			if(tile instanceof FluidHandler)
-			{
-				if(!(((FluidHandler)tile).network.equals(network)))
-				{
-					((FluidHandler)tile).network.merge(this);
-				}
-			}
-		}
-		for(int y = -1; y < 2; y++)
-		{
-			TileEntity tile = worldObj.getTileEntity(xCoord, yCoord+y, zCoord);
-			if(tile instanceof FluidHandler)
-			{
-				if(!(((FluidHandler)tile).network.equals(network)))
-				{
-					((FluidHandler)tile).network.merge(this);
-				}
-			}
-		}
-		for(int z = -1; z < 2; z++)
-		{
-			TileEntity tile = worldObj.getTileEntity(xCoord, yCoord, zCoord+z);
-			if(tile instanceof FluidHandler)
-			{
-				if(!(((FluidHandler)tile).network.equals(network)))
-				{
-					((FluidHandler)tile).network.merge(this);
-				}
-			}
-			else if(tile instanceof TileEntityRedstonePipe)
-			{
-				//if(calcDirection(tile) != ((TileEntityRedstonePipe)tile).from)
-				//{
-					if(((TileEntityRedstonePipe)tile).getTankInfo(calcDirection(tile))[0].fluid != null)
-					{
-						if(tank.getFluidAmount() > 0 && tank.getFluid().isFluidEqual(((TileEntityRedstonePipe)tile).getTankInfo(calcDirection(tile))[0].fluid) && tank.getCapacity() != tank.getFluidAmount())
-							((TileEntityRedstonePipe)tile).fill(calcDirection(tile), this.drain(null, tank.getFluid(), true), true);
-					}
-					else if(tank.getFluid() != null)
-					{
-						((TileEntityRedstonePipe)tile).fill(calcDirection(tile), this.drain(null, tank.getFluid(), true), true);
-					}
-				//}
-			}
-			else if(tile instanceof TileEntityDataPipe)
-			{
-				if(calcDirection(tile) != ((TileEntityDataPipe)tile).from)
-				{
-					if(((TileEntityDataPipe)tile).getTankInfo(calcDirection(tile))[0].fluid != null)	
-					{
-						if(tank.getFluidAmount() > 0 && tank.getFluid().isFluidEqual(((TileEntityDataPipe)tile).getTankInfo(calcDirection(tile))[0].fluid) && tank.getCapacity() != tank.getFluidAmount())
-							((TileEntityDataPipe)tile).fill(calcDirection(tile), this.drain(null, tank.getFluid(), true), true);
-					}
-					else
-					{
-						((TileEntityDataPipe)tile).fill(calcDirection(tile), this.drain(null, tank.getFluid(), true), true);
-					}
-				}
-			}
-			else if(tile instanceof IFluidHandler && ((IFluidHandler)tile).getTankInfo(calcDirection(tile)).length >= 1)	
-			{
-				if(((IFluidHandler)tile).getTankInfo(calcDirection(tile))[0].fluid != null)	
-				{
-					if(tank.getFluidAmount() > 0 && tank.getFluid().isFluidEqual(((IFluidHandler)tile).getTankInfo(calcDirection(tile))[0].fluid) && tank.getCapacity() != tank.getFluidAmount())
-						tank.fill(((IFluidHandler)tile).drain(calcDirection(tile), tank.getFluid(), true), true);
-					else if(tank.getFluidAmount() == 0)
-						tank.fill(((IFluidHandler)tile).drain(calcDirection(tile), ((IFluidHandler)tile).getTankInfo(calcDirection(tile))[0].fluid, true), true);
-					
-				}
-			}
-		}
+		super.writeToNBT(tag);
+		tank.writeToNBT(tag);
+	}
+	@Override
+	public void readFromNBT(NBTTagCompound tag)
+	{
+		super.readFromNBT(tag);
+		tank.readFromNBT(tag);
+		
 	}
 	
 	private ForgeDirection calcDirection(TileEntity tile)
@@ -111,35 +52,91 @@ public class TileEntityLiquidPipe extends FluidHandler
 		return ForgeDirection.DOWN;
 	}
 	
-	@Override
-	public void writeToNBT(NBTTagCompound tag)
+	/**Returns nearby tanks that we can  dump into*/
+	private IFluidHandler[] getConnectedTanks(FluidStack stack, ForgeDirection from)
 	{
-		super.writeToNBT(tag);
+		if(stack == null)
+			return null;
+		ArrayList<IFluidHandler> tanks = new ArrayList<IFluidHandler>();
+		
+		for(ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
+		{
+			if(!dir.equals(from))
+			{
+				TileEntity remote = worldObj.getTileEntity(xCoord+dir.offsetX, yCoord+dir.offsetY, zCoord+dir.offsetZ);
+				if(remote != null && remote instanceof IFluidHandler)
+					if(((IFluidHandler)remote).getTankInfo(dir.getOpposite()) != null 
+					&& ((IFluidHandler)remote).canFill(dir, stack.getFluid()))
+						if(((IFluidHandler)remote).getTankInfo(dir)[0].fluid != null)
+						{
+							if(((IFluidHandler)remote).getTankInfo(dir.getOpposite())[0].fluid.amount < ((IFluidHandler)remote).getTankInfo(dir.getOpposite())[0].capacity)
+								tanks.add((IFluidHandler) remote);
+						}
+						else
+						{
+							tanks.add((IFluidHandler) remote);
+						}
+		
+			}
+		}
+		
+		IFluidHandler[] tankArray = new IFluidHandler[tanks.size()];
+		return (IFluidHandler[]) tanks.toArray(tankArray);
 	}
+	
 	@Override
-	public void readFromNBT(NBTTagCompound tag)
+	public void updateEntity()
 	{
-		super.readFromNBT(tag);
+		if(tank.getFluid() != null)
+		{
+			for(IFluidHandler remote : getConnectedTanks(new FluidStack(tank.getFluid().getFluid(), 0), null))
+			{
+				if(remote.getTankInfo(calcDirection((TileEntity) remote)) != null && remote.getTankInfo(calcDirection((TileEntity) remote))[0].fluid == null)
+					remote.fill(calcDirection((TileEntity)remote), drain(null, tank.getFluidAmount()/2, true), true);
+			}
+		}
 	}
 
 	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
 	{
-		return network.fill(resource, doFill);
+		IFluidHandler[] tanks = getConnectedTanks(resource, from);
+		if(resource == null)
+			return 0;
+		FluidStack resourceN = new FluidStack(resource.getFluid(), 0);
+		
+		if(tanks.length > 0)
+		{
+			for(IFluidHandler remote : tanks)
+			{
+				FluidStack resourceM = new FluidStack(resource.getFluid(), resource.amount/(tanks.length+1));
+				resourceN = resourceM.copy();
+				if(remote.fill(calcDirection((TileEntity) remote), resourceM, false) < resourceM.amount)
+					resourceN.amount += remote.fill(calcDirection((TileEntity) remote), resourceM, true);
+				else
+					remote.fill(calcDirection((TileEntity) remote), resourceM, true);
+			}
+		}
+		else
+		{
+			resourceN = resource.copy();
+		}
+		
+		return tank.fill(resourceN, doFill);
 	}
 
 	@Override
 	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
 	{
 		// TODO Auto-generated method stub
-		return network.drain(resource, doDrain);
+		return tank.drain(resource.amount, doDrain);
 	}
 
 	@Override
 	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
 		// TODO Auto-generated method stub
-		return null;
+		return tank.drain(maxDrain, doDrain);
 	}
 
 	@Override

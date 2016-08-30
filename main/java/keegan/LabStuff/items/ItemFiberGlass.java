@@ -7,7 +7,7 @@ import net.minecraft.item.Item;
 
 public class ItemFiberGlass extends Item {
 
-	public ItemFiberGlass(int par1) {
+	public ItemFiberGlass() {
 		super();
 	}
 	

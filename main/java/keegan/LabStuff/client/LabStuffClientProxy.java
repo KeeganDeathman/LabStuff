@@ -1,12 +1,12 @@
 package keegan.labstuff.client;
 
+import cpw.mods.fml.client.registry.ClientRegistry;
 import keegan.labstuff.LabStuffMain;
 import keegan.labstuff.common.LabStuffCommonProxy;
 import keegan.labstuff.render.*;
 import keegan.labstuff.tileentity.*;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.MinecraftForgeClient;
-import cpw.mods.fml.client.registry.ClientRegistry;
 
 public class LabStuffClientProxy extends LabStuffCommonProxy
 {
@@ -34,9 +34,25 @@ public class LabStuffClientProxy extends LabStuffCommonProxy
 		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(LabStuffMain.blockWindTurbine), new ItemRenderWindTurbine());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDataCable.class, new TileEntityRenderDataCable());
 		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(LabStuffMain.blockDataCable), new ItemRenderDataCable());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityLiquid.class, new TileEntityRenderLiquidPipe());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityLiquidPipe.class, new TileEntityRenderLiquidPipe());
 		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(LabStuffMain.blockLiquidPipe), new ItemRenderLiquidPipe());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityIndustrialMotorShaft.class, new TileEntityRenderIndustrialMotor());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySolenoidAxel.class, new TileEntityRenderSolenoid());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityFusionToroidalMagnet.class, new TileEntityRenderToroid());
+		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(LabStuffMain.blockFusionToroidalMagnet), new ItemRenderToroid());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityAcceleratorControlPanel.class, new RenderAcceleratorControlPanel());
+		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(LabStuffMain.blockAcceleratorControlPanel), new ItemRenderAcceleratorControlPanel());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityAcceleratorTube.class, new RenderAcceleratorTube());
+		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(LabStuffMain.blockAcceleratorTube), new ItemRenderAcceleratorPipe());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityAcceleratorDetectorCore.class, new RenderAcceleratorDetector());
+		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(LabStuffMain.blockDSCRibbonCable), new ItemRendererRibbonCable());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRibbonCable.class, new RenderRibbonCable());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDLLaptop.class, new RenderDLLaptop());
+		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(LabStuffMain.blockDLLaptop), new ItemRenderDLLaptop());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMatterCollector.class, new RenderMatterCollector());
+		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(LabStuffMain.blockMatterCollector), new ItemRenderMatterCollector());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTurbine.class, new RenderTurbineRotor());
+		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(LabStuffMain.blockTurbineRotor), new ItemRenderTurbineRotor());
 	}
 	
 	@Override

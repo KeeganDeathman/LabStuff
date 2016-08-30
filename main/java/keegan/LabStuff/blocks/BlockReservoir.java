@@ -3,9 +3,11 @@ package keegan.labstuff.blocks;
 import keegan.labstuff.tileentity.TileEntityReservoir;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.*;
 
@@ -60,6 +62,36 @@ public class BlockReservoir extends Block implements ITileEntityProvider
 			return true;
 		}
 		return false;
+	}
+	
+	@Override
+	public boolean isOpaqueCube()
+	{
+		return false;
+	}
+	
+	private IIcon side1;
+	private IIcon side2;
+	
+	@Override
+    // registerIcons
+    public void registerBlockIcons(IIconRegister par1IconRegister)
+    {
+        // blockIcon - blockIcon
+        this.side1 = this.blockIcon = par1IconRegister.registerIcon("labstuff:reservoir");
+        this.side2 = par1IconRegister.registerIcon("labstuff:reservoir-top");
+    }
+	
+	@Override
+	public IIcon getIcon(int side, int metadata)
+	{
+		switch(side)
+		{
+			case 0: case 1:
+				return this.side2;
+			default:
+				return this.side1;
+		}
 	}
 
 }

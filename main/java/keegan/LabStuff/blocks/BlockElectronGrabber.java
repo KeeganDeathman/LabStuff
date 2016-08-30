@@ -17,7 +17,6 @@ import net.minecraft.world.World;
 public class BlockElectronGrabber extends Block implements ITileEntityProvider
 {
 
-	public Block[][][] multiblocks;
 
 
 	public BlockElectronGrabber(Material p_i45394_1_) {
@@ -59,33 +58,5 @@ public class BlockElectronGrabber extends Block implements ITileEntityProvider
         	world.setBlockMetadataWithNotify(x, y, z, 3, 2);
         
     }
-	
-	
-	@Override
-	public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z, boolean willHarvest)
-	{
-		super.removedByPlayer(world, player, x, y, z, false);
-		if (multiblocks[0][0][0] != null) 
-		{
-			for (int i = 0; i < 3; i++) 
-			{
-				for (int j = 0; j < 3; j++) 
-				{
-					for (int k = 0; k < 3; k++) 
-					{
-						if (multiblocks[i][j][k] != null && multiblocks[i][j][k] == LabStuffMain.blockGasChamberWall) 
-						{
-							((BlockGasChamberWall) multiblocks[i][j][k]).setMultiBlockState(false, null);
-						}
-						else if (multiblocks[i][j][k] != null && multiblocks[i][j][k] == LabStuffMain.blockGasChamberPort) 
-						{
-							((BlockGasChamberPort) multiblocks[i][j][k]).setInputState(false);
-						}
-					}
-				}
-			}
-		}
-		return true;
-	}
 
 }

@@ -1,9 +1,11 @@
 package keegan.labstuff.blocks;
 
+import keegan.labstuff.LabStuffMain;
 import keegan.labstuff.tileentity.*;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.*;
@@ -22,7 +24,7 @@ public class BlockLiquidPipe extends Block implements ITileEntityProvider
 	public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_)
 	{
 		// TODO Auto-generated method stub
-		return new TileEntityLiquid();
+		return new TileEntityLiquidPipe();
 	}
 	
 	@Override
@@ -42,9 +44,9 @@ public class BlockLiquidPipe extends Block implements ITileEntityProvider
     	if(!world.isRemote)
     	{
     		TileEntity tile = world.getTileEntity(x, y, z);
-    		if(tile instanceof TileEntityLiquid && ((TileEntityLiquid)tile).tank.getFluid() != null)
+    		if(tile instanceof TileEntityLiquidPipe && ((TileEntityLiquidPipe)tile).tank.getFluid() != null)
     		{
-    			player.addChatMessage(new ChatComponentText("Network is holding " + ((TileEntityLiquid)tile).getTankInfo(ForgeDirection.UNKNOWN)[0].fluid.amount));
+    			player.addChatMessage(new ChatComponentText("Network is holding " + ((TileEntityLiquidPipe)tile).getTankInfo(ForgeDirection.UNKNOWN)[0].fluid.amount + "/" + ((TileEntityLiquidPipe)tile).getTankInfo(ForgeDirection.UNKNOWN)[0].capacity + "mb of " + ((TileEntityLiquidPipe)tile).getTankInfo(ForgeDirection.UNKNOWN)[0].fluid.getLocalizedName()));
     			return true;
     		}
     		player.addChatMessage(new ChatComponentText("Error! Maybe it's empty?"));

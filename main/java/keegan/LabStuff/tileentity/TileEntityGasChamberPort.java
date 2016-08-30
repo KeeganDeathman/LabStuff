@@ -1,11 +1,11 @@
 package keegan.labstuff.tileentity;
 
-import keegan.labstuff.blocks.BlockGasChamberPort;
+import keegan.labstuff.LabStuffMain;
+import keegan.labstuff.blocks.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.biome.BiomeCache.Block;
 
 public class TileEntityGasChamberPort extends TileEntity implements IInventory
 {
@@ -20,13 +20,14 @@ public class TileEntityGasChamberPort extends TileEntity implements IInventory
 	}
 	
 	TileEntityGasChamberPort remoteTile;
+	TileEntityGasChamberPort outputTile;
 	
 	@Override
 	public void updateEntity()
 	{
 		//get input.output state
 		BlockGasChamberPort me = (BlockGasChamberPort) worldObj.getBlock(xCoord, yCoord, zCoord);
-		this.input = me.getInputState() || worldObj.getBlock(xCoord, yCoord - 2, zCoord) instanceof BlockGasChamberPort;
+		this.input = worldObj.getBlock(xCoord, yCoord - 2, zCoord) instanceof BlockGasChamberPort;
 		if(input && worldObj.getBlock(xCoord, yCoord - 2, zCoord) instanceof BlockGasChamberPort)
 		{
 			remoteTile = (TileEntityGasChamberPort)worldObj.getTileEntity(xCoord, yCoord-2, zCoord);
@@ -40,18 +41,84 @@ public class TileEntityGasChamberPort extends TileEntity implements IInventory
 		}
 		if(worldObj.getTileEntity(xCoord, yCoord-1, zCoord) != null && !input)
 		{
-			if(worldObj.getTileEntity(xCoord, yCoord-1, zCoord) instanceof TileEntityPlasmaPipe)
+			if(worldObj.getTileEntity(xCoord, yCoord-1, zCoord) instanceof TileEntityPlasmaPipe && worldObj.getTileEntity(xCoord, yCoord + 2, zCoord) instanceof TileEntityGasChamberPort)
 			{
 				TileEntityPlasmaPipe pipe = (TileEntityPlasmaPipe)worldObj.getTileEntity(xCoord, yCoord-1, zCoord);
 				remoteTile = (TileEntityGasChamberPort)worldObj.getTileEntity(xCoord, yCoord+2, zCoord);
-				if(testtubes > 0 && me.isMultiBlock())
+				
+				if(getLaser() != null)
 				{
-					pipe.addPlasma(20, this);
-					remoteTile.decrStackSize(0, 1);
-					testtubes-=1;
+					if(worldObj.getBlock(xCoord-1, yCoord+1, zCoord) != null && worldObj.getBlock(xCoord-1, yCoord+1, zCoord).equals(LabStuffMain.blockGasChamberPort))
+						outputTile = (TileEntityGasChamberPort) worldObj.getTileEntity(xCoord-1, yCoord+1, zCoord);
+					if(worldObj.getBlock(xCoord+1, yCoord+1, zCoord) != null && worldObj.getBlock(xCoord+1, yCoord+1, zCoord).equals(LabStuffMain.blockGasChamberPort))
+						outputTile = (TileEntityGasChamberPort) worldObj.getTileEntity(xCoord+1, yCoord+1, zCoord);
+					if(worldObj.getBlock(xCoord, yCoord+1, zCoord+1) != null && worldObj.getBlock(xCoord, yCoord+1, zCoord+1).equals(LabStuffMain.blockGasChamberPort))
+						outputTile = (TileEntityGasChamberPort) worldObj.getTileEntity(xCoord, yCoord+1, zCoord+1);
+					if(worldObj.getBlock(xCoord, yCoord+1, zCoord-1) != null && worldObj.getBlock(xCoord, yCoord-1, zCoord+1).equals(LabStuffMain.blockGasChamberPort))
+						outputTile = (TileEntityGasChamberPort) worldObj.getTileEntity(xCoord, yCoord+1, zCoord-1);
+
+					
+					if(testtubes > 0 && getLaser().isMultiblock())
+					{
+						pipe.addPlasma(500, this);
+						remoteTile.decrStackSize(0, 1);
+						outputTile.setInventorySlotContents(0, new ItemStack(LabStuffMain.itemTestTube, outputTile.emptyTubes()+1));
+						testtubes-=1;
+					}
 				}
 			}
 		}
+	}
+	
+	public TileEntityElectronGrabber getLaser()
+	{
+		TileEntityElectronGrabber laser = null;
+		
+		if(input)
+		{
+			if(worldObj.getTileEntity(xCoord+1, yCoord-1, zCoord) != null && worldObj.getTileEntity(xCoord+1, yCoord-1, zCoord) instanceof TileEntityElectronGrabber)
+				laser = (TileEntityElectronGrabber) worldObj.getTileEntity(xCoord+1, yCoord-1, zCoord);
+			if(worldObj.getTileEntity(xCoord-1, yCoord-1, zCoord) != null && worldObj.getTileEntity(xCoord-1, yCoord-1, zCoord) instanceof TileEntityElectronGrabber)
+				laser = (TileEntityElectronGrabber) worldObj.getTileEntity(xCoord-1, yCoord-1, zCoord);
+			if(worldObj.getTileEntity(xCoord, yCoord-1, zCoord+1) != null && worldObj.getTileEntity(xCoord, yCoord-1, zCoord+1) instanceof TileEntityElectronGrabber)
+				laser = (TileEntityElectronGrabber) worldObj.getTileEntity(xCoord, yCoord-1, zCoord+1);
+			if(worldObj.getTileEntity(xCoord, yCoord-1, zCoord-1) != null && worldObj.getTileEntity(xCoord, yCoord-1, zCoord-1) instanceof TileEntityElectronGrabber)
+				laser = (TileEntityElectronGrabber) worldObj.getTileEntity(xCoord, yCoord-1, zCoord-1);
+		}
+		else if(worldObj.getBlock(xCoord, yCoord-1, zCoord) instanceof BlockGasChamberWall && worldObj.getBlock(xCoord, yCoord+1, zCoord) instanceof BlockGasChamberWall)
+		{
+			if(worldObj.getTileEntity(xCoord+2, yCoord, zCoord) != null && worldObj.getTileEntity(xCoord+2, yCoord, zCoord) instanceof TileEntityElectronGrabber)
+				laser = (TileEntityElectronGrabber) worldObj.getTileEntity(xCoord+2, yCoord, zCoord);
+			if(worldObj.getTileEntity(xCoord-2, yCoord, zCoord) != null && worldObj.getTileEntity(xCoord-2, yCoord, zCoord) instanceof TileEntityElectronGrabber)
+				laser = (TileEntityElectronGrabber) worldObj.getTileEntity(xCoord-2, yCoord, zCoord);
+			if(worldObj.getTileEntity(xCoord+1, yCoord, zCoord+1) != null && worldObj.getTileEntity(xCoord+1, yCoord, zCoord+1) instanceof TileEntityElectronGrabber)
+				laser = (TileEntityElectronGrabber) worldObj.getTileEntity(xCoord+1, yCoord, zCoord+1);
+			if(worldObj.getTileEntity(xCoord+1, yCoord, zCoord-1) != null && worldObj.getTileEntity(xCoord+1, yCoord, zCoord-1) instanceof TileEntityElectronGrabber)
+				laser = (TileEntityElectronGrabber) worldObj.getTileEntity(xCoord+1, yCoord, zCoord-1);
+			if(worldObj.getTileEntity(xCoord-1, yCoord, zCoord+1) != null && worldObj.getTileEntity(xCoord-1, yCoord, zCoord+1) instanceof TileEntityElectronGrabber)
+				laser = (TileEntityElectronGrabber) worldObj.getTileEntity(xCoord-1, yCoord, zCoord+1);
+			if(worldObj.getTileEntity(xCoord-1, yCoord, zCoord-1) != null && worldObj.getTileEntity(xCoord-1, yCoord, zCoord-1) instanceof TileEntityElectronGrabber)
+				laser = (TileEntityElectronGrabber) worldObj.getTileEntity(xCoord-1, yCoord, zCoord-1);
+		}
+		else
+		{
+			if(worldObj.getTileEntity(xCoord+1, yCoord+1, zCoord) != null && worldObj.getTileEntity(xCoord+1, yCoord+1, zCoord) instanceof TileEntityElectronGrabber)
+				laser = (TileEntityElectronGrabber) worldObj.getTileEntity(xCoord+1, yCoord+1, zCoord);
+			if(worldObj.getTileEntity(xCoord-1, yCoord+1, zCoord) != null && worldObj.getTileEntity(xCoord-1, yCoord+1, zCoord) instanceof TileEntityElectronGrabber)
+				laser = (TileEntityElectronGrabber) worldObj.getTileEntity(xCoord-1, yCoord+1, zCoord);
+			if(worldObj.getTileEntity(xCoord, yCoord+1, zCoord+1) != null && worldObj.getTileEntity(xCoord, yCoord+1, zCoord+1) instanceof TileEntityElectronGrabber)
+				laser = (TileEntityElectronGrabber) worldObj.getTileEntity(xCoord, yCoord+1, zCoord+1);
+			if(worldObj.getTileEntity(xCoord, yCoord+1, zCoord-1) != null && worldObj.getTileEntity(xCoord, yCoord+1, zCoord-1) instanceof TileEntityElectronGrabber)
+				laser = (TileEntityElectronGrabber) worldObj.getTileEntity(xCoord, yCoord+1, zCoord-1);
+		}
+		return laser;
+	}
+	
+	public int emptyTubes()
+	{
+		if(getStackInSlot(0) != null)
+			return getStackInSlot(0).stackSize;
+		return 0;
 	}
 
 	@Override
@@ -163,4 +230,8 @@ public class TileEntityGasChamberPort extends TileEntity implements IInventory
 		// TODO Auto-generated method stub
 		return true;
 	}
+
+	public boolean testTubeSlot() {
+		return input || (worldObj.getBlock(xCoord, yCoord-1, zCoord).equals(LabStuffMain.blockGasChamberWall) && worldObj.getBlock(xCoord, yCoord + 1, zCoord).equals(LabStuffMain.blockGasChamberWall))
+;	}
 }

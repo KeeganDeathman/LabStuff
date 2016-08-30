@@ -1,23 +1,24 @@
 package keegan.labstuff.render;
 
+import java.awt.Color;
+
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import keegan.labstuff.models.ModelPlasmaPipe;
-import keegan.labstuff.tileentity.TileEntityLiquid;
+import keegan.labstuff.tileentity.TileEntityLiquidPipe;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.*;
 import net.minecraftforge.fluids.*;
 
 public class TileEntityRenderLiquidPipe extends TileEntitySpecialRenderer implements ISimpleBlockRenderingHandler
 {
-
+	
 	public static Minecraft mc = Minecraft.getMinecraft();
 	public static ModelPlasmaPipe model = new ModelPlasmaPipe();
 	public static ResourceLocation tex = new ResourceLocation("labstuff:textures/models/LiquidPipe.png");
@@ -31,7 +32,7 @@ public class TileEntityRenderLiquidPipe extends TileEntitySpecialRenderer implem
 	private boolean west = false;
 	private RenderBlocks renderer;
 	
-	public void renderPipe(TileEntityLiquid entity, double x, double y, double z, float tick)
+	public void renderPipe(TileEntityLiquidPipe entity, double x, double y, double z, float tick)
 	{
 		 int i = entity.blockMetadata;
 
@@ -68,51 +69,19 @@ public class TileEntityRenderLiquidPipe extends TileEntitySpecialRenderer implem
 	        
 	        GL11.glPopMatrix();
 	        
-	        if(entity.tank.getFluid() != null)
-		 	{
-		 		GL11.glPushMatrix();
-			 	GL11.glEnable(GL11.GL_BLEND);
-				OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ZERO);
-				FluidStack fluidStack = entity.tank.getFluid();
-				Fluid fluid = fluidStack.getFluid();
-
-	            GL11.glColor3f(1, 1, 1);
-	            //Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationBlocksTexture);
-	            mc.renderEngine.bindTexture(mc.renderEngine.getResourceLocation(fluid.getSpriteNumber()));
-	            //fillAreaWithIcon(fluidIcon, 0, 0, 16, 16);
-		        GL11.glTranslatef((float) x, (float) y, (float) z);
-		        GL11.glTranslatef(0.5F, 1.5F, 0.5F);
-		        // Use this or else model renders upside-down.
-		        GL11.glRotatef(180, 180F, 0F, 1F);
-		        
-		        if (i == 0)
-		            rotate = 0;
-
-		        if (i == 1)
-		            rotate = 90;
-
-		        if (i == 2)
-		            rotate = 180;
-
-		        if (i == 3)
-		            rotate = -90;
-		        GL11.glRotatef(rotate, 0F, 1F, 0F);
-		        
-		        this.configureSides(entity);
-		        
-		        
-		        renderer.setRenderBounds(0,0,0,1,1,1);
-		        renderer.renderAllFaces = true;
-		        renderer.renderStandardBlock(fluid.getBlock(), entity.xCoord, entity.yCoord, entity.zCoord);
-		        //renderer.renderBlockLiquid(fluid.getBlock(), entity.xCoord, entity.yCoord, entity.zCoord);
-		        //renderer.renderAllFaces = false;
-		        GL11.glDisable(GL11.GL_BLEND);
-		        
-		        GL11.glPopMatrix();
-		 	}
-	        
 	}
 	
+	public static void colorFluid(Fluid fluid)
+	{
+	    int color = fluid.getColor();
+	    
+	    float cR = (color >> 16 & 0xFF) / 255.0F;
+	    float cG = (color >> 8 & 0xFF) / 255.0F;
+	    float cB = (color & 0xFF) / 255.0F;
+	    
+	    GL11.glColor3f(cR, cG, cB);
+	}
+		
 	@Override
 	public void func_147496_a(World world)
 	{
@@ -121,7 +90,7 @@ public class TileEntityRenderLiquidPipe extends TileEntitySpecialRenderer implem
 	}
 	
 	
-	 public void configureSides(TileEntityLiquid tile)
+	 public void configureSides(TileEntityLiquidPipe tile)
 	 {
 		 int x = tile.xCoord;
 	     int y = tile.yCoord;
@@ -143,7 +112,7 @@ public class TileEntityRenderLiquidPipe extends TileEntitySpecialRenderer implem
 	
 	public void renderTileEntityAt(TileEntity tileEntity, double d, double d1, double d2, float f) 
 	{
-		this.renderPipe((TileEntityLiquid) tileEntity, d, d1, d2, f);
+		this.renderPipe((TileEntityLiquidPipe) tileEntity, d, d1, d2, f);
 	}
 	
 	@Override

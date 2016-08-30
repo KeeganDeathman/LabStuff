@@ -1,9 +1,5 @@
 package keegan.labstuff.tileentity;
 
-import java.util.ArrayList;
-
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.*;
 

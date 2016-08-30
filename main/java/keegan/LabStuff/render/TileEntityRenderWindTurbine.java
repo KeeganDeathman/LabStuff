@@ -18,7 +18,7 @@ public class TileEntityRenderWindTurbine extends TileEntitySpecialRenderer imple
 	//This method is called when minecraft renders a tile entity
 
 	public static Minecraft mc = Minecraft.getMinecraft();
-	public static ModelWindTurbine model = new ModelWindTurbine();
+	public ModelWindTurbine model = new ModelWindTurbine();
 	
 	public void renderTurbine(TileEntityWindTurbine entity, double x, double y, double z, float tick)
 	{

@@ -12,11 +12,13 @@ public class TileEntityIndustrialMotorContact extends TileEntityPowerConnection
 	{
 		if(getPowerSource()!=null)
 		{
-			if(getPowerSource().subtractPower(250, this))
+			if(getPowerSource().subtractPower(9090, this))
 				isPowered = true;
 			else
 				isPowered = false;
 		}
+		else
+			isPowered=false;
 	}
 	
 }

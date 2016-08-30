@@ -21,7 +21,7 @@ public class ItemCircuitDesignTable extends Item
 			world.setBlock(i, j+1, k,LabStuffMain.blockCircuitDesignTable);
 			Block table = world.getBlock(i, j+1, k);
 			int l = MathHelper.floor_double((double)(entityplayer.rotationYaw * 4.0F / 360.0F) + 2.5D) & 3;
-			((BlockCircuitDesignTable)table).onBlockPlacedBy(world, i, j, k, entityplayer, itemstack, l);
+			((BlockCircuitDesignTable)table).onBlockPlacedBy(world, i, j, k, l);
 			return true;
 		}
 		return false;

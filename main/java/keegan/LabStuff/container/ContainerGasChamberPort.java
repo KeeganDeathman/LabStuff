@@ -17,7 +17,7 @@ public class ContainerGasChamberPort extends Container {
 	{
 		tileEntity = te;
 		
-		if(tileEntity.input)
+		if(tileEntity.testTubeSlot())
 		{
 			bindPlayerInventory(invPlayer);
 			this.addSlotToContainer(new SlotTestTubes(this, tileEntity, 0, 201, 37));
