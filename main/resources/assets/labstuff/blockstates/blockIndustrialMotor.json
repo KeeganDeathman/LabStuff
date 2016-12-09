@@ -1,0 +1,7 @@
+{
+	"variants": {
+		"complete=false":{ "model": "labstuff:blockimotor" },
+		"complete=true":{ "model": "labstuff:blockimotor" },
+		"normal": { "model": "labstuff:blockimotor" }
+	}
+}

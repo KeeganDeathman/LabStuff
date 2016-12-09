@@ -1,5 +1,11 @@
 {
 	"variants": {
-		"normal": { "model": "labstuff:blockczo" }
+		"facing=south": { "model": "labstuff:czo", "y":180},
+		"facing=west": { "model": "labstuff:czo", "y":270},
+		"facing=east": { "model": "labstuff:czo", "y":90},
+		"facing=north": { "model": "labstuff:czo" },
+		"facing=down": { "model": "labstuff:czo" },
+		"facing=up": { "model": "labstuff:czo" },
+		"default": { "model": "labstuff:czo" }
 	}
 }

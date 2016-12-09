@@ -5,7 +5,7 @@ import keegan.labstuff.items.ItemSiliconBoule;
 import keegan.labstuff.items.ItemSiliconBoulePart;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
-import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -54,17 +54,6 @@ public class TileEntityCzo extends TileEntityPowerConnection implements IInvento
 	}
 
 	@Override
-	public ItemStack getStackInSlotOnClosing(int slot) 
-	{
-		// TODO Auto-generated method stub
-		ItemStack stack = getStackInSlot(slot);
-		if (stack != null) {
-			setInventorySlotContents(slot, null);
-		}
-		return stack;
-	}
-
-	@Override
 	public void setInventorySlotContents(int slot, ItemStack itemstack) 
 	{
 		chestContents[slot] = itemstack;
@@ -99,39 +88,9 @@ public class TileEntityCzo extends TileEntityPowerConnection implements IInvento
 		}
 		return false;
 	}
-
-	@Override
-	public String getInventoryName() {
-		// TODO Auto-generated method stub
-		return "Czo";
-	}
-
-
-
-	@Override
-	public void closeInventory() {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-
-
-	@Override
-	public boolean hasCustomInventoryName() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-
-	@Override
-	public void openInventory() {
-		// TODO Auto-generated method stub
-		
-	}
 	
 	@Override
-	public void writeToNBT(NBTTagCompound tagCompound)
+	public NBTTagCompound writeToNBT(NBTTagCompound tagCompound)
 	{
 		super.writeToNBT(tagCompound);
 		NBTTagList itemList = new NBTTagList();
@@ -148,6 +107,8 @@ public class TileEntityCzo extends TileEntityPowerConnection implements IInvento
         }
         tagCompound.setTag("Inventory", itemList);
         tagCompound.setString("Spinning", spinning);
+        
+        return tagCompound;
 	}
 	
 	@Override
@@ -173,7 +134,7 @@ public class TileEntityCzo extends TileEntityPowerConnection implements IInvento
 				powerSource.subtractPower(500, this);
 				spinning = "spinning";
 				System.out.println("Beginning spin " + spinning);
-				worldObj.scheduleBlockUpdate(xCoord, yCoord, zCoord, getBlockType(), 6000);
+				worldObj.scheduleUpdate(pos, getBlockType(), 6000);
 			}
 		}
 		else
@@ -197,9 +158,9 @@ public class TileEntityCzo extends TileEntityPowerConnection implements IInvento
 	}
 	
 	@Override
-	public void updateEntity()
+	public void update()
 	{
-		super.updateEntity();
+		super.update();
 		TileEntityPower powerSource = getPowerSource();
 		if(getStackInSlot(0) != null && !spinning.equals("spinning") && powerSource.getPower() > 600)
 		{
@@ -207,5 +168,62 @@ public class TileEntityCzo extends TileEntityPowerConnection implements IInvento
 				grow(powerSource);
 		}
 	}
+	
+	
+	@Override
+	public String getName() {
+		// TODO Auto-generated method stub
+		return "Czo";
+	}
 
+	@Override
+	public boolean hasCustomName() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public ItemStack removeStackFromSlot(int index) {
+		// TODO Auto-generated method stub
+        return ItemStackHelper.getAndRemove(this.chestContents, index);
+	}
+	
+	@Override
+	public int getField(int id) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void setField(int id, int value) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public int getFieldCount() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void clear() {
+
+	        for (int i = 0; i < this.chestContents.length; ++i)
+	        {
+	            this.chestContents[i] = null;
+	        }		
+	}
+
+	@Override
+	public void openInventory(EntityPlayer player) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void closeInventory(EntityPlayer player) {
+		// TODO Auto-generated method stub
+		
+	}
 }

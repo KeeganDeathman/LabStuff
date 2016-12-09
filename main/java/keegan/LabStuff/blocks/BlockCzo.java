@@ -4,34 +4,49 @@ import java.util.Random;
 
 import keegan.labstuff.LabStuffMain;
 import keegan.labstuff.tileentity.TileEntityCzo;
-import net.minecraft.block.Block;
-import net.minecraft.block.ITileEntityProvider;
+import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.*;
+import net.minecraft.block.state.*;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.MathHelper;
-import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
+import net.minecraft.util.*;
+import net.minecraft.util.math.*;
+import net.minecraft.world.*;
 
 public class BlockCzo extends Block implements ITileEntityProvider
 {
 
+	
 	public BlockCzo(Material p_i45394_1_) 
 	{
 		super(p_i45394_1_);
 	}
 
 	
+
 	@Override
-    public boolean isOpaqueCube() 
+	public int getMetaFromState(IBlockState state)
+	{
+		return state.getValue(FACING).getIndex();
+	}
+	
+	@Override
+	public IBlockState getStateFromMeta(int meta)
+	{
+		return this.getDefaultState().withProperty(FACING, EnumFacing.getFront(meta));
+	}
+	
+	@Override
+    public boolean isOpaqueCube(IBlockState state) 
     {
             return false;
     }
     
-    public boolean shouldSideBeRendered(IBlockAccess access, int i, int j, int k, int l)
-	{
+    @Override
+	public boolean shouldSideBeRendered(IBlockState state, IBlockAccess access, BlockPos pos, EnumFacing side) {
 		return false;
 	}
 	
@@ -42,39 +57,35 @@ public class BlockCzo extends Block implements ITileEntityProvider
 	}
 	
 	@Override
-	public void updateTick(World world, int x, int y, int z, Random rand)
+	public void updateTick(World world, BlockPos pos, IBlockState state, Random rand)
 	{
-		((TileEntityCzo)world.getTileEntity(x, y, z)).completeGrowth();
+		((TileEntityCzo)world.getTileEntity(pos)).completeGrowth();
 	}
 	
 	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par5, float par6, float par7, float par8)
-	{
+	 public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack held, EnumFacing facing, float fx, float par8, float par9) {
 		System.out.println("Hello!");
 		if(!world.isRemote)
 		{
-			player.openGui(LabStuffMain.instance, 8, world, x, y, z);
+			player.openGui(LabStuffMain.instance, 8, world, pos.getX(), pos.getY(), pos.getZ());
 			return true;
 		}
 		return false;
 	}
 	
+	public static final PropertyDirection FACING = PropertyDirection.create("facing");
+    
 	@Override
-    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack)
+	public BlockStateContainer createBlockState()
+	{
+		return new BlockStateContainer(this, new IProperty[]{FACING});
+	}
+	
+    @Override
+    public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase player, ItemStack stack)
     {
     	int l = MathHelper.floor_double((double)(player.rotationYaw * 4.0F / 360.0F) + 2.5D) & 3;
-    	if (l == 0)
-    		world.setBlockMetadataWithNotify(x, y, z, 0, 2);
-
-    	if (l == 1)
-    		world.setBlockMetadataWithNotify(x, y, z, 1, 2);
-
-        if (l == 2)
-        	world.setBlockMetadataWithNotify(x, y, z, 2, 2);
-
-        if (l == 3)
-        	world.setBlockMetadataWithNotify(x, y, z, 3, 2);
-        
+    	world.setBlockState(pos, getDefaultState().withProperty(FACING, EnumFacing.fromAngle(90*l)));    
     }
 
 }

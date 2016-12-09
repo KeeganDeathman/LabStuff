@@ -1,0 +1,11 @@
+{
+	"parent": "block/cube",
+	"textures": {
+		"up": "labstuff:blocks/dscdrive",
+		"down": "labstuff:blocks/dsc",
+		"south": "labstuff:blocks/dsc",
+		"west": "labstuff:blocks/dsc",
+		"east": "labstuff:blocks/dsc",
+		"north": "labstuff:blocks/dsc"
+	}
+}

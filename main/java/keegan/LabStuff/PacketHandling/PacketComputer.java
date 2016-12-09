@@ -1,14 +1,14 @@
 package keegan.labstuff.PacketHandling;
 
-import keegan.labstuff.tileentity.TileEntityComputer;
-
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
+import keegan.labstuff.tileentity.TileEntityComputer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import cpw.mods.fml.common.network.ByteBufUtils;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 public class PacketComputer extends AbstractPacket {
 
@@ -79,7 +79,7 @@ public class PacketComputer extends AbstractPacket {
 	{
 		System.out.println("Handling Server Side");
 		World world = player.worldObj;
-		TileEntity te = world.getTileEntity(x,y,z);
+		TileEntity te = world.getTileEntity(new BlockPos(x,y,z));
 		if(te instanceof TileEntityComputer)
 		{
 			System.out.println("Setting tile enitity's log...");

@@ -1,0 +1,5 @@
+{
+	"variants": {
+		"connected_down=true,connected_east=true,connected_north=true,connected_south=true,connected_up=true,connected_west=true,turbines=0": { "model": "labstuff:blockturbinevent" }
+	}
+}

@@ -27,7 +27,7 @@ public class TileEntityDSCCore extends DSCPart
 	}
 	
 	@Override
-	public void writeToNBT(NBTTagCompound tag)
+	public NBTTagCompound writeToNBT(NBTTagCompound tag)
 	{
 		tag.setBoolean("hasOS", hasOS);
 		tag.setInteger("ram", ram);
@@ -40,6 +40,8 @@ public class TileEntityDSCCore extends DSCPart
 			discovs[i] = discovered.get(i).getIndex();
 		}
 		tag.setIntArray("discovered", discovs);
+		
+		return tag;
 	}
 	
 	@Override
@@ -58,9 +60,9 @@ public class TileEntityDSCCore extends DSCPart
 	}
 	
 	@Override
-	public void updateEntity()
+	public void update()
 	{
-		super.updateEntity();
+		super.update();
 		boolean foundOS = false;
 		int foundRam = 0;
 		int foundNeed = 0;

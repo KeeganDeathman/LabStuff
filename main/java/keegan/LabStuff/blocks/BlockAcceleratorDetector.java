@@ -8,7 +8,7 @@ public class BlockAcceleratorDetector extends Block
 
 	public BlockAcceleratorDetector()
 	{
-		super(Material.iron);
+		super(Material.IRON);
 	}
 
 }

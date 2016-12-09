@@ -1,0 +1,13 @@
+{
+    "__comment": "Model for when four connected sides at an angle.",
+	"parent": "block/cube",
+    "textures": {
+		"particle": "labstuff:blocks/gaschamber/gaschamber0C",
+        "down": "labstuff:blocks/gaschamber/gaschamber4C",
+		"up": "labstuff:blocks/gaschamber/gaschamber4C",
+		"north": "labstuff:blocks/gaschamber/gaschamber4C",
+		"south": "labstuff:blocks/gaschamber/gaschamber3C_uwd",
+		"west": "labstuff:blocks/gaschamber/gaschamber4C",
+		"east": "labstuff:blocks/gaschamber/gaschamber3C_ued"
+    }
+}

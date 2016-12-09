@@ -1,0 +1,11 @@
+{
+	"parent": "block/cube",
+	"textures": {
+		"up": "labstuff:blocks/reservoir-top",
+		"down": "labstuff:blocks/reservoir-top",
+		"south": "labstuff:blocks/reservoir",
+		"west": "labstuff:blocks/reservoir",
+		"east": "labstuff:blocks/reservoir",
+		"north": "labstuff:blocks/reservoir"
+	}
+}

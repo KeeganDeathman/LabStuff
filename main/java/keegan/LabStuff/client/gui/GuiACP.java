@@ -41,7 +41,7 @@ public class GuiACP extends GuiContainer
 			//Start button
 			if(texX > 216 && texX < 245 && texY > 55 && texY < 87)
 			{
-				LabStuffMain.packetPipeline.sendToServer(new PacketACP(tile.xCoord, tile.yCoord, tile.zCoord, "launch"));
+				LabStuffMain.packetPipeline.sendToServer(new PacketACP(tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ(), "launch"));
 			}
 		}
 	}

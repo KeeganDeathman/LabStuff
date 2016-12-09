@@ -1,0 +1,11 @@
+{
+	"parent": "block/cube",
+	"textures": {
+		"up": "labstuff:blocks/blockSolenoidAxel",
+		"down": "labstuff:blocks/blockSolenoidAxel",
+		"south": "labstuff:blocks/blockSolenoidVert",
+		"west": "labstuff:blocks/blockSolenoidVert",
+		"east": "labstuff:blocks/blockSolenoidVert",
+		"north": "labstuff:blocks/blockSolenoidVert"
+	}
+}

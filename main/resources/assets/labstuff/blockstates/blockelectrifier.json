@@ -1,5 +1,17 @@
 {
 	"variants": {
-		"normal": { "model": "labstuff:blockelectrifier" }
+		"facing=south,watered=true": { "model": "labstuff:electrifier-watered", "y":180},
+		"facing=west,watered=true": { "model": "labstuff:electrifier-watered"},
+		"facing=east,watered=true": { "model": "labstuff:electrifier-watered", "y":90},
+		"facing=north,watered=true": { "model": "labstuff:electrifier-watered", "y":270},
+		"facing=down,watered=true": { "model": "labstuff:electrifier-watered" },
+		"facing=up,watered=true": { "model": "labstuff:electrifier-watered" },
+		"facing=south,watered=false": { "model": "labstuff:electrifier", "y":180},
+		"facing=west,watered=false": { "model": "labstuff:electrifier"},
+		"facing=east,watered=false": { "model": "labstuff:electrifier", "y":90},
+		"facing=north,watered=false": { "model": "labstuff:electrifier", "y":270},
+		"facing=down,watered=false": { "model": "labstuff:electrifier" },
+		"facing=up,watered=false": { "model": "labstuff:electrifier" },
+		"default": { "model": "labstuff:electrifier" }
 	}
 }

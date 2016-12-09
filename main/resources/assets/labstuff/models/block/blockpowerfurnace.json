@@ -1,6 +1,11 @@
 {
-	"parent": "block/cube_all",
+	"parent": "block/cube",
 	"textures": {
-		"all": "labstuff:blocks/blockpowerfurnace"
+		"up": "labstuff:blocks/blockCircuitMaker",
+		"down": "labstuff:blocks/blockCircuitMaker",
+		"south": "labstuff:blocks/furnace-generator",
+		"west": "labstuff:blocks/furnace-generator",
+		"east": "labstuff:blocks/furnace-generator",
+		"north": "labstuff:blocks/furnace-generator-front"
 	}
 }

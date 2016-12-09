@@ -1,15 +1,11 @@
 package keegan.labstuff.container;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import keegan.labstuff.slot.SlotPowerFurnace;
 import keegan.labstuff.tileentity.TileEntityPowerFurnace;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.ICrafting;
-import net.minecraft.inventory.Slot;
+import net.minecraft.entity.player.*;
+import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.relauncher.*;
 
 public class ContainerPowerFurnace extends Container 
 {
@@ -24,17 +20,17 @@ public class ContainerPowerFurnace extends Container
 		this.addSlotToContainer(new SlotPowerFurnace(tile, 0, 106, 205));
 		
 	}
-	
-	 public void addCraftingToCrafters(ICrafting p_75132_1_)
+	@Override
+	 public void addListener(IContainerListener listener)
 	 {
-		 super.addCraftingToCrafters(p_75132_1_);
-		 p_75132_1_.sendProgressBarUpdate(this, 0, this.tile.getBurnTime());
+		 super.addListener(listener);
+		 listener.sendProgressBarUpdate(this, 0, this.tile.getBurnTime());
 	 }
-	 
+	
 	@Override
 	public boolean canInteractWith(EntityPlayer entityplayer) 
 	{
-		return this.tile.isUseableByPlayer(entityplayer);
+		return true;
 	}
 	
 	protected void bindPlayerInventory(InventoryPlayer inventoryPlayer)
@@ -52,36 +48,6 @@ public class ContainerPowerFurnace extends Container
 				addSlotToContainer(new Slot(inventoryPlayer, i, 8 + i * 18, 70));
 			}
 	}
-	
-	
-	  /**
-     * Looks for changes made in the container, sends them to every listener.
-     */
-    public void detectAndSendChanges()
-    {
-        super.detectAndSendChanges();
-
-        for (int i = 0; i < this.crafters.size(); ++i)
-        {
-            ICrafting icrafting = (ICrafting)this.crafters.get(i);
-
-            if (this.lastBurnTime != this.tile.getBurnTime())
-            {
-                icrafting.sendProgressBarUpdate(this, 0, this.tile.getBurnTime());
-            }
-        }
-        this.lastBurnTime = tile.getBurnTime();
-    }
-    
-	
-	@SideOnly(Side.CLIENT)
-    public void updateProgressBar(int p_75137_1_, int p_75137_2_)
-    {
-        if (p_75137_1_ == 0)
-        {
-            this.tile.setBurnTime(p_75137_2_);
-        }
-    }
 	
 	@Override
     public ItemStack transferStackInSlot(EntityPlayer player, int slot) {
@@ -118,7 +84,32 @@ public class ContainerPowerFurnace extends Container
             }
             return stack;
     }
+	
+	@Override
+	 public void detectAndSendChanges()
+	    {
+	        super.detectAndSendChanges();
 
+	        for (int i = 0; i < this.listeners.size(); ++i)
+	        {
+	        	IContainerListener icrafting = (IContainerListener)this.listeners.get(i);
 
+	            if (this.lastBurnTime != this.tile.getBurnTime())
+	            {
+	                icrafting.sendProgressBarUpdate(this, 0, this.tile.getBurnTime());
+	            }
+	        }
+	        this.lastBurnTime = tile.getBurnTime();
+	    }
+	    
+		@Override
+		@SideOnly(Side.CLIENT)
+	    public void updateProgressBar(int p_75137_1_, int p_75137_2_)
+	    {
+	        if (p_75137_1_ == 0)
+	        {
+	            this.tile.setBurnTime(p_75137_2_);
+	        }
+	    }
 
 }

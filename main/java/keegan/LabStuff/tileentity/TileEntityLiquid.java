@@ -1,10 +1,6 @@
 package keegan.labstuff.tileentity;
 
-import keegan.labstuff.LabStuffMain;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.*;
 
 public class TileEntityLiquid extends TileEntity {}
 

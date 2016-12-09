@@ -1,0 +1,7 @@
+{
+	"variants": {
+		"complete=false":{ "model": "labstuff:blockimotorshaft" },
+		"complete=true":{ "model": "labstuff:blockimotorshaft" },
+		"normal": { "model": "labstuff:blockimotorshaft" }
+	}
+}

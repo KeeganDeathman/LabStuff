@@ -3,7 +3,7 @@ package keegan.labstuff.tileentity;
 import keegan.labstuff.LabStuffMain;
 import keegan.labstuff.blocks.*;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 
@@ -54,17 +54,6 @@ public class TileEntityVent extends TileEntity implements IInventory
 	}
 
 	@Override
-	public ItemStack getStackInSlotOnClosing(int slot) 
-	{
-		// TODO Auto-generated method stub
-		ItemStack stack = getStackInSlot(slot);
-		if (stack != null) {
-			setInventorySlotContents(slot, null);
-		}
-		return stack;
-	}
-
-	@Override
 	public void setInventorySlotContents(int slot, ItemStack itemstack) 
 	{
 		chestContents[slot] = itemstack;
@@ -97,40 +86,69 @@ public class TileEntityVent extends TileEntity implements IInventory
 		return true;
 	}
 
-
-
-	@Override
-	public String getInventoryName() {
-		return "GasChamberPort";
-	}
-
-
-
-	@Override
-	public void closeInventory() {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-
-
-	@Override
-	public boolean hasCustomInventoryName() {
-		// TODO Auto-generated method stub
-		return true;
-	}
-
-
-	@Override
-	public void openInventory() {
-		// TODO Auto-generated method stub
-		
-	}
-
 	@Override
 	public boolean isItemValidForSlot(int arg0, ItemStack arg1) {
 		// TODO Auto-generated method stub
 		return true;
 	}
+	@Override
+	public void openInventory(EntityPlayer player)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void closeInventory(EntityPlayer player)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public String getName() {
+		// TODO Auto-generated method stub
+		return "Vent";
+	}
+
+	@Override
+	public boolean hasCustomName() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public ItemStack removeStackFromSlot(int index) {
+		// TODO Auto-generated method stub
+        return ItemStackHelper.getAndRemove(this.chestContents, index);
+	}
+	
+	@Override
+	public int getField(int id) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void setField(int id, int value) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public int getFieldCount() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void clear() {
+
+	        for (int i = 0; i < this.chestContents.length; ++i)
+	        {
+	            this.chestContents[i] = null;
+	        }		
+	}
+
 }
+

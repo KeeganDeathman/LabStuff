@@ -1,6 +1,5 @@
 package keegan.labstuff.PacketHandling;
 
-import cpw.mods.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import keegan.labstuff.LabStuffMain;
@@ -8,7 +7,9 @@ import keegan.labstuff.tileentity.TileEntityDLLaptop;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 public class PacketDLLaptopUSB extends AbstractPacket
 {
@@ -56,7 +57,7 @@ public class PacketDLLaptopUSB extends AbstractPacket
 	@Override
 	public void handleServerSide(EntityPlayer player) {
 		World world = player.worldObj;
-		TileEntity te = world.getTileEntity(x,y,z);
+		TileEntity te = world.getTileEntity(new BlockPos(x,y,z));
 		if(te instanceof TileEntityDLLaptop)
 		{
 			if(slot == 42)

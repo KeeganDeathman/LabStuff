@@ -1,0 +1,8 @@
+{
+    "variants": {
+        "axis=y":  { "model": "labstuff:rubber_log" },
+        "axis=z":   { "model": "labstuff:rubber_log", "x": 90 },
+        "axis=x":   { "model": "labstuff:rubber_log", "x": 90, "y": 90 },
+        "axis=none": { "model": "labstuff:rubber_bark" }
+    }
+}

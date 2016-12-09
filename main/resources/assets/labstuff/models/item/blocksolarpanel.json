@@ -1,8 +1,18 @@
 {
-	"parent": "labstuff:block/blocksolarpanel",
+    "parent": "labstuff:item/itemsolar",
 	"display": {
-		"thirdperson": {
-			"rotation": [ 10, -45, 170 ],
+        "gui": {
+            "rotation": [ 30, 135, 0 ],
+            "translation": [ 0, 0, 0],
+            "scale":[ 0.625, 0.625, 0.625 ]
+        },
+        "fixed": {
+            "rotation": [ 0, 90, 0 ],
+            "translation": [ 0, 0, 0],
+            "scale":[ 0.5, 0.5, 0.5 ]
+        },
+		"inventory": {
+			"rotation": [ 10, -45, 170],
 			"translation": [ 0, 1.5, -2.75 ],
 			"scale": [ 0.375, 0.375, 0.375 ]
 		}

@@ -7,7 +7,7 @@ import keegan.labstuff.recipes.CircuitDesign;
 import keegan.labstuff.recipes.Recipes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
-import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -24,7 +24,7 @@ public class TileEntityCircuitDesignTable extends TileEntity implements IInvento
 	}
 	
 	@Override
-	public void writeToNBT(NBTTagCompound tagCompound)
+	public NBTTagCompound writeToNBT(NBTTagCompound tagCompound)
 	{
 		super.writeToNBT(tagCompound);
 		NBTTagList itemList = new NBTTagList();
@@ -41,17 +41,19 @@ public class TileEntityCircuitDesignTable extends TileEntity implements IInvento
 		}
 		tagCompound.setTag("Inventory", itemList);
 		tagCompound.setString("Design", circuitDesign);
+		
+		return tagCompound;
 	}
 	
 	public void drawCircuit(String design)
 	{
 		ArrayList<CircuitDesign> designs = Recipes.getCircuitDeisgns();
-		if(!worldObj.isRemote)
+		if(!worldObj.isRemote && getStackInSlot(0) != null)
 		{
 			System.out.println("Drawing begun");
 			for(int i=0; i < designs.size(); i++)
 			{
-				if(design.equals(designs.get(i).getName()) && getStackInSlot(0) != null)
+				if(design.equals(designs.get(i).getName()))
 					setInventorySlotContents(0, new ItemStack(designs.get(i).getDesignSheet(), getStackInSlot(0).stackSize));
 			}
 		}
@@ -131,24 +133,13 @@ public class TileEntityCircuitDesignTable extends TileEntity implements IInvento
 	}
 
 	@Override
-	public ItemStack getStackInSlotOnClosing(int slot) 
-	{
-		// TODO Auto-generated method stub
-		ItemStack stack = getStackInSlot(slot);
-		if (stack != null) {
-			setInventorySlotContents(slot, null);
-		}
-		return stack;
-	}
-
-	@Override
 	public void setInventorySlotContents(int slot, ItemStack itemstack) 
 	{
-		chestContents[slot] = itemstack;
 		if(itemstack != null && itemstack.stackSize > getInventoryStackLimit())
 		{
 			itemstack.stackSize = getInventoryStackLimit();
 		}
+		chestContents[slot] = itemstack;
 		
 	}
 
@@ -169,7 +160,7 @@ public class TileEntityCircuitDesignTable extends TileEntity implements IInvento
 
 	@Override
 	public boolean isItemValidForSlot(int slot, ItemStack itemstack) {
-		if(slot == 0 && itemstack.getItem() == Items.paper)
+		if(slot == 0 && itemstack.getItem() == Items.PAPER)
 		{
 			return true;
 		}
@@ -180,33 +171,59 @@ public class TileEntityCircuitDesignTable extends TileEntity implements IInvento
 		return false;
 	}
 
+
+
 	@Override
-	public String getInventoryName() {
+	public String getName() {
 		// TODO Auto-generated method stub
 		return "Circuit Design Table";
 	}
 
-
+	@Override
+	public boolean hasCustomName() {
+		// TODO Auto-generated method stub
+		return true;
+	}
 
 	@Override
-	public void closeInventory() {
+	public ItemStack removeStackFromSlot(int index) {
+		// TODO Auto-generated method stub
+		return ItemStackHelper.getAndRemove(chestContents, index);
+	}
+
+	@Override
+	public void openInventory(EntityPlayer player) {
 		// TODO Auto-generated method stub
 		
 	}
 
-
-
-
 	@Override
-	public boolean hasCustomInventoryName() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-
-	@Override
-	public void openInventory() {
+	public void closeInventory(EntityPlayer player) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public int getField(int id) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void setField(int id, int value) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public int getFieldCount() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void clear() {
+		for(ItemStack stack : chestContents)
+			stack = null;
 	}
 }

@@ -4,13 +4,14 @@ import keegan.labstuff.LabStuffMain;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.*;
 import net.minecraft.entity.player.*;
-import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.*;
-import net.minecraft.network.play.server.S12PacketEntityVelocity;
+import net.minecraft.network.play.server.SPacketEntityVelocity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ITickable;
 
-public class TileEntityGravityManipulater extends TileEntity implements IInventory
+public class TileEntityGravityManipulater extends TileEntity implements IInventory, ITickable
 {
 	
 	private float gravityModifier;
@@ -27,7 +28,7 @@ public class TileEntityGravityManipulater extends TileEntity implements IInvento
 	}
 	
 	@Override
-	public void writeToNBT(NBTTagCompound tagCompound)
+	public NBTTagCompound writeToNBT(NBTTagCompound tagCompound)
 	{
 		super.writeToNBT(tagCompound);
 		tagCompound.setFloat("gravityManipulater", gravityModifier);
@@ -46,6 +47,8 @@ public class TileEntityGravityManipulater extends TileEntity implements IInvento
             }
         }
         tagCompound.setTag("Inventory", itemList);
+        
+        return tagCompound;
 		
 	}
 	
@@ -67,7 +70,7 @@ public class TileEntityGravityManipulater extends TileEntity implements IInvento
 	}
 	
 	@Override
-	public void updateEntity()
+	public void update()
 	{
 		tickCount += 1;
 		if(getStackInSlot(0) != null && getStackInSlot(0).isItemEqual(new ItemStack(LabStuffMain.itemWarpDriveBattery)) && warpTime == 0)
@@ -84,9 +87,9 @@ public class TileEntityGravityManipulater extends TileEntity implements IInvento
 				for(int i = 0; i < worldObj.loadedEntityList.size(); i++)
 				{
 					Entity entity = (Entity) worldObj.loadedEntityList.get(i);
-					float distX = (float) Math.abs(entity.posX - xCoord);
-					float distY = (float) Math.abs(entity.posY - yCoord);
-					float distZ = (float) Math.abs(entity.posZ - zCoord);
+					float distX = (float) Math.abs(entity.posX - pos.getX());
+					float distY = (float) Math.abs(entity.posY - pos.getY());
+					float distZ = (float) Math.abs(entity.posZ - pos.getZ());
 					float distHor = (float) Math.sqrt((distX * distX) + (distZ * distZ));
 					int dist = (int) Math.sqrt((distHor * distHor) + (distY * distY));
 					if(gravityModifier != 0 && dist <= 25)
@@ -97,7 +100,7 @@ public class TileEntityGravityManipulater extends TileEntity implements IInvento
 							if(!player.capabilities.isFlying)
 							{
 								player.addVelocity(0, gravityModifier, 0);
-								((EntityPlayerMP) player).playerNetServerHandler.sendPacket(new S12PacketEntityVelocity(player));
+								((EntityPlayerMP) player).connection.sendPacket(new SPacketEntityVelocity(player));
 								System.out.println(gravityModifier);
 							}
 						}
@@ -111,7 +114,7 @@ public class TileEntityGravityManipulater extends TileEntity implements IInvento
 				warpTime -= 10;
 				if(warpTime == 0)
 				{
-				worldObj.spawnEntityInWorld(new EntityItem(worldObj, xCoord, yCoord+1, zCoord, new ItemStack(LabStuffMain.itemEmptyWarpDriveBattery)));
+				worldObj.spawnEntityInWorld(new EntityItem(worldObj, pos.getX(), pos.getY()+1, pos.getZ(), new ItemStack(LabStuffMain.itemEmptyWarpDriveBattery)));
 				}
 			}
 		}
@@ -164,17 +167,6 @@ public class TileEntityGravityManipulater extends TileEntity implements IInvento
 	}
 
 	@Override
-	public ItemStack getStackInSlotOnClosing(int slot) 
-	{
-		// TODO Auto-generated method stub
-		ItemStack stack = getStackInSlot(slot);
-		if (stack != null) {
-			setInventorySlotContents(slot, null);
-		}
-		return stack;
-	}
-
-	@Override
 	public void setInventorySlotContents(int slot, ItemStack itemstack) 
 	{
 		chestContents[slot] = itemstack;
@@ -208,32 +200,61 @@ public class TileEntityGravityManipulater extends TileEntity implements IInvento
 	}
 
 	@Override
-	public String getInventoryName() {
-		// TODO Auto-generated method stub
-		return "Gravity";
-	}
-
-
-
-	@Override
-	public void closeInventory() {
+	public void openInventory(EntityPlayer player)
+	{
 		// TODO Auto-generated method stub
 		
 	}
 
-
-
-
 	@Override
-	public boolean hasCustomInventoryName() {
+	public void closeInventory(EntityPlayer player)
+	{
 		// TODO Auto-generated method stub
-		return false;
+		
 	}
 
+	@Override
+	public String getName() {
+		// TODO Auto-generated method stub
+		return "Gravity Manipulater";
+	}
 
 	@Override
-	public void openInventory() {
+	public boolean hasCustomName() {
 		// TODO Auto-generated method stub
+		return true;
+	}
 
+	@Override
+	public ItemStack removeStackFromSlot(int index) {
+		// TODO Auto-generated method stub
+        return ItemStackHelper.getAndRemove(this.chestContents, index);
+	}
+	
+	@Override
+	public int getField(int id) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void setField(int id, int value) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public int getFieldCount() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void clear() {
+
+	        for (int i = 0; i < this.chestContents.length; ++i)
+	        {
+	            this.chestContents[i] = null;
+	        }		
 	}
 }

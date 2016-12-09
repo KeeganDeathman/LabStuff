@@ -70,9 +70,9 @@ public class GuiCircuitMaker extends GuiContainer
 				ArrayList<CircuitCreation> recipes = Recipes.getCircuitCreations();
 				for(int i = 0; i < recipes.size(); i++)
 				{
-					if(tile.getStackInSlot(0).getItem().getUnlocalizedName().contains(recipes.get(i).getDesignName()))
+					if(tile.getStackInSlot(0) != null && tile.getStackInSlot(0).getItem().getUnlocalizedName().contains(recipes.get(i).getDesignName()))
 					{
-						if(tile.getStackInSlot(1).getItem() == LabStuffMain.itemCircuitBoardPlate || tile.getStackInSlot(1).getItem().equals(recipes.get(i).getEtched()))
+						if(tile.getStackInSlot(1) != null &&(tile.getStackInSlot(1).getItem() == LabStuffMain.itemCircuitBoardPlate || tile.getStackInSlot(1).getItem().equals(recipes.get(i).getEtched())))
 						{
 							drill();
 						}
@@ -87,9 +87,9 @@ public class GuiCircuitMaker extends GuiContainer
 				ArrayList<CircuitCreation> recipes = Recipes.getCircuitCreations();
 				for(int i = 0; i < recipes.size(); i++)
 				{
-					if(tile.getStackInSlot(0).getItem().getUnlocalizedName().contains(recipes.get(i).getDesignName()))
+					if(tile.getStackInSlot(0) != null && tile.getStackInSlot(0).getItem().getUnlocalizedName().contains(recipes.get(i).getDesignName()))
 					{
-						if(tile.getStackInSlot(3).getItem() == LabStuffMain.itemCircuitBoardPlate || tile.getStackInSlot(3).getItem().equals(recipes.get(i).getDrilled()))
+						if(tile.getStackInSlot(3) != null && (tile.getStackInSlot(3).getItem() == LabStuffMain.itemCircuitBoardPlate || tile.getStackInSlot(3).getItem().equals(recipes.get(i).getDrilled())))
 						{
 							etch();
 						}
@@ -116,7 +116,7 @@ public class GuiCircuitMaker extends GuiContainer
 			this.drawTexturedModalRect(x, y, 46, 128, progress, 17);
 		}*/
 		System.out.println("Sending packet now.");
-		LabStuffMain.packetPipeline.sendToServer(new PacketCircuitMaker(tile.xCoord, tile.yCoord, tile.zCoord, "Drill"));
+		LabStuffMain.packetPipeline.sendToServer(new PacketCircuitMaker(tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ(), "Drill"));
 	}
 	
 	private void etch()
@@ -130,6 +130,6 @@ public class GuiCircuitMaker extends GuiContainer
 			this.drawTexturedModalRect(x, y, 46, 128, progress, 17);
 		}*/
 		System.out.println("Sending packet now.");
-		LabStuffMain.packetPipeline.sendToServer(new PacketCircuitMaker(tile.xCoord, tile.yCoord, tile.zCoord, "Etch"));
+		LabStuffMain.packetPipeline.sendToServer(new PacketCircuitMaker(tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ(), "Etch"));
 	}
 }

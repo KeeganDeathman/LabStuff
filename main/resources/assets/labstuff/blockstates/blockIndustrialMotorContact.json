@@ -1,0 +1,16 @@
+{
+	"forge_marker":1,
+	"defaults":
+	{
+		"custom":{"flip-v":"true"},
+		"model":"labstuff:blockimotorcontact"
+	},
+	"variants":
+	{
+		"complete":
+		{
+			"true":{"model":"labstuff:industrialmotor.obj"},
+			"false":{}
+		}
+	}
+}

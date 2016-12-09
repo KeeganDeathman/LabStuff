@@ -1,5 +1,5 @@
 {
 	"variants": {
-		"normal": { "model": "labstuff:blocksolarpanel" }
+		"normal": { "model": "labstuff:blocksolar" }
 	}
 }

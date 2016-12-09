@@ -1,5 +1,7 @@
 package keegan.labstuff.client.gui;
 
+import java.io.IOException;
+
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
@@ -34,19 +36,19 @@ public class GuiGravityManipulater extends GuiContainer
 	public void initGui()
 	{
 		super.initGui();
-		this.gravityModifierInput = new GuiTextField(this.fontRendererObj, 200, 160, 80, 10);
+		this.gravityModifierInput = new GuiTextField(0, this.fontRendererObj, 200, 160, 80, 10);
 		this.gravityModifierInput.setText(this.gravityModifier);
 	}
 
 	@Override
-	public void mouseClicked(int mouseX, int mouseY, int par3)
+	public void mouseClicked(int mouseX, int mouseY, int par3) throws IOException
 	{
 		super.mouseClicked(mouseX, mouseY, par3);
 		this.gravityModifierInput.mouseClicked(mouseX, mouseY, par3);
 	}
 
 	@Override
-	protected void keyTyped(char par1, int par2)
+	protected void keyTyped(char par1, int par2) throws IOException
 	{
 		super.keyTyped(par1, par2);
 		// Checks to see if were dealing with the console
@@ -59,7 +61,7 @@ public class GuiGravityManipulater extends GuiContainer
 		if (par2 == 28)
 		{
 			this.gravityModifier = this.gravityModifierInput.getText();
-			LabStuffMain.packetPipeline.sendToServer(new PacketGravity(tile.xCoord, tile.yCoord, tile.zCoord, Float.parseFloat(gravityModifier)));
+			LabStuffMain.packetPipeline.sendToServer(new PacketGravity(tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ(), Float.parseFloat(gravityModifier)));
 			this.gravityModifierInput.setText(gravityModifier = "");
 		}
 

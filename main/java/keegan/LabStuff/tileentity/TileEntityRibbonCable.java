@@ -3,8 +3,10 @@ package keegan.labstuff.tileentity;
 import java.util.ArrayList;
 
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ITickable;
+import net.minecraft.util.math.BlockPos;
 
-public class TileEntityRibbonCable extends TileEntity
+public class TileEntityRibbonCable extends TileEntity implements ITickable
 {
 
 	protected ArrayList<DSCPart> devices;
@@ -42,44 +44,57 @@ public class TileEntityRibbonCable extends TileEntity
 	{
 		if (!worldObj.isRemote)
 		{
-			if (worldObj.getTileEntity(xCoord + 1, yCoord, zCoord) != null && worldObj.getTileEntity(xCoord + 1, yCoord, zCoord) instanceof TileEntityRibbonCable)
+			
+			int xCoord = pos.getX();
+			int yCoord = pos.getY();
+			int zCoord = pos.getZ();
+			
+			if (getTileEntity(xCoord + 1, yCoord, zCoord) != null && getTileEntity(xCoord + 1, yCoord, zCoord) instanceof TileEntityRibbonCable)
 			{
-				return (TileEntityRibbonCable) worldObj.getTileEntity(xCoord + 1, yCoord, zCoord);
+				return (TileEntityRibbonCable) getTileEntity(xCoord + 1, yCoord, zCoord);
 			}
-			if (worldObj.getTileEntity(xCoord - 1, yCoord, zCoord) != null && worldObj.getTileEntity(xCoord - 1, yCoord, zCoord) instanceof TileEntityRibbonCable)
+			if (getTileEntity(xCoord - 1, yCoord, zCoord) != null && getTileEntity(xCoord - 1, yCoord, zCoord) instanceof TileEntityRibbonCable)
 			{
-				return (TileEntityRibbonCable) worldObj.getTileEntity(xCoord - 1, yCoord, zCoord);
+				return (TileEntityRibbonCable) getTileEntity(xCoord - 1, yCoord, zCoord);
 			}
-			if (worldObj.getTileEntity(xCoord, yCoord + 1, zCoord) != null && worldObj.getTileEntity(xCoord, yCoord + 1, zCoord) instanceof TileEntityRibbonCable)
+			if (getTileEntity(xCoord, yCoord + 1, zCoord) != null && getTileEntity(xCoord, yCoord + 1, zCoord) instanceof TileEntityRibbonCable)
 			{
-				return (TileEntityRibbonCable) worldObj.getTileEntity(xCoord, yCoord + 1, zCoord);
+				return (TileEntityRibbonCable) getTileEntity(xCoord, yCoord + 1, zCoord);
 			}
-			if (worldObj.getTileEntity(xCoord, yCoord - 1, zCoord) != null && worldObj.getTileEntity(xCoord, yCoord - 1, zCoord) instanceof TileEntityRibbonCable)
+			if (getTileEntity(xCoord, yCoord - 1, zCoord) != null && getTileEntity(xCoord, yCoord - 1, zCoord) instanceof TileEntityRibbonCable)
 			{
-				return (TileEntityRibbonCable) worldObj.getTileEntity(xCoord, yCoord - 1, zCoord);
+				return (TileEntityRibbonCable) getTileEntity(xCoord, yCoord - 1, zCoord);
 			}
-			if (worldObj.getTileEntity(xCoord, yCoord, zCoord + 1) != null && worldObj.getTileEntity(xCoord, yCoord, zCoord + 1) instanceof TileEntityRibbonCable)
+			if (getTileEntity(xCoord, yCoord, zCoord + 1) != null && getTileEntity(xCoord, yCoord, zCoord + 1) instanceof TileEntityRibbonCable)
 			{
-				return (TileEntityRibbonCable) worldObj.getTileEntity(xCoord, yCoord, zCoord + 1);
+				return (TileEntityRibbonCable) getTileEntity(xCoord, yCoord, zCoord + 1);
 			}
-			if (worldObj.getTileEntity(xCoord, yCoord, zCoord - 1) != null && worldObj.getTileEntity(xCoord, yCoord, zCoord - 1) instanceof TileEntityRibbonCable)
+			if (getTileEntity(xCoord, yCoord, zCoord - 1) != null && getTileEntity(xCoord, yCoord, zCoord - 1) instanceof TileEntityRibbonCable)
 			{
-				return (TileEntityRibbonCable) worldObj.getTileEntity(xCoord, yCoord, zCoord - 1);
+				return (TileEntityRibbonCable) getTileEntity(xCoord, yCoord, zCoord - 1);
 			}
 		}
 		return null;
+	}
+
+	private TileEntity getTileEntity(int i, int yCoord, int zCoord) {
+		// TODO Auto-generated method stub
+		return worldObj.getTileEntity(new BlockPos(i, yCoord, zCoord));
 	}
 
 	public TileEntityRibbonCable getNetwork(TileEntityRibbonCable src)
 	{
 		if (!worldObj.isRemote)
 		{
-			TileEntity posX = worldObj.getTileEntity(xCoord + 1, yCoord, zCoord);
-			TileEntity negX = worldObj.getTileEntity(xCoord - 1, yCoord, zCoord);
-			TileEntity posY = worldObj.getTileEntity(xCoord, yCoord + 1, zCoord);
-			TileEntity negY = worldObj.getTileEntity(xCoord, yCoord - 1, zCoord);
-			TileEntity posZ = worldObj.getTileEntity(xCoord, yCoord, zCoord + 1);
-			TileEntity negZ = worldObj.getTileEntity(xCoord, yCoord, zCoord - 1);
+			int xCoord = pos.getX();
+			int yCoord = pos.getY();
+			int zCoord = pos.getZ();
+			TileEntity posX = getTileEntity(xCoord + 1, yCoord, zCoord);
+			TileEntity negX = getTileEntity(xCoord - 1, yCoord, zCoord);
+			TileEntity posY = getTileEntity(xCoord, yCoord + 1, zCoord);
+			TileEntity negY = getTileEntity(xCoord, yCoord - 1, zCoord);
+			TileEntity posZ = getTileEntity(xCoord, yCoord, zCoord + 1);
+			TileEntity negZ = getTileEntity(xCoord, yCoord, zCoord - 1);
 			if (posX != null && posX instanceof TileEntityRibbonCable && !posX.equals(src) && !posX.equals(src))
 			{
 				return (TileEntityRibbonCable) posX;
@@ -112,34 +127,37 @@ public class TileEntityRibbonCable extends TileEntity
 	{
 		if (!worldObj.isRemote)
 		{
-			if (worldObj.getTileEntity(xCoord + 1, yCoord, zCoord) != null && worldObj.getTileEntity(xCoord + 1, yCoord, zCoord) instanceof TileEntityRibbonCable)
+			int xCoord = pos.getX();
+			int yCoord = pos.getY();
+			int zCoord = pos.getZ();
+			if (getTileEntity(xCoord + 1, yCoord, zCoord) != null && getTileEntity(xCoord + 1, yCoord, zCoord) instanceof TileEntityRibbonCable)
 			{
-				TileEntityRibbonCable cable = (TileEntityRibbonCable) worldObj.getTileEntity(xCoord + 1, yCoord, zCoord);
+				TileEntityRibbonCable cable = (TileEntityRibbonCable) getTileEntity(xCoord + 1, yCoord, zCoord);
 				if (cable.devices != null && cable.getDeviceCount() > 0) return cable;
 			}
-			if (worldObj.getTileEntity(xCoord - 1, yCoord, zCoord) != null && worldObj.getTileEntity(xCoord - 1, yCoord, zCoord) instanceof TileEntityRibbonCable)
+			if (getTileEntity(xCoord - 1, yCoord, zCoord) != null && getTileEntity(xCoord - 1, yCoord, zCoord) instanceof TileEntityRibbonCable)
 			{
-				TileEntityRibbonCable cable = (TileEntityRibbonCable) worldObj.getTileEntity(xCoord - 1, yCoord, zCoord);
+				TileEntityRibbonCable cable = (TileEntityRibbonCable) getTileEntity(xCoord - 1, yCoord, zCoord);
 				if (cable.devices != null && cable.getDeviceCount() > 0) return cable;
 			}
-			if (worldObj.getTileEntity(xCoord, yCoord + 1, zCoord) != null && worldObj.getTileEntity(xCoord, yCoord + 1, zCoord) instanceof TileEntityRibbonCable)
+			if (getTileEntity(xCoord, yCoord + 1, zCoord) != null && getTileEntity(xCoord, yCoord + 1, zCoord) instanceof TileEntityRibbonCable)
 			{
-				TileEntityRibbonCable cable = (TileEntityRibbonCable) worldObj.getTileEntity(xCoord, yCoord + 1, zCoord);
+				TileEntityRibbonCable cable = (TileEntityRibbonCable) getTileEntity(xCoord, yCoord + 1, zCoord);
 				if (cable.devices != null && cable.getDeviceCount() > 0) return cable;
 			}
-			if (worldObj.getTileEntity(xCoord, yCoord - 1, zCoord) != null && worldObj.getTileEntity(xCoord, yCoord - 1, zCoord) instanceof TileEntityRibbonCable)
+			if (getTileEntity(xCoord, yCoord - 1, zCoord) != null && getTileEntity(xCoord, yCoord - 1, zCoord) instanceof TileEntityRibbonCable)
 			{
-				TileEntityRibbonCable cable = (TileEntityRibbonCable) worldObj.getTileEntity(xCoord, yCoord - 1, zCoord);
+				TileEntityRibbonCable cable = (TileEntityRibbonCable) getTileEntity(xCoord, yCoord - 1, zCoord);
 				if (cable.devices != null && cable.getDeviceCount() > 0) return cable;
 			}
-			if (worldObj.getTileEntity(xCoord, yCoord, zCoord + 1) != null && worldObj.getTileEntity(xCoord, yCoord, zCoord + 1) instanceof TileEntityRibbonCable)
+			if (getTileEntity(xCoord, yCoord, zCoord + 1) != null && getTileEntity(xCoord, yCoord, zCoord + 1) instanceof TileEntityRibbonCable)
 			{
-				TileEntityRibbonCable cable = (TileEntityRibbonCable) worldObj.getTileEntity(xCoord, yCoord, zCoord + 1);
+				TileEntityRibbonCable cable = (TileEntityRibbonCable) getTileEntity(xCoord, yCoord, zCoord + 1);
 				if (cable.devices != null && cable.getDeviceCount() > 0) return cable;
 			}
-			if (worldObj.getTileEntity(xCoord, yCoord, zCoord - 1) != null && worldObj.getTileEntity(xCoord, yCoord, zCoord - 1) instanceof TileEntityRibbonCable)
+			if (getTileEntity(xCoord, yCoord, zCoord - 1) != null && getTileEntity(xCoord, yCoord, zCoord - 1) instanceof TileEntityRibbonCable)
 			{
-				TileEntityRibbonCable cable = (TileEntityRibbonCable) worldObj.getTileEntity(xCoord, yCoord, zCoord - 1);
+				TileEntityRibbonCable cable = (TileEntityRibbonCable) getTileEntity(xCoord, yCoord, zCoord - 1);
 				if (cable.devices != null && cable.getDeviceCount() > 0) return cable;
 			}
 		}
@@ -150,7 +168,7 @@ public class TileEntityRibbonCable extends TileEntity
 	{
 		for (DSCPart device : devices)
 		{
-			if (worldObj.getTileEntity(device.xCoord, device.yCoord, device.zCoord).equals(device))
+			if (worldObj.getTileEntity(device.getPos()).equals(device))
 			{}
 			else
 			{
@@ -246,7 +264,7 @@ public class TileEntityRibbonCable extends TileEntity
 	}
 
 	@Override
-	public void updateEntity()
+	public void update()
 	{
 		tickCount++;
 		if (tickCount >= 120)

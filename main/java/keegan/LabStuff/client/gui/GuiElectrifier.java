@@ -7,7 +7,8 @@ import keegan.labstuff.tileentity.TileEntityElectrifier;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.*;
-import net.minecraft.util.*;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 
 public class GuiElectrifier extends GuiContainer
@@ -46,7 +47,7 @@ public class GuiElectrifier extends GuiContainer
 	@Override
 	public void drawGuiContainerForegroundLayer(int par1, int par2)
 	{
-		this.fontRendererObj.drawString(StatCollector.translateToLocal("container.inventory"), 8, ySize - 255 + 2, 4210752);
+		this.fontRendererObj.drawString(new TextComponentTranslation("container.inventory").getFormattedText(), 8, ySize - 255 + 2, 4210752);
 		//System.out.println("electrify? " + electrifing);
 		if(electrifing)
 		{

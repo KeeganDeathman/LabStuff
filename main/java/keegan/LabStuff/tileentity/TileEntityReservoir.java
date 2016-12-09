@@ -2,83 +2,92 @@ package keegan.labstuff.tileentity;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.*;
 import net.minecraftforge.fluids.*;
 
-public class TileEntityReservoir extends TileEntity implements IFluidHandler
+@SuppressWarnings("deprecation")
+public class TileEntityReservoir extends TileEntity implements IFluidHandler, ITickable
 {
 	
-	public FluidTank tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME*10);
+	public FluidTank tank = new FluidTank(4000);
 	
 	@Override
-	public void updateEntity()
+	public void update()
 	{
-		if(worldObj.getTileEntity(xCoord, yCoord-1, zCoord) instanceof IFluidHandler)
+		if(worldObj.getTileEntity(pos.down()) instanceof IFluidHandler)
 		{
-			IFluidHandler pipe = (IFluidHandler)worldObj.getTileEntity(xCoord, yCoord-1, zCoord);
-			if(tank.getFluidAmount() > 0 && pipe.getTankInfo(ForgeDirection.UP).length >= 1)
+			IFluidHandler pipe = (IFluidHandler)worldObj.getTileEntity(pos.down());
+			if(tank.getFluidAmount() > 0 && pipe.getTankInfo(getDir((TileEntity) pipe)) != null)
 			{
-				if((tank.getFluid().equals(pipe.getTankInfo(ForgeDirection.UP)[0].fluid) || pipe.getTankInfo(ForgeDirection.UP)[0].fluid == null) && !worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord))
+				if((pipe.getTankInfo(getDir((TileEntity)pipe)) != null && pipe.getTankInfo(getDir((TileEntity)pipe)).length > 0 && tank.getFluid().equals(pipe.getTankInfo(getDir((TileEntity)pipe))[0].fluid) || pipe.getTankInfo(getDir((TileEntity)pipe))[0].fluid == null) && worldObj.isBlockIndirectlyGettingPowered(pos) == 0)
 				{
-					pipe.fill(ForgeDirection.UP, drain(null, new FluidStack(tank.getFluid(), FluidContainerRegistry.BUCKET_VOLUME), true), true);
+					pipe.fill(getDir((TileEntity)pipe), drain(getDir((TileEntity) pipe), new FluidStack(tank.getFluid(), 1000), true), true);
 				}
 			}
 		}
 	}
 	
+	private EnumFacing getDir(TileEntity remote) {
+		// TODO Auto-generated method stub
+		return EnumFacing.getFacingFromVector(pos.getX() - remote.getPos().getX(), pos.getY() - remote.getPos().getY(), pos.getZ() - remote.getPos().getZ());
+	}
+	
 	@Override
-	public void writeToNBT(NBTTagCompound tag)
+	public NBTTagCompound writeToNBT(NBTTagCompound tag)
 	{
 		super.writeToNBT(tag);
+		
+		tank.writeToNBT(tag);
+		
+		return tag;
 	}
 	@Override
 	public void readFromNBT(NBTTagCompound tag)
 	{
 		super.readFromNBT(tag);
+		
+		tank.readFromNBT(tag);
 	}
 
 	@Override
-	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
+	public int fill(EnumFacing from, FluidStack resource, boolean doFill)
 	{
 		// TODO Auto-generated method stub
 		return tank.fill(resource, doFill);
 	}
 
 	@Override
-	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
+	public FluidStack drain(EnumFacing from, FluidStack resource, boolean doDrain)
 	{
 		// TODO Auto-generated method stub
 		return tank.drain(resource.amount, doDrain);
 	}
 
 	@Override
-	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
+	public FluidStack drain(EnumFacing from, int maxDrain, boolean doDrain)
 	{
 		// TODO Auto-generated method stub
 		return tank.drain(maxDrain, doDrain);
 	}
 
+
 	@Override
-	public boolean canFill(ForgeDirection from, Fluid fluid)
+	public FluidTankInfo[] getTankInfo(EnumFacing from)
 	{
 		// TODO Auto-generated method stub
-		return worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
+		return new FluidTankInfo[]{tank.getInfo()};
 	}
 
 	@Override
-	public boolean canDrain(ForgeDirection from, Fluid fluid)
-	{
+	public boolean canFill(EnumFacing from, Fluid fluid) {
 		// TODO Auto-generated method stub
-		if(from.equals(ForgeDirection.DOWN))
-			return !worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
 		return false;
 	}
 
 	@Override
-	public FluidTankInfo[] getTankInfo(ForgeDirection from)
-	{
+	public boolean canDrain(EnumFacing from, Fluid fluid) {
 		// TODO Auto-generated method stub
-		return new FluidTankInfo[]{tank.getInfo()};
+		return true;
 	}
 
 }

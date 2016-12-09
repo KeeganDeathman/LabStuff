@@ -2,14 +2,14 @@ package keegan.labstuff.tileentity;
 
 import java.util.ArrayList;
 
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChatComponentText;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.*;
 import net.minecraftforge.fluids.*;
+import net.minecraftforge.fluids.capability.FluidTankProperties;
 
-public class TileEntityLiquidPipe extends TileEntity implements IFluidHandler
+@SuppressWarnings(value = {"deprecation" })
+public class TileEntityLiquidPipe extends TileEntity implements IFluidHandler, ITickable
 {
 	public FluidTank tank;
 	
@@ -19,15 +19,17 @@ public class TileEntityLiquidPipe extends TileEntity implements IFluidHandler
 
 	public TileEntityLiquidPipe()
 	{
-		tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 4);
+		tank = new FluidTank(4000);
 		source = null;
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound tag)
+	public NBTTagCompound writeToNBT(NBTTagCompound tag)
 	{
 		super.writeToNBT(tag);
 		tank.writeToNBT(tag);
+		
+		return tag;
 	}
 	@Override
 	public void readFromNBT(NBTTagCompound tag)
@@ -36,47 +38,33 @@ public class TileEntityLiquidPipe extends TileEntity implements IFluidHandler
 		tank.readFromNBT(tag);
 		
 	}
-	
-	private ForgeDirection calcDirection(TileEntity tile)
-	{
-		if(yCoord > tile.yCoord)
-			return ForgeDirection.UP;
-		if(xCoord > tile.xCoord)
-			return ForgeDirection.EAST;
-		if(xCoord < tile.xCoord)
-			return ForgeDirection.WEST;
-		if(zCoord > tile.zCoord)
-			return ForgeDirection.SOUTH;
-		if(zCoord < tile.zCoord)
-			return ForgeDirection.NORTH;
-		return ForgeDirection.DOWN;
-	}
-	
 	/**Returns nearby tanks that we can  dump into*/
-	private IFluidHandler[] getConnectedTanks(FluidStack stack, ForgeDirection from)
+	private IFluidHandler[] getConnectedTanks(FluidStack stack, EnumFacing from)
 	{
 		if(stack == null)
 			return null;
 		ArrayList<IFluidHandler> tanks = new ArrayList<IFluidHandler>();
 		
-		for(ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
+		for(EnumFacing dir : EnumFacing.VALUES)
 		{
 			if(!dir.equals(from))
 			{
-				TileEntity remote = worldObj.getTileEntity(xCoord+dir.offsetX, yCoord+dir.offsetY, zCoord+dir.offsetZ);
+				TileEntity remote = worldObj.getTileEntity(pos.offset(dir));
 				if(remote != null && remote instanceof IFluidHandler)
-					if(((IFluidHandler)remote).getTankInfo(dir.getOpposite()) != null 
-					&& ((IFluidHandler)remote).canFill(dir, stack.getFluid()))
-						if(((IFluidHandler)remote).getTankInfo(dir)[0].fluid != null)
+				{
+					if(((IFluidHandler)remote).getTankInfo(getDir(remote)) != null && ((IFluidHandler)remote).getTankInfo(getDir(remote)).length >= 1)
+					{
+						if(((IFluidHandler) remote).getTankInfo(getDir(remote))[0].fluid != null)
 						{
-							if(((IFluidHandler)remote).getTankInfo(dir.getOpposite())[0].fluid.amount < ((IFluidHandler)remote).getTankInfo(dir.getOpposite())[0].capacity)
+							if(((IFluidHandler)remote).getTankInfo(getDir(remote))[0].fluid.amount < ((IFluidHandler)remote).getTankInfo(getDir(remote))[0].capacity)
 								tanks.add((IFluidHandler) remote);
 						}
 						else
 						{
 							tanks.add((IFluidHandler) remote);
 						}
-		
+					}
+				}
 			}
 		}
 		
@@ -85,79 +73,72 @@ public class TileEntityLiquidPipe extends TileEntity implements IFluidHandler
 	}
 	
 	@Override
-	public void updateEntity()
+	public void update()
 	{
 		if(tank.getFluid() != null)
 		{
 			for(IFluidHandler remote : getConnectedTanks(new FluidStack(tank.getFluid().getFluid(), 0), null))
 			{
-				if(remote.getTankInfo(calcDirection((TileEntity) remote)) != null && remote.getTankInfo(calcDirection((TileEntity) remote))[0].fluid == null)
-					remote.fill(calcDirection((TileEntity)remote), drain(null, tank.getFluidAmount()/2, true), true);
+				if(remote.getTankInfo(getDir((TileEntity)remote)) != null && remote.getTankInfo(getDir((TileEntity)remote))[0] == null)
+					remote.fill(getDir((TileEntity)remote), drain(getDir((TileEntity) remote), tank.getFluidAmount()/2, true), true);
 			}
 		}
 	}
 
+	private EnumFacing getDir(TileEntity remote) {
+		// TODO Auto-generated method stub
+		return EnumFacing.getFacingFromVector(pos.getX() - remote.getPos().getX(), pos.getY() - remote.getPos().getY(), pos.getZ() - remote.getPos().getZ());
+	}
+
 	@Override
-	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
+	public int fill(EnumFacing from, FluidStack resource, boolean doFill)
 	{
-		IFluidHandler[] tanks = getConnectedTanks(resource, from);
-		if(resource == null)
-			return 0;
-		FluidStack resourceN = new FluidStack(resource.getFluid(), 0);
-		
-		if(tanks.length > 0)
+		int filled = tank.fill(resource, doFill);
+		if(doFill)
 		{
-			for(IFluidHandler remote : tanks)
+			IFluidHandler[] tanks = getConnectedTanks(resource, null);
+			if(tanks != null)
 			{
-				FluidStack resourceM = new FluidStack(resource.getFluid(), resource.amount/(tanks.length+1));
-				resourceN = resourceM.copy();
-				if(remote.fill(calcDirection((TileEntity) remote), resourceM, false) < resourceM.amount)
-					resourceN.amount += remote.fill(calcDirection((TileEntity) remote), resourceM, true);
-				else
-					remote.fill(calcDirection((TileEntity) remote), resourceM, true);
+				for(IFluidHandler remote : tanks)
+				{
+					if(remote.getTankInfo(getDir((TileEntity)remote)) != null && remote.getTankInfo(getDir((TileEntity)remote))[0].fluid != null && !((remote.getTankInfo(getDir((TileEntity)remote))[0].fluid.amount + resource.amount) > tank.getFluidAmount()))
+						remote.fill(getDir((TileEntity)remote), resource, doFill);
+				}
 			}
 		}
-		else
-		{
-			resourceN = resource.copy();
-		}
-		
-		return tank.fill(resourceN, doFill);
+		return filled;
 	}
 
 	@Override
-	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
+	public FluidStack drain(EnumFacing from, FluidStack resource, boolean doDrain)
 	{
 		// TODO Auto-generated method stub
 		return tank.drain(resource.amount, doDrain);
 	}
 
 	@Override
-	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
+	public FluidStack drain(EnumFacing from, int maxDrain, boolean doDrain)
 	{
 		// TODO Auto-generated method stub
 		return tank.drain(maxDrain, doDrain);
 	}
+	
+	@Override
+	public FluidTankInfo[] getTankInfo(EnumFacing from) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 	@Override
-	public boolean canFill(ForgeDirection from, Fluid fluid)
-	{
+	public boolean canFill(EnumFacing from, Fluid fluid) {
 		// TODO Auto-generated method stub
 		return true;
 	}
 
 	@Override
-	public boolean canDrain(ForgeDirection from, Fluid fluid)
-	{
+	public boolean canDrain(EnumFacing from, Fluid fluid) {
 		// TODO Auto-generated method stub
 		return true;
-	}
-
-	@Override
-	public FluidTankInfo[] getTankInfo(ForgeDirection from)
-	{
-		// TODO Auto-generated method stub
-		return new FluidTankInfo[]{tank.getInfo()};
 	}
 
 }

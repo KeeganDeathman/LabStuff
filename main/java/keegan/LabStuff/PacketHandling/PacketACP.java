@@ -1,12 +1,13 @@
 package keegan.labstuff.PacketHandling;
 
-import cpw.mods.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import keegan.labstuff.tileentity.TileEntityAcceleratorControlPanel;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 public class PacketACP extends AbstractPacket
 {
@@ -55,7 +56,7 @@ public class PacketACP extends AbstractPacket
 	public void handleServerSide(EntityPlayer player)
 	{
 		World world = player.worldObj;
-		TileEntity te = world.getTileEntity(x,y,z);
+		TileEntity te = world.getTileEntity(new BlockPos(x,y,z));
 		if(te instanceof TileEntityAcceleratorControlPanel)
 		{
 			if(button.equals("launch"))

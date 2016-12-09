@@ -1,5 +1,11 @@
 {
 	"variants": {
-		"normal": { "model": "labstuff:blockelectrongrabber" }
+		"facing=south": { "model": "labstuff:blocklaser", "y":180},
+		"facing=west": { "model": "labstuff:blocklaser", "y":270},
+		"facing=east": { "model": "labstuff:blocklaser", "y":90},
+		"facing=north": { "model": "labstuff:blocklaser" },
+		"facing=down": { "model": "labstuff:blocklaser" },
+		"facing=up": { "model": "labstuff:blocklaser" },
+		"default": { "model": "labstuff:blocklaser" }
 	}
 }

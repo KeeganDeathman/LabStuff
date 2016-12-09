@@ -12,7 +12,8 @@ import keegan.labstuff.tileentity.DSCBench;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.util.*;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextComponentTranslation;
 
 public class GuiDSCBench extends GuiContainer
 {
@@ -78,7 +79,7 @@ public class GuiDSCBench extends GuiContainer
 				if(i.getName().equals(itemName))
 				{
 					item = i;
-					LabStuffMain.packetPipeline.sendToServer(new PacketDSCBench(item,tile.xCoord, tile.yCoord, tile.zCoord));
+					LabStuffMain.packetPipeline.sendToServer(new PacketDSCBench(item,tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ()));
 				}
 			}
 		}
@@ -92,8 +93,8 @@ public class GuiDSCBench extends GuiContainer
 	@Override
 	public void drawGuiContainerForegroundLayer(int par1, int par2)
 	{
-		this.fontRendererObj.drawString(StatCollector.translateToLocal("container.inventory"), -30, ySize - 255 + 2, 4210752);
-		this.fontRendererObj.drawString(StatCollector.translateToLocal(itemName), xSize - 150 + 2, ySize - 100 + 2, 4210752);
+		this.fontRendererObj.drawString(new TextComponentTranslation("container.inventory").getFormattedText(), -30, ySize - 255 + 2, 4210752);
+		this.fontRendererObj.drawString(itemName, xSize - 150 + 2, ySize - 100 + 2, 4210752);
 	}
 
 	@Override

@@ -4,8 +4,9 @@ import keegan.labstuff.blocks.BlockPlasmaPipe;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ITickable;
 
-public class TileEntityPlasma extends TileEntity 
+public class TileEntityPlasma extends TileEntity implements ITickable
 {
 	
 	protected int plasmaInt = 0;
@@ -19,28 +20,28 @@ public class TileEntityPlasma extends TileEntity
 	public void addPlasma(int addition, TileEntity issuer)
 	{
 		plasmaInt+=addition;
-		if (worldObj.getTileEntity(xCoord + 1, yCoord, zCoord)  instanceof TileEntityPlasma && worldObj.getTileEntity(xCoord + 1, yCoord, zCoord) != issuer && worldObj.getTileEntity(xCoord + 1, yCoord, zCoord) != null) 
+		if (worldObj.getTileEntity(pos.add(1,0,0))  instanceof TileEntityPlasma && worldObj.getTileEntity(pos.add(1,0,0)) != issuer && worldObj.getTileEntity(pos.add(1,0,0)) != null) 
 		{
-			((TileEntityPlasma) worldObj.getTileEntity(xCoord + 1, yCoord, zCoord)).addPlasmaNetworked(plasmaInt, this);
+			((TileEntityPlasma) worldObj.getTileEntity(pos.add(1,0,0))).addPlasmaNetworked(plasmaInt, this);
 		}
-		if (worldObj.getTileEntity(xCoord - 1, yCoord, zCoord)  instanceof TileEntityPlasma && worldObj.getTileEntity(xCoord - 1, yCoord, zCoord) != issuer && worldObj.getTileEntity(xCoord - 1, yCoord, zCoord) != null) 
+		if (worldObj.getTileEntity(pos.west())  instanceof TileEntityPlasma && worldObj.getTileEntity(pos.west()) != issuer && worldObj.getTileEntity(pos.west()) != null) 
 		{
-				((TileEntityPlasma) worldObj.getTileEntity(xCoord - 1, yCoord, zCoord)).addPlasmaNetworked(plasmaInt, this);
+				((TileEntityPlasma) worldObj.getTileEntity(pos.west())).addPlasmaNetworked(plasmaInt, this);
 		}
-		if (worldObj.getTileEntity(xCoord, yCoord + 1, zCoord)  instanceof TileEntityPlasma && worldObj.getTileEntity(xCoord, yCoord + 1, zCoord) != issuer && worldObj.getTileEntity(xCoord, yCoord + 1, zCoord) != null) 
+		if (worldObj.getTileEntity(pos.up())  instanceof TileEntityPlasma && worldObj.getTileEntity(pos.up()) != issuer && worldObj.getTileEntity(pos.up()) != null) 
 		{
-			((TileEntityPlasma) worldObj.getTileEntity(xCoord, yCoord + 1, zCoord)).addPlasmaNetworked(plasmaInt, this);
+			((TileEntityPlasma) worldObj.getTileEntity(pos.up())).addPlasmaNetworked(plasmaInt, this);
 		}
-		if (worldObj.getTileEntity(xCoord, yCoord - 1, zCoord)  instanceof TileEntityPlasma && worldObj.getTileEntity(xCoord, yCoord - 1, zCoord) != issuer && worldObj.getTileEntity(xCoord, yCoord - 1, zCoord) != null) 
+		if (worldObj.getTileEntity(pos.down())  instanceof TileEntityPlasma && worldObj.getTileEntity(pos.down()) != issuer && worldObj.getTileEntity(pos.down()) != null) 
 		{
-			((TileEntityPlasma) worldObj.getTileEntity(xCoord, yCoord - 1, zCoord)).addPlasmaNetworked(plasmaInt, this);
+			((TileEntityPlasma) worldObj.getTileEntity(pos.down())).addPlasmaNetworked(plasmaInt, this);
 		}
-		if (worldObj.getTileEntity(xCoord, yCoord, zCoord + 1)  instanceof TileEntityPlasma && worldObj.getTileEntity(xCoord, yCoord, zCoord + 1) != issuer && worldObj.getTileEntity(xCoord, yCoord, zCoord + 1) != null) 
+		if (worldObj.getTileEntity(pos.south())  instanceof TileEntityPlasma && worldObj.getTileEntity(pos.south()) != issuer && worldObj.getTileEntity(pos.south()) != null) 
 		{
-			((TileEntityPlasma) worldObj.getTileEntity(xCoord, yCoord, zCoord + 1)).addPlasmaNetworked(plasmaInt, this);
+			((TileEntityPlasma) worldObj.getTileEntity(pos.south())).addPlasmaNetworked(plasmaInt, this);
 		}
-		if (worldObj.getTileEntity(xCoord, yCoord, zCoord - 1) instanceof TileEntityPlasma && worldObj.getTileEntity(xCoord, yCoord, zCoord - 1) != issuer && worldObj.getTileEntity(xCoord, yCoord, zCoord - 1) != null) {
-				((TileEntityPlasma) worldObj.getTileEntity(xCoord, yCoord, zCoord - 1)).addPlasmaNetworked(plasmaInt, this);
+		if (worldObj.getTileEntity(pos.north()) instanceof TileEntityPlasma && worldObj.getTileEntity(pos.north()) != issuer && worldObj.getTileEntity(pos.north()) != null) {
+				((TileEntityPlasma) worldObj.getTileEntity(pos.north())).addPlasmaNetworked(plasmaInt, this);
 		}
 	}
 	
@@ -49,29 +50,28 @@ public class TileEntityPlasma extends TileEntity
 		if(plasmaInt + addition == issuer.getPlasma())
 		{
 			plasmaInt+=addition;
-			if (worldObj.getTileEntity(xCoord + 1, yCoord, zCoord)  instanceof TileEntityPlasma && worldObj.getTileEntity(xCoord + 1, yCoord, zCoord) != issuer && worldObj.getTileEntity(xCoord + 1, yCoord, zCoord) != null) 
+			if (worldObj.getTileEntity(pos.add(1,0,0))  instanceof TileEntityPlasma && worldObj.getTileEntity(pos.add(1,0,0)) != issuer && worldObj.getTileEntity(pos.add(1,0,0)) != null) 
 			{
-				((TileEntityPlasma) worldObj.getTileEntity(xCoord + 1, yCoord, zCoord)).addPlasmaNetworked(plasmaInt, this);
+				((TileEntityPlasma) worldObj.getTileEntity(pos.add(1,0,0))).addPlasmaNetworked(plasmaInt, this);
 			}
-			if (worldObj.getTileEntity(xCoord - 1, yCoord, zCoord)  instanceof TileEntityPlasma && worldObj.getTileEntity(xCoord - 1, yCoord, zCoord) != issuer && worldObj.getTileEntity(xCoord - 1, yCoord, zCoord) != null) 
+			if (worldObj.getTileEntity(pos.west())  instanceof TileEntityPlasma && worldObj.getTileEntity(pos.west()) != issuer && worldObj.getTileEntity(pos.west()) != null) 
 			{
-				((TileEntityPlasma) worldObj.getTileEntity(xCoord - 1, yCoord, zCoord)).addPlasmaNetworked(plasmaInt, this);
+					((TileEntityPlasma) worldObj.getTileEntity(pos.west())).addPlasmaNetworked(plasmaInt, this);
 			}
-			if (worldObj.getTileEntity(xCoord, yCoord + 1, zCoord)  instanceof TileEntityPlasma && worldObj.getTileEntity(xCoord, yCoord + 1, zCoord) != issuer && worldObj.getTileEntity(xCoord, yCoord + 1, zCoord) != null) 
+			if (worldObj.getTileEntity(pos.up())  instanceof TileEntityPlasma && worldObj.getTileEntity(pos.up()) != issuer && worldObj.getTileEntity(pos.up()) != null) 
 			{
-				((TileEntityPlasma) worldObj.getTileEntity(xCoord, yCoord + 1, zCoord)).addPlasmaNetworked(plasmaInt, this);
+				((TileEntityPlasma) worldObj.getTileEntity(pos.up())).addPlasmaNetworked(plasmaInt, this);
 			}
-			if (worldObj.getTileEntity(xCoord, yCoord - 1, zCoord)  instanceof TileEntityPlasma && worldObj.getTileEntity(xCoord, yCoord - 1, zCoord) != issuer && worldObj.getTileEntity(xCoord, yCoord - 1, zCoord) != null) 
+			if (worldObj.getTileEntity(pos.down())  instanceof TileEntityPlasma && worldObj.getTileEntity(pos.down()) != issuer && worldObj.getTileEntity(pos.down()) != null) 
 			{
-				((TileEntityPlasma) worldObj.getTileEntity(xCoord, yCoord - 1, zCoord)).addPlasmaNetworked(plasmaInt, this);
+				((TileEntityPlasma) worldObj.getTileEntity(pos.down())).addPlasmaNetworked(plasmaInt, this);
 			}
-			if (worldObj.getTileEntity(xCoord, yCoord, zCoord + 1)  instanceof TileEntityPlasma && worldObj.getTileEntity(xCoord, yCoord, zCoord + 1) != issuer && worldObj.getTileEntity(xCoord, yCoord, zCoord + 1) != null) 
+			if (worldObj.getTileEntity(pos.south())  instanceof TileEntityPlasma && worldObj.getTileEntity(pos.south()) != issuer && worldObj.getTileEntity(pos.south()) != null) 
 			{
-				((TileEntityPlasma) worldObj.getTileEntity(xCoord, yCoord, zCoord + 1)).addPlasmaNetworked(plasmaInt, this);
+				((TileEntityPlasma) worldObj.getTileEntity(pos.south())).addPlasmaNetworked(plasmaInt, this);
 			}
-			if (worldObj.getTileEntity(xCoord, yCoord, zCoord - 1) instanceof TileEntityPlasma && worldObj.getTileEntity(xCoord, yCoord, zCoord - 1) != issuer && worldObj.getTileEntity(xCoord, yCoord, zCoord - 1) != null) 
-			{
-				((TileEntityPlasma) worldObj.getTileEntity(xCoord, yCoord, zCoord - 1)).addPlasmaNetworked(plasmaInt, this);
+			if (worldObj.getTileEntity(pos.north()) instanceof TileEntityPlasma && worldObj.getTileEntity(pos.north()) != issuer && worldObj.getTileEntity(pos.north()) != null) {
+					((TileEntityPlasma) worldObj.getTileEntity(pos.north())).addPlasmaNetworked(plasmaInt, this);
 			}
 		}
 		else
@@ -89,29 +89,28 @@ public class TileEntityPlasma extends TileEntity
 		if(plasmaInt >= subtraction)
 		{
 			plasmaInt-=subtraction;
-			if(worldObj.getTileEntity(xCoord+1, yCoord, zCoord) instanceof TileEntityPlasma && worldObj.getTileEntity(xCoord+1, yCoord, zCoord) != issuer && worldObj.getTileEntity(xCoord+1, yCoord, zCoord) != null)
+			if (worldObj.getTileEntity(pos.add(1,0,0))  instanceof TileEntityPlasma && worldObj.getTileEntity(pos.add(1,0,0)) != issuer && worldObj.getTileEntity(pos.add(1,0,0)) != null) 
 			{
-				((TileEntityPlasma)worldObj.getTileEntity(xCoord+1, yCoord, zCoord)).subtractPlasmaNetworked(plasmaInt, this);
+				((TileEntityPlasma) worldObj.getTileEntity(pos.add(1,0,0))).subtractPlasmaNetworked(plasmaInt, this);
 			}
-			if(worldObj.getTileEntity(xCoord-1, yCoord, zCoord) instanceof TileEntityPlasma && worldObj.getTileEntity(xCoord-1, yCoord, zCoord) != issuer && worldObj.getTileEntity(xCoord-1, yCoord, zCoord) != null)
+			if (worldObj.getTileEntity(pos.west())  instanceof TileEntityPlasma && worldObj.getTileEntity(pos.west()) != issuer && worldObj.getTileEntity(pos.west()) != null) 
 			{
-				((TileEntityPlasma)worldObj.getTileEntity(xCoord-1, yCoord, zCoord)).subtractPlasmaNetworked(plasmaInt, this);
+					((TileEntityPlasma) worldObj.getTileEntity(pos.west())).subtractPlasmaNetworked(plasmaInt, this);
 			}
-			if(worldObj.getTileEntity(xCoord, yCoord+1, zCoord) instanceof TileEntityPlasma && worldObj.getTileEntity(xCoord, yCoord+1, zCoord) != issuer && worldObj.getTileEntity(xCoord, yCoord+1, zCoord) != null)
+			if (worldObj.getTileEntity(pos.up())  instanceof TileEntityPlasma && worldObj.getTileEntity(pos.up()) != issuer && worldObj.getTileEntity(pos.up()) != null) 
 			{
-				((TileEntityPlasma)worldObj.getTileEntity(xCoord, yCoord+1, zCoord)).subtractPlasmaNetworked(plasmaInt, this);
+				((TileEntityPlasma) worldObj.getTileEntity(pos.up())).subtractPlasmaNetworked(plasmaInt, this);
 			}
-			if(worldObj.getTileEntity(xCoord, yCoord-1, zCoord) instanceof TileEntityPlasma && worldObj.getTileEntity(xCoord, yCoord-1, zCoord) != issuer && worldObj.getTileEntity(xCoord, yCoord-1, zCoord) != null)
+			if (worldObj.getTileEntity(pos.down())  instanceof TileEntityPlasma && worldObj.getTileEntity(pos.down()) != issuer && worldObj.getTileEntity(pos.down()) != null) 
 			{
-				((TileEntityPlasma)worldObj.getTileEntity(xCoord, yCoord-1, zCoord)).subtractPlasmaNetworked(plasmaInt, this);
+				((TileEntityPlasma) worldObj.getTileEntity(pos.down())).subtractPlasmaNetworked(plasmaInt, this);
 			}
-			if(worldObj.getTileEntity(xCoord, yCoord, zCoord+1) instanceof TileEntityPlasma && worldObj.getTileEntity(xCoord, yCoord, zCoord+1) != issuer && worldObj.getTileEntity(xCoord, yCoord, zCoord+1) != null)
+			if (worldObj.getTileEntity(pos.south())  instanceof TileEntityPlasma && worldObj.getTileEntity(pos.south()) != issuer && worldObj.getTileEntity(pos.south()) != null) 
 			{
-				((TileEntityPlasma)worldObj.getTileEntity(xCoord, yCoord, zCoord+1)).subtractPlasmaNetworked(plasmaInt, this);
+				((TileEntityPlasma) worldObj.getTileEntity(pos.south())).subtractPlasmaNetworked(plasmaInt, this);
 			}
-			if(worldObj.getTileEntity(xCoord, yCoord, zCoord-1) instanceof TileEntityPlasma && worldObj.getTileEntity(xCoord, yCoord, zCoord-1) != issuer && worldObj.getTileEntity(xCoord, yCoord, zCoord-1) != null)
-			{
-				((TileEntityPlasma)worldObj.getTileEntity(xCoord, yCoord, zCoord-1)).subtractPlasmaNetworked(plasmaInt, this);
+			if (worldObj.getTileEntity(pos.north()) instanceof TileEntityPlasma && worldObj.getTileEntity(pos.north()) != issuer && worldObj.getTileEntity(pos.north()) != null) {
+					((TileEntityPlasma) worldObj.getTileEntity(pos.north())).subtractPlasmaNetworked(plasmaInt, this);
 			}
 		}
 	}
@@ -122,30 +121,28 @@ public class TileEntityPlasma extends TileEntity
 		{
 			if(plasmaInt - subtraction == issuer.getPlasma())
 			{
-				plasmaInt-=subtraction;
-				if(worldObj.getTileEntity(xCoord+1, yCoord, zCoord) instanceof TileEntityPlasma && worldObj.getTileEntity(xCoord+1, yCoord, zCoord) != issuer && worldObj.getTileEntity(xCoord+1, yCoord, zCoord) != null)
+				if (worldObj.getTileEntity(pos.add(1,0,0))  instanceof TileEntityPlasma && worldObj.getTileEntity(pos.add(1,0,0)) != issuer && worldObj.getTileEntity(pos.add(1,0,0)) != null) 
 				{
-					((TileEntityPlasma)worldObj.getTileEntity(xCoord+1, yCoord, zCoord)).subtractPlasmaNetworked(plasmaInt, this);
+					((TileEntityPlasma) worldObj.getTileEntity(pos.add(1,0,0))).subtractPlasmaNetworked(plasmaInt, this);
 				}
-				if(worldObj.getTileEntity(xCoord-1, yCoord, zCoord) instanceof TileEntityPlasma && worldObj.getTileEntity(xCoord-1, yCoord, zCoord) != issuer && worldObj.getTileEntity(xCoord-1, yCoord, zCoord) != null)
+				if (worldObj.getTileEntity(pos.west())  instanceof TileEntityPlasma && worldObj.getTileEntity(pos.west()) != issuer && worldObj.getTileEntity(pos.west()) != null) 
 				{
-					((TileEntityPlasma)worldObj.getTileEntity(xCoord-1, yCoord, zCoord)).subtractPlasmaNetworked(plasmaInt, this);
+					((TileEntityPlasma) worldObj.getTileEntity(pos.west())).subtractPlasmaNetworked(plasmaInt, this);
 				}
-				if(worldObj.getTileEntity(xCoord, yCoord+1, zCoord) instanceof TileEntityPlasma && worldObj.getTileEntity(xCoord, yCoord+1, zCoord) != issuer && worldObj.getTileEntity(xCoord, yCoord+1, zCoord) != null)
+				if (worldObj.getTileEntity(pos.up())  instanceof TileEntityPlasma && worldObj.getTileEntity(pos.up()) != issuer && worldObj.getTileEntity(pos.up()) != null) 
 				{
-					((TileEntityPlasma)worldObj.getTileEntity(xCoord, yCoord+1, zCoord)).subtractPlasmaNetworked(plasmaInt, this);
+					((TileEntityPlasma) worldObj.getTileEntity(pos.up())).subtractPlasmaNetworked(plasmaInt, this);
 				}
-				if(worldObj.getTileEntity(xCoord, yCoord-1, zCoord) instanceof TileEntityPlasma && worldObj.getTileEntity(xCoord, yCoord-1, zCoord) != issuer && worldObj.getTileEntity(xCoord, yCoord-1, zCoord) != null)
+				if (worldObj.getTileEntity(pos.down())  instanceof TileEntityPlasma && worldObj.getTileEntity(pos.down()) != issuer && worldObj.getTileEntity(pos.down()) != null) 
 				{
-					((TileEntityPlasma)worldObj.getTileEntity(xCoord, yCoord-1, zCoord)).subtractPlasmaNetworked(plasmaInt, this);
+					((TileEntityPlasma) worldObj.getTileEntity(pos.down())).subtractPlasmaNetworked(plasmaInt, this);
 				}
-				if(worldObj.getTileEntity(xCoord, yCoord, zCoord+1) instanceof TileEntityPlasma && worldObj.getTileEntity(xCoord, yCoord, zCoord+1) != issuer && worldObj.getTileEntity(xCoord, yCoord, zCoord+1) != null)
+				if (worldObj.getTileEntity(pos.south())  instanceof TileEntityPlasma && worldObj.getTileEntity(pos.south()) != issuer && worldObj.getTileEntity(pos.south()) != null) 
 				{
-					((TileEntityPlasma)worldObj.getTileEntity(xCoord, yCoord, zCoord+1)).subtractPlasmaNetworked(plasmaInt, this);
+					((TileEntityPlasma) worldObj.getTileEntity(pos.south())).subtractPlasmaNetworked(plasmaInt, this);
 				}
-				if(worldObj.getTileEntity(xCoord, yCoord, zCoord-1) instanceof TileEntityPlasma && worldObj.getTileEntity(xCoord, yCoord, zCoord-1) != issuer && worldObj.getTileEntity(xCoord, yCoord, zCoord-1) != null)
-				{
-					((TileEntityPlasma)worldObj.getTileEntity(xCoord, yCoord, zCoord-1)).subtractPlasmaNetworked(plasmaInt, this);
+				if (worldObj.getTileEntity(pos.north()) instanceof TileEntityPlasma && worldObj.getTileEntity(pos.north()) != issuer && worldObj.getTileEntity(pos.north()) != null) {
+					((TileEntityPlasma) worldObj.getTileEntity(pos.north())).subtractPlasmaNetworked(plasmaInt, this);
 				}
 			}
 			else
@@ -160,10 +157,12 @@ public class TileEntityPlasma extends TileEntity
 	}
 	
 	@Override
-	public void writeToNBT(NBTTagCompound tag)
+	public NBTTagCompound writeToNBT(NBTTagCompound tag)
 	{
 		super.writeToNBT(tag);
 		tag.setInteger("plasma", this.plasmaInt);
+		
+		return tag;
 	}
 	
 	@Override
@@ -176,5 +175,12 @@ public class TileEntityPlasma extends TileEntity
 	public int getPlasma()
 	{
 		return plasmaInt;
+	}
+
+
+	@Override
+	public void update() {
+		// TODO Auto-generated method stub
+		
 	}
 }

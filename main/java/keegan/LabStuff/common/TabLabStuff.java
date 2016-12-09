@@ -3,7 +3,7 @@ package keegan.labstuff.common;
 import keegan.labstuff.LabStuffMain;
 
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
+import net.minecraft.item.*;
 
 public class TabLabStuff extends CreativeTabs {
 
@@ -15,7 +15,7 @@ public class TabLabStuff extends CreativeTabs {
 	public Item getTabIconItem()
 	{
 		
-		return LabStuffMain.itemFiberGlass;
+		return Item.getItemFromBlock(LabStuffMain.blockComputer);
 	}
 	
 	public String getTranslatedTabLabel()

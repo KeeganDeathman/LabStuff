@@ -2,25 +2,45 @@ package keegan.labstuff.blocks;
 
 import keegan.labstuff.LabStuffMain;
 import keegan.labstuff.tileentity.TileEntityElectrifier;
-import net.minecraft.block.Block;
-import net.minecraft.block.ITileEntityProvider;
+import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.*;
+import net.minecraft.block.state.*;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.MathHelper;
-import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
+import net.minecraft.util.*;
+import net.minecraft.util.math.*;
+import net.minecraft.world.*;
+import net.minecraftforge.fml.relauncher.*;
 
 public class BlockElectrifier extends Block implements ITileEntityProvider
 {
 
+	
 	public BlockElectrifier(Material p_i45394_1_) 
 	{
 		super(p_i45394_1_);
+		this.setDefaultState(getDefaultState().withProperty(WATERED, false));
 	}
 
+
+	@Override
+	public int getMetaFromState(IBlockState state)
+	{
+		return (state.getValue(FACING).getIndex() + 1) * ((state.getValue(WATERED) ? 2 : 1));
+	}
+	
+	@Override
+	public IBlockState getStateFromMeta(int meta)
+	{
+		if(meta < 6)
+			return this.getDefaultState().withProperty(FACING, EnumFacing.getFront(meta-1)).withProperty(WATERED, false);
+		else
+			return this.getDefaultState().withProperty(FACING, EnumFacing.getFront(meta/2-1)).withProperty(WATERED, true);
+	}
+	
 	@Override
 	public TileEntity createNewTileEntity(World arg0, int arg1) {
 		return new TileEntityElectrifier();
@@ -28,26 +48,31 @@ public class BlockElectrifier extends Block implements ITileEntityProvider
 	
 	//It's not an opaque cube, so you need this.
     @Override
-    public boolean isOpaqueCube() 
+    public boolean isOpaqueCube(IBlockState state) 
     {
             return false;
     }
     
+	public static final PropertyDirection FACING = PropertyDirection.create("facing");
+	public static final PropertyBool WATERED = PropertyBool.create("watered");
+    
+	@Override
+	public BlockStateContainer createBlockState()
+	{
+		return new BlockStateContainer(this, new IProperty[]{FACING, WATERED});
+	}
+	
+	@SideOnly(Side.CLIENT)
+    public BlockRenderLayer getBlockLayer()
+    {
+        return BlockRenderLayer.TRANSLUCENT;
+    }
+	
     @Override
-    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack)
+    public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase player, ItemStack stack)
     {
     	int l = MathHelper.floor_double((double)(player.rotationYaw * 4.0F / 360.0F) + 2.5D) & 3;
-    	if (l == 0)
-    		world.setBlockMetadataWithNotify(x, y, z, 0, 2);
-
-    	if (l == 1)
-    		world.setBlockMetadataWithNotify(x, y, z, 1, 2);
-
-        if (l == 2)
-        	world.setBlockMetadataWithNotify(x, y, z, 2, 2);
-
-        if (l == 3)
-        	world.setBlockMetadataWithNotify(x, y, z, 3, 2);
+    	world.setBlockState(pos, getDefaultState().withProperty(FACING, EnumFacing.fromAngle(90*l)).withProperty(WATERED, false));    
     }
     
     public boolean shouldSideBeRendered(IBlockAccess access, int i, int j, int k, int l)
@@ -56,12 +81,12 @@ public class BlockElectrifier extends Block implements ITileEntityProvider
 	}
     
     @Override
-    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par5, float par6, float par7, float par8)
+    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack held, EnumFacing facing, float fx, float par8, float par9) 
     {
     	System.out.println("Im awake!");
     	if(!world.isRemote)
     	{
-    		player.openGui(LabStuffMain.instance, 4, world, x, y, z);
+    		player.openGui(LabStuffMain.instance, 4, world, pos.getX(), pos.getY(), pos.getZ());
     		return true;
     	}
     	return false;

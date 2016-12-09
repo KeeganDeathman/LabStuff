@@ -1,40 +1,74 @@
 package keegan.labstuff.blocks;
 
 import keegan.labstuff.LabStuffMain;
-import keegan.labstuff.tileentity.TileEntityFusionToroidalMagnet;
+import keegan.labstuff.tileentity.TileEntityToroid;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.block.properties.*;
+import net.minecraft.block.state.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.*;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.*;
 
-public class BlockFusionToroidalMagnet extends Block implements ITileEntityProvider{
+public class BlockFusionToroidalMagnet extends Block implements ITileEntityProvider
+{
+	
+	public static PropertyInteger ANGLE = PropertyInteger.create("angle", 0, 7);
 
-	public BlockFusionToroidalMagnet(Material p_i45394_1_) {
+	public BlockFusionToroidalMagnet(Material p_i45394_1_)
+	{
 		super(p_i45394_1_);
+		this.setDefaultState(getDefaultState().withProperty(ANGLE, 0));
 		// TODO Auto-generated constructor stub
 	}
+	
+
 
 	@Override
-	public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_) {
-		// TODO Auto-generated method stub
-		return new TileEntityFusionToroidalMagnet();
+	public BlockStateContainer createBlockState()
+	{
+		return new BlockStateContainer(this, new IProperty[]{ANGLE});
 	}
 	
 	@Override
-    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par5, float par6, float par7, float par8)
-    {
+	public EnumBlockRenderType getRenderType(IBlockState state)
+	{
+		return EnumBlockRenderType.MODEL;
+	}
+	
+	@Override
+	public int getMetaFromState(IBlockState state)
+	{
+		return state.getValue(ANGLE);
+	}
+	
+	@Override
+	public IBlockState getStateFromMeta(int meta)
+	{
+		return getDefaultState().withProperty(ANGLE, meta);
+	}
+	
+	@Override
+	public boolean isOpaqueCube(IBlockState state)
+	{
+		return true;
+		
+	}
+	
+	@Override
+    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack held, EnumFacing facing, float fx, float par8, float par9) 
+	{
     	if(!world.isRemote)
     	{
-    		if(player.getHeldItem() != null)
+    		if(held != null)
     		{
-    			if(world.getBlockMetadata(x, y, z) == 7 && player.getHeldItem().isItemEqual(new ItemStack(LabStuffMain.itemWrench)))
-        			world.setBlockMetadataWithNotify(x, y, z, 0, 2);
-        		else if (player.getHeldItem().isItemEqual(new ItemStack(LabStuffMain.itemWrench)))
-        			world.setBlockMetadataWithNotify(x, y, z, world.getBlockMetadata(x, y, z)+1, 2);
+    			if(world.getBlockState(pos).getValue(ANGLE) == 7 && held.isItemEqual(new ItemStack(LabStuffMain.itemWrench)))
+        			world.setBlockState(pos, getDefaultState());
+        		else if (held.isItemEqual(new ItemStack(LabStuffMain.itemWrench)))
+        			world.setBlockState(pos, getDefaultState().withProperty(ANGLE, world.getBlockState(pos).getValue(ANGLE)+1), 2);
         		return true;
 
     		}
@@ -43,15 +77,18 @@ public class BlockFusionToroidalMagnet extends Block implements ITileEntityProvi
     }
 	
 	@Override
-	public boolean isOpaqueCube()
-	{
+	public boolean shouldSideBeRendered(IBlockState state, IBlockAccess access, BlockPos pos, EnumFacing side) {
 		return false;
+	}
+
+
+
+	@Override
+	public TileEntity createNewTileEntity(World worldIn, int meta) {
+		// TODO Auto-generated method stub
+		return new TileEntityToroid();
 	}
 	
-	@Override
-	public boolean shouldSideBeRendered(IBlockAccess ba, int x, int y, int z, int side)
-	{
-		return false;
-	}
+	
 
 }

@@ -1,6 +1,11 @@
 {
-	"parent": "block/cube_all",
+	"parent": "block/cube",
 	"textures": {
-		"all": "labstuff:blocks/blockgaschamberwall"
+		"up": "labstuff:blocks/gaschamber0",
+		"down": "labstuff:blocks/gaschamber0",
+		"north": "labstuff:blocks/gaschamber0",
+		"east": "labstuff:blocks/gaschamber0",
+		"south": "labstuff:blocks/gaschamber0",
+		"west": "labstuff:blocks/gaschamber0"
 	}
 }

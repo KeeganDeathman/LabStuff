@@ -15,7 +15,7 @@ public class TileEntityComputer extends TileEntity
 	public TileEntityComputer() {}
 	
 	@Override
-	public void writeToNBT(NBTTagCompound tag)
+	public NBTTagCompound writeToNBT(NBTTagCompound tag)
 	{
 		super.writeToNBT(tag);
 		tag.setString(ConsoleLogLine1, "ConsoleLogLine1");	
@@ -23,6 +23,8 @@ public class TileEntityComputer extends TileEntity
 		tag.setString(ConsoleLogLine3, "ConsoleLogLine3");	
 		tag.setString(ConsoleLogLine4, "ConsoleLogLine4");	
 		tag.setString(ConsoleLogLine5, "ConsoleLogLine5");	
+		
+		return tag;
 	}
 	
 	@Override

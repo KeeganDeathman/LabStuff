@@ -2,22 +2,20 @@ package keegan.labstuff.client.gui;
 
 import java.util.ArrayList;
 
+import org.lwjgl.opengl.GL11;
+
 import keegan.labstuff.LabStuffMain;
 import keegan.labstuff.PacketHandling.PacketCircuitDesignTable;
 import keegan.labstuff.container.ContainerCircuitDesignTable;
-import keegan.labstuff.recipes.CircuitDesign;
-import keegan.labstuff.recipes.Recipes;
+import keegan.labstuff.recipes.*;
 import keegan.labstuff.tileentity.TileEntityCircuitDesignTable;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.entity.player.*;
 import net.minecraft.init.Items;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
-
-import org.lwjgl.opengl.GL11;
 
 public class GuiCircuitDesignTable extends GuiContainer
 {
@@ -78,9 +76,9 @@ public class GuiCircuitDesignTable extends GuiContainer
 	    	}
 	    	else if(par1GuiButton.id == 0)
 	    	{
-	    		if(tile.getStackInSlot(0).getItem() == Items.paper)
+	    		if(tile.getStackInSlot(0) != null && tile.getStackInSlot(0).getItem() == Items.PAPER)
 	    		{
-	    			LabStuffMain.packetPipeline.sendToServer(new PacketCircuitDesignTable(tile.xCoord, tile.yCoord, tile.zCoord, circuitDesign));
+	    			LabStuffMain.packetPipeline.sendToServer(new PacketCircuitDesignTable(tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ(), circuitDesign));
 	    		}
 	    	}
 	    	else
@@ -94,8 +92,8 @@ public class GuiCircuitDesignTable extends GuiContainer
 	@Override
 	public void drawGuiContainerForegroundLayer(int par1, int par2)
 	{
-		this.fontRendererObj.drawString(StatCollector.translateToLocal("container.inventory"), 8, ySize - 255 + 2, 4210752);
-		this.fontRendererObj.drawString(StatCollector.translateToLocal(circuitDesign), xSize - 105 + 2, ySize - 100 + 2, 4210752);
+		this.fontRendererObj.drawString(new TextComponentTranslation("container.inventory").getFormattedText(), 8, ySize - 255 + 2, 4210752);
+		this.fontRendererObj.drawString(circuitDesign, xSize - 105 + 2, ySize - 100 + 2, 4210752);
 	}
 
 

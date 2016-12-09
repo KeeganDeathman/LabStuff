@@ -3,7 +3,7 @@ package keegan.labstuff.tileentity;
 import cofh.api.energy.*;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 public class TileEntityLVToRF extends TileEntityPowerConnection implements IEnergyProvider
 {
@@ -16,10 +16,12 @@ public class TileEntityLVToRF extends TileEntityPowerConnection implements IEner
 	}
 	
 	@Override
-	public void writeToNBT(NBTTagCompound tag)
+	public NBTTagCompound writeToNBT(NBTTagCompound tag)
 	{
 		super.writeToNBT(tag);
 		storage.writeToNBT(tag);
+	
+		return tag;
 	}
 	
 	@Override
@@ -33,62 +35,58 @@ public class TileEntityLVToRF extends TileEntityPowerConnection implements IEner
 	
 	
 	@Override
-	public void updateEntity()
+	public void update()
 	{
 		TileEntity[] connectedTEs = new TileEntity[6];
-		connectedTEs[0] = worldObj.getTileEntity(xCoord+1, yCoord, zCoord);
-		connectedTEs[1] = worldObj.getTileEntity(xCoord-1, yCoord, zCoord);
-		connectedTEs[2] = worldObj.getTileEntity(xCoord, yCoord+1, zCoord);
-		connectedTEs[3] = worldObj.getTileEntity(xCoord, yCoord-1, zCoord);
-		connectedTEs[4] = worldObj.getTileEntity(xCoord, yCoord, zCoord+1);
-		connectedTEs[5] = worldObj.getTileEntity(xCoord, yCoord, zCoord-1);
+		connectedTEs[0] = worldObj.getTileEntity(pos.west());
+		connectedTEs[1] = worldObj.getTileEntity(pos.east());
+		connectedTEs[2] = worldObj.getTileEntity(pos.down());
+		connectedTEs[3] = worldObj.getTileEntity(pos.up());
+		connectedTEs[4] = worldObj.getTileEntity(pos.north());
+		connectedTEs[5] = worldObj.getTileEntity(pos.south());
 		for(int i = 0; i < connectedTEs.length; i++)
 		{
-			if(connectedTEs[i] != null && connectedTEs[i] instanceof IEnergyHandler && getPowerSource() != null)
+			if(connectedTEs[i] != null && connectedTEs[i] instanceof IEnergyReceiver && getPowerSource() != null)
 			{
 				if(((TileEntityPower)getPowerSource()).subtractPower(storage.receiveEnergy(storage.getMaxReceive(), true)*2, this))
 				{
-					((IEnergyHandler)connectedTEs[i]).receiveEnergy(calcDirection(connectedTEs[i]).getOpposite(), storage.getMaxReceive(), false);
+					((IEnergyReceiver)connectedTEs[i]).receiveEnergy(calcDirection(connectedTEs[i]).getOpposite(), storage.getMaxReceive(), false);
 				}
 			}
 		}
 	}
 	
-	private ForgeDirection calcDirection(TileEntity tile)
+	private EnumFacing calcDirection(TileEntity tile)
 	{
-		if(yCoord > tile.yCoord)
-			return ForgeDirection.UP;
-		if(xCoord > tile.xCoord)
-			return ForgeDirection.EAST;
-		if(xCoord < tile.xCoord)
-			return ForgeDirection.WEST;
-		if(zCoord > tile.zCoord)
-			return ForgeDirection.SOUTH;
-		if(zCoord < tile.zCoord)
-			return ForgeDirection.NORTH;
-		return ForgeDirection.DOWN;
+		for(EnumFacing dir : EnumFacing.VALUES)
+		{
+			if(pos.offset(dir).equals(tile.getPos()))
+				return dir;
+		}
+		
+		return null;
 	}
 
 	
 	@Override
-	public boolean canConnectEnergy(ForgeDirection from) 
+	public boolean canConnectEnergy(EnumFacing from) 
 	{
 		return true;
 	}
 	@Override
-	public int extractEnergy(ForgeDirection from, int maxExtract, boolean simulate) 
+	public int extractEnergy(EnumFacing from, int maxExtract, boolean simulate) 
 	{
 		return storage.extractEnergy(maxExtract, simulate);
 	}
 
 	@Override
-	public int getEnergyStored(ForgeDirection from) 
+	public int getEnergyStored(EnumFacing from) 
 	{
 		return storage.getEnergyStored();
 	}
 
 	@Override
-	public int getMaxEnergyStored(ForgeDirection from) 
+	public int getMaxEnergyStored(EnumFacing from) 
 	{
 		return storage.getMaxEnergyStored();
 	}

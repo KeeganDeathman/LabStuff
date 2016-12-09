@@ -2,8 +2,9 @@ package keegan.labstuff.tileentity;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ITickable;
 
-public class TileEntityPower extends TileEntity
+public class TileEntityPower extends TileEntity implements ITickable
 {
 protected int powerInt = 0;
 	
@@ -16,28 +17,33 @@ protected int powerInt = 0;
 	public void addPower(int addition, TileEntity issuer)
 	{
 		powerInt+=addition;
-		if (worldObj.getTileEntity(xCoord + 1, yCoord, zCoord)  instanceof TileEntityPower && worldObj.getTileEntity(xCoord + 1, yCoord, zCoord) != issuer && worldObj.getTileEntity(xCoord + 1, yCoord, zCoord) != null) 
+		
+		int xCoord = pos.getX();
+		int yCoord = pos.getY();
+		int zCoord = pos.getZ();
+		
+		if (getTileEntity(xCoord + 1, yCoord, zCoord)  instanceof TileEntityPower && getTileEntity(xCoord + 1, yCoord, zCoord) != issuer && getTileEntity(xCoord + 1, yCoord, zCoord) != null) 
 		{
-			((TileEntityPower) worldObj.getTileEntity(xCoord + 1, yCoord, zCoord)).addPowerNetworked(powerInt, this);
+			((TileEntityPower) getTileEntity(xCoord + 1, yCoord, zCoord)).addPowerNetworked(powerInt, this);
 		}
-		if (worldObj.getTileEntity(xCoord - 1, yCoord, zCoord)  instanceof TileEntityPower && worldObj.getTileEntity(xCoord - 1, yCoord, zCoord) != issuer && worldObj.getTileEntity(xCoord - 1, yCoord, zCoord) != null) 
+		if (getTileEntity(xCoord - 1, yCoord, zCoord)  instanceof TileEntityPower && getTileEntity(xCoord - 1, yCoord, zCoord) != issuer && getTileEntity(xCoord - 1, yCoord, zCoord) != null) 
 		{
-				((TileEntityPower) worldObj.getTileEntity(xCoord - 1, yCoord, zCoord)).addPowerNetworked(powerInt, this);
+				((TileEntityPower) getTileEntity(xCoord - 1, yCoord, zCoord)).addPowerNetworked(powerInt, this);
 		}
-		if (worldObj.getTileEntity(xCoord, yCoord + 1, zCoord)  instanceof TileEntityPower && worldObj.getTileEntity(xCoord, yCoord + 1, zCoord) != issuer && worldObj.getTileEntity(xCoord, yCoord + 1, zCoord) != null) 
+		if (getTileEntity(xCoord, yCoord + 1, zCoord)  instanceof TileEntityPower && getTileEntity(xCoord, yCoord + 1, zCoord) != issuer && getTileEntity(xCoord, yCoord + 1, zCoord) != null) 
 		{
-			((TileEntityPower) worldObj.getTileEntity(xCoord, yCoord + 1, zCoord)).addPowerNetworked(powerInt, this);
+			((TileEntityPower) getTileEntity(xCoord, yCoord + 1, zCoord)).addPowerNetworked(powerInt, this);
 		}
-		if (worldObj.getTileEntity(xCoord, yCoord - 1, zCoord)  instanceof TileEntityPower && worldObj.getTileEntity(xCoord, yCoord - 1, zCoord) != issuer && worldObj.getTileEntity(xCoord, yCoord - 1, zCoord) != null) 
+		if (getTileEntity(xCoord, yCoord - 1, zCoord)  instanceof TileEntityPower && getTileEntity(xCoord, yCoord - 1, zCoord) != issuer && getTileEntity(xCoord, yCoord - 1, zCoord) != null) 
 		{
-			((TileEntityPower) worldObj.getTileEntity(xCoord, yCoord - 1, zCoord)).addPowerNetworked(powerInt, this);
+			((TileEntityPower) getTileEntity(xCoord, yCoord - 1, zCoord)).addPowerNetworked(powerInt, this);
 		}
-		if (worldObj.getTileEntity(xCoord, yCoord, zCoord + 1)  instanceof TileEntityPower && worldObj.getTileEntity(xCoord, yCoord, zCoord + 1) != issuer && worldObj.getTileEntity(xCoord, yCoord, zCoord + 1) != null) 
+		if (getTileEntity(xCoord, yCoord, zCoord + 1)  instanceof TileEntityPower && getTileEntity(xCoord, yCoord, zCoord + 1) != issuer && getTileEntity(xCoord, yCoord, zCoord + 1) != null) 
 		{
-			((TileEntityPower) worldObj.getTileEntity(xCoord, yCoord, zCoord + 1)).addPowerNetworked(powerInt, this);
+			((TileEntityPower) getTileEntity(xCoord, yCoord, zCoord + 1)).addPowerNetworked(powerInt, this);
 		}
-		if (worldObj.getTileEntity(xCoord, yCoord, zCoord - 1) instanceof TileEntityPower && worldObj.getTileEntity(xCoord, yCoord, zCoord - 1) != issuer && worldObj.getTileEntity(xCoord, yCoord, zCoord - 1) != null) {
-				((TileEntityPower) worldObj.getTileEntity(xCoord, yCoord, zCoord - 1)).addPowerNetworked(powerInt, this);
+		if (getTileEntity(xCoord, yCoord, zCoord - 1) instanceof TileEntityPower && getTileEntity(xCoord, yCoord, zCoord - 1) != issuer && getTileEntity(xCoord, yCoord, zCoord - 1) != null) {
+				((TileEntityPower) getTileEntity(xCoord, yCoord, zCoord - 1)).addPowerNetworked(powerInt, this);
 		}
 	}
 	
@@ -46,29 +52,34 @@ protected int powerInt = 0;
 		if(powerInt + addition == issuer.getPower())
 		{
 			powerInt+=addition;
-			if (worldObj.getTileEntity(xCoord + 1, yCoord, zCoord)  instanceof TileEntityPower && worldObj.getTileEntity(xCoord + 1, yCoord, zCoord) != issuer && worldObj.getTileEntity(xCoord + 1, yCoord, zCoord) != null) 
+			
+			int xCoord = pos.getX();
+			int yCoord = pos.getY();
+			int zCoord = pos.getZ();
+			
+			if (getTileEntity(xCoord + 1, yCoord, zCoord)  instanceof TileEntityPower && getTileEntity(xCoord + 1, yCoord, zCoord) != issuer && getTileEntity(xCoord + 1, yCoord, zCoord) != null) 
 			{
-				((TileEntityPower) worldObj.getTileEntity(xCoord + 1, yCoord, zCoord)).addPowerNetworked(powerInt, this);
+				((TileEntityPower) getTileEntity(xCoord + 1, yCoord, zCoord)).addPowerNetworked(powerInt, this);
 			}
-			if (worldObj.getTileEntity(xCoord - 1, yCoord, zCoord)  instanceof TileEntityPower && worldObj.getTileEntity(xCoord - 1, yCoord, zCoord) != issuer && worldObj.getTileEntity(xCoord - 1, yCoord, zCoord) != null) 
+			if (getTileEntity(xCoord - 1, yCoord, zCoord)  instanceof TileEntityPower && getTileEntity(xCoord - 1, yCoord, zCoord) != issuer && getTileEntity(xCoord - 1, yCoord, zCoord) != null) 
 			{
-				((TileEntityPower) worldObj.getTileEntity(xCoord - 1, yCoord, zCoord)).addPowerNetworked(powerInt, this);
+				((TileEntityPower) getTileEntity(xCoord - 1, yCoord, zCoord)).addPowerNetworked(powerInt, this);
 			}
-			if (worldObj.getTileEntity(xCoord, yCoord + 1, zCoord)  instanceof TileEntityPower && worldObj.getTileEntity(xCoord, yCoord + 1, zCoord) != issuer && worldObj.getTileEntity(xCoord, yCoord + 1, zCoord) != null) 
+			if (getTileEntity(xCoord, yCoord + 1, zCoord)  instanceof TileEntityPower && getTileEntity(xCoord, yCoord + 1, zCoord) != issuer && getTileEntity(xCoord, yCoord + 1, zCoord) != null) 
 			{
-				((TileEntityPower) worldObj.getTileEntity(xCoord, yCoord + 1, zCoord)).addPowerNetworked(powerInt, this);
+				((TileEntityPower) getTileEntity(xCoord, yCoord + 1, zCoord)).addPowerNetworked(powerInt, this);
 			}
-			if (worldObj.getTileEntity(xCoord, yCoord - 1, zCoord)  instanceof TileEntityPower && worldObj.getTileEntity(xCoord, yCoord - 1, zCoord) != issuer && worldObj.getTileEntity(xCoord, yCoord - 1, zCoord) != null) 
+			if (getTileEntity(xCoord, yCoord - 1, zCoord)  instanceof TileEntityPower && getTileEntity(xCoord, yCoord - 1, zCoord) != issuer && getTileEntity(xCoord, yCoord - 1, zCoord) != null) 
 			{
-				((TileEntityPower) worldObj.getTileEntity(xCoord, yCoord - 1, zCoord)).addPowerNetworked(powerInt, this);
+				((TileEntityPower) getTileEntity(xCoord, yCoord - 1, zCoord)).addPowerNetworked(powerInt, this);
 			}
-			if (worldObj.getTileEntity(xCoord, yCoord, zCoord + 1)  instanceof TileEntityPower && worldObj.getTileEntity(xCoord, yCoord, zCoord + 1) != issuer && worldObj.getTileEntity(xCoord, yCoord, zCoord + 1) != null) 
+			if (getTileEntity(xCoord, yCoord, zCoord + 1)  instanceof TileEntityPower && getTileEntity(xCoord, yCoord, zCoord + 1) != issuer && getTileEntity(xCoord, yCoord, zCoord + 1) != null) 
 			{
-				((TileEntityPower) worldObj.getTileEntity(xCoord, yCoord, zCoord + 1)).addPowerNetworked(powerInt, this);
+				((TileEntityPower) getTileEntity(xCoord, yCoord, zCoord + 1)).addPowerNetworked(powerInt, this);
 			}
-			if (worldObj.getTileEntity(xCoord, yCoord, zCoord - 1) instanceof TileEntityPower && worldObj.getTileEntity(xCoord, yCoord, zCoord - 1) != issuer && worldObj.getTileEntity(xCoord, yCoord, zCoord - 1) != null) 
+			if (getTileEntity(xCoord, yCoord, zCoord - 1) instanceof TileEntityPower && getTileEntity(xCoord, yCoord, zCoord - 1) != issuer && getTileEntity(xCoord, yCoord, zCoord - 1) != null) 
 			{
-				((TileEntityPower) worldObj.getTileEntity(xCoord, yCoord, zCoord - 1)).addPowerNetworked(powerInt, this);
+				((TileEntityPower) getTileEntity(xCoord, yCoord, zCoord - 1)).addPowerNetworked(powerInt, this);
 			}
 		}
 		else
@@ -86,29 +97,34 @@ protected int powerInt = 0;
 		if(powerInt >= subtraction)
 		{
 			powerInt-=subtraction;
-			if(worldObj.getTileEntity(xCoord+1, yCoord, zCoord) instanceof TileEntityPower && worldObj.getTileEntity(xCoord+1, yCoord, zCoord) != issuer && worldObj.getTileEntity(xCoord+1, yCoord, zCoord) != null)
+			
+			int xCoord = pos.getX();
+			int yCoord = pos.getY();
+			int zCoord = pos.getZ();
+			
+			if(getTileEntity(xCoord+1, yCoord, zCoord) instanceof TileEntityPower && getTileEntity(xCoord+1, yCoord, zCoord) != issuer && getTileEntity(xCoord+1, yCoord, zCoord) != null)
 			{
-				((TileEntityPower)worldObj.getTileEntity(xCoord+1, yCoord, zCoord)).subtractPowerNetworked(powerInt, this);
+				((TileEntityPower)getTileEntity(xCoord+1, yCoord, zCoord)).subtractPowerNetworked(powerInt, this);
 			}
-			if(worldObj.getTileEntity(xCoord-1, yCoord, zCoord) instanceof TileEntityPower && worldObj.getTileEntity(xCoord-1, yCoord, zCoord) != issuer && worldObj.getTileEntity(xCoord-1, yCoord, zCoord) != null)
+			if(getTileEntity(xCoord-1, yCoord, zCoord) instanceof TileEntityPower && getTileEntity(xCoord-1, yCoord, zCoord) != issuer && getTileEntity(xCoord-1, yCoord, zCoord) != null)
 			{
-				((TileEntityPower)worldObj.getTileEntity(xCoord-1, yCoord, zCoord)).subtractPowerNetworked(powerInt, this);
+				((TileEntityPower)getTileEntity(xCoord-1, yCoord, zCoord)).subtractPowerNetworked(powerInt, this);
 			}
-			if(worldObj.getTileEntity(xCoord, yCoord+1, zCoord) instanceof TileEntityPower && worldObj.getTileEntity(xCoord, yCoord+1, zCoord) != issuer && worldObj.getTileEntity(xCoord, yCoord+1, zCoord) != null)
+			if(getTileEntity(xCoord, yCoord+1, zCoord) instanceof TileEntityPower && getTileEntity(xCoord, yCoord+1, zCoord) != issuer && getTileEntity(xCoord, yCoord+1, zCoord) != null)
 			{
-				((TileEntityPower)worldObj.getTileEntity(xCoord, yCoord+1, zCoord)).subtractPowerNetworked(powerInt, this);
+				((TileEntityPower)getTileEntity(xCoord, yCoord+1, zCoord)).subtractPowerNetworked(powerInt, this);
 			}
-			if(worldObj.getTileEntity(xCoord, yCoord-1, zCoord) instanceof TileEntityPower && worldObj.getTileEntity(xCoord, yCoord-1, zCoord) != issuer && worldObj.getTileEntity(xCoord, yCoord-1, zCoord) != null)
+			if(getTileEntity(xCoord, yCoord-1, zCoord) instanceof TileEntityPower && getTileEntity(xCoord, yCoord-1, zCoord) != issuer && getTileEntity(xCoord, yCoord-1, zCoord) != null)
 			{
-				((TileEntityPower)worldObj.getTileEntity(xCoord, yCoord-1, zCoord)).subtractPowerNetworked(powerInt, this);
+				((TileEntityPower)getTileEntity(xCoord, yCoord-1, zCoord)).subtractPowerNetworked(powerInt, this);
 			}
-			if(worldObj.getTileEntity(xCoord, yCoord, zCoord+1) instanceof TileEntityPower && worldObj.getTileEntity(xCoord, yCoord, zCoord+1) != issuer && worldObj.getTileEntity(xCoord, yCoord, zCoord+1) != null)
+			if(getTileEntity(xCoord, yCoord, zCoord+1) instanceof TileEntityPower && getTileEntity(xCoord, yCoord, zCoord+1) != issuer && getTileEntity(xCoord, yCoord, zCoord+1) != null)
 			{
-				((TileEntityPower)worldObj.getTileEntity(xCoord, yCoord, zCoord+1)).subtractPowerNetworked(powerInt, this);
+				((TileEntityPower)getTileEntity(xCoord, yCoord, zCoord+1)).subtractPowerNetworked(powerInt, this);
 			}
-			if(worldObj.getTileEntity(xCoord, yCoord, zCoord-1) instanceof TileEntityPower && worldObj.getTileEntity(xCoord, yCoord, zCoord-1) != issuer && worldObj.getTileEntity(xCoord, yCoord, zCoord-1) != null)
+			if(getTileEntity(xCoord, yCoord, zCoord-1) instanceof TileEntityPower && getTileEntity(xCoord, yCoord, zCoord-1) != issuer && getTileEntity(xCoord, yCoord, zCoord-1) != null)
 			{
-				((TileEntityPower)worldObj.getTileEntity(xCoord, yCoord, zCoord-1)).subtractPowerNetworked(powerInt, this);
+				((TileEntityPower)getTileEntity(xCoord, yCoord, zCoord-1)).subtractPowerNetworked(powerInt, this);
 			}
 			return true;
 		}
@@ -123,29 +139,34 @@ protected int powerInt = 0;
 			if(powerInt - subtraction == issuer.getPower())
 			{
 				powerInt-=subtraction;
-				if(worldObj.getTileEntity(xCoord+1, yCoord, zCoord) instanceof TileEntityPower && worldObj.getTileEntity(xCoord+1, yCoord, zCoord) != issuer && worldObj.getTileEntity(xCoord+1, yCoord, zCoord) != null)
+				
+				int xCoord = pos.getX();
+				int yCoord = pos.getY();
+				int zCoord = pos.getZ();
+				
+				if(getTileEntity(xCoord+1, yCoord, zCoord) instanceof TileEntityPower && getTileEntity(xCoord+1, yCoord, zCoord) != issuer && getTileEntity(xCoord+1, yCoord, zCoord) != null)
 				{
-					((TileEntityPower)worldObj.getTileEntity(xCoord+1, yCoord, zCoord)).subtractPowerNetworked(powerInt, this);
+					((TileEntityPower)getTileEntity(xCoord+1, yCoord, zCoord)).subtractPowerNetworked(powerInt, this);
 				}
-				if(worldObj.getTileEntity(xCoord-1, yCoord, zCoord) instanceof TileEntityPower && worldObj.getTileEntity(xCoord-1, yCoord, zCoord) != issuer && worldObj.getTileEntity(xCoord-1, yCoord, zCoord) != null)
+				if(getTileEntity(xCoord-1, yCoord, zCoord) instanceof TileEntityPower && getTileEntity(xCoord-1, yCoord, zCoord) != issuer && getTileEntity(xCoord-1, yCoord, zCoord) != null)
 				{
-					((TileEntityPower)worldObj.getTileEntity(xCoord-1, yCoord, zCoord)).subtractPowerNetworked(powerInt, this);
+					((TileEntityPower)getTileEntity(xCoord-1, yCoord, zCoord)).subtractPowerNetworked(powerInt, this);
 				}
-				if(worldObj.getTileEntity(xCoord, yCoord+1, zCoord) instanceof TileEntityPower && worldObj.getTileEntity(xCoord, yCoord+1, zCoord) != issuer && worldObj.getTileEntity(xCoord, yCoord+1, zCoord) != null)
+				if(getTileEntity(xCoord, yCoord+1, zCoord) instanceof TileEntityPower && getTileEntity(xCoord, yCoord+1, zCoord) != issuer && getTileEntity(xCoord, yCoord+1, zCoord) != null)
 				{
-					((TileEntityPower)worldObj.getTileEntity(xCoord, yCoord+1, zCoord)).subtractPowerNetworked(powerInt, this);
+					((TileEntityPower)getTileEntity(xCoord, yCoord+1, zCoord)).subtractPowerNetworked(powerInt, this);
 				}
-				if(worldObj.getTileEntity(xCoord, yCoord-1, zCoord) instanceof TileEntityPower && worldObj.getTileEntity(xCoord, yCoord-1, zCoord) != issuer && worldObj.getTileEntity(xCoord, yCoord-1, zCoord) != null)
+				if(getTileEntity(xCoord, yCoord-1, zCoord) instanceof TileEntityPower && getTileEntity(xCoord, yCoord-1, zCoord) != issuer && getTileEntity(xCoord, yCoord-1, zCoord) != null)
 				{
-					((TileEntityPower)worldObj.getTileEntity(xCoord, yCoord-1, zCoord)).subtractPowerNetworked(powerInt, this);
+					((TileEntityPower)getTileEntity(xCoord, yCoord-1, zCoord)).subtractPowerNetworked(powerInt, this);
 				}
-				if(worldObj.getTileEntity(xCoord, yCoord, zCoord+1) instanceof TileEntityPower && worldObj.getTileEntity(xCoord, yCoord, zCoord+1) != issuer && worldObj.getTileEntity(xCoord, yCoord, zCoord+1) != null)
+				if(getTileEntity(xCoord, yCoord, zCoord+1) instanceof TileEntityPower && getTileEntity(xCoord, yCoord, zCoord+1) != issuer && getTileEntity(xCoord, yCoord, zCoord+1) != null)
 				{
-					((TileEntityPower)worldObj.getTileEntity(xCoord, yCoord, zCoord+1)).subtractPowerNetworked(powerInt, this);
+					((TileEntityPower)getTileEntity(xCoord, yCoord, zCoord+1)).subtractPowerNetworked(powerInt, this);
 				}
-				if(worldObj.getTileEntity(xCoord, yCoord, zCoord-1) instanceof TileEntityPower && worldObj.getTileEntity(xCoord, yCoord, zCoord-1) != issuer && worldObj.getTileEntity(xCoord, yCoord, zCoord-1) != null)
+				if(getTileEntity(xCoord, yCoord, zCoord-1) instanceof TileEntityPower && getTileEntity(xCoord, yCoord, zCoord-1) != issuer && getTileEntity(xCoord, yCoord, zCoord-1) != null)
 				{
-					((TileEntityPower)worldObj.getTileEntity(xCoord, yCoord, zCoord-1)).subtractPowerNetworked(powerInt, this);
+					((TileEntityPower)getTileEntity(xCoord, yCoord, zCoord-1)).subtractPowerNetworked(powerInt, this);
 				}
 			}
 			else
@@ -159,11 +180,19 @@ protected int powerInt = 0;
 		}
 	}
 	
+	private TileEntity getTileEntity(int i, int yCoord, int zCoord) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
 	@Override
-	public void writeToNBT(NBTTagCompound tag)
+	public NBTTagCompound writeToNBT(NBTTagCompound tag)
 	{
 		super.writeToNBT(tag);
 		tag.setInteger("power", this.powerInt);
+		
+		return tag;
 	}
 	
 	@Override
@@ -176,5 +205,12 @@ protected int powerInt = 0;
 	public int getPower()
 	{
 		return powerInt;
+	}
+
+
+	@Override
+	public void update() {
+		// TODO Auto-generated method stub
+		
 	}
 }

@@ -6,7 +6,6 @@ public class ItemDiscoveryDrive extends Item
 {
 	public ItemDiscoveryDrive()
 	{
-		this.setTextureName("labstuff:discovdrive");
 	}
 	
 	public String getDiscoveryName()

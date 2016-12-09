@@ -1,9 +1,9 @@
 package keegan.labstuff.container;
 
-import cpw.mods.fml.relauncher.*;
 import keegan.labstuff.tileentity.TileEntityDLLaptop;
 import net.minecraft.entity.player.*;
 import net.minecraft.inventory.*;
+import net.minecraftforge.fml.relauncher.*;
 
 public class ContainerDLLaptop extends Container
 {
@@ -26,9 +26,9 @@ public class ContainerDLLaptop extends Container
 	    {
 	        super.detectAndSendChanges();
 
-	        for (int i = 0; i < this.crafters.size(); ++i)
+	        for (int i = 0; i < this.listeners.size(); ++i)
 	        {
-	            ICrafting icrafting = (ICrafting)this.crafters.get(i);
+	        	IContainerListener icrafting = (IContainerListener)this.listeners.get(i);
 
 	            if (this.lastTablet != this.tile.isTablet())
 	            {
@@ -65,9 +65,9 @@ public class ContainerDLLaptop extends Container
 	        }
 	    }
 		
-		 public void addCraftingToCrafters(ICrafting p_75132_1_)
+		 public void addListener(IContainerListener p_75132_1_)
 		 {
-			 super.addCraftingToCrafters(p_75132_1_);
+			 super.addListener(p_75132_1_);
 			 int tabletInt;
 			 if(this.tile.isTablet())
 				 tabletInt = 1;

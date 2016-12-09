@@ -1,534 +1,634 @@
 package keegan.labstuff.tileentity;
 
+import org.apache.commons.lang3.BooleanUtils;
+
 import keegan.labstuff.LabStuffMain;
 import keegan.labstuff.blocks.*;
+import keegan.labstuff.blocks.BlockSolenoidAxel.EnumRender;
+import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.*;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.*;
 
 public class TileEntitySolenoidAxel extends TileEntityRotary
 {
 	
 	public float angle;
 	
+	int xCoord = pos.getX();
+	int yCoord = pos.getY();
+	int zCoord = pos.getZ();
+	
 	public TileEntitySolenoidAxel()
 	{
-		setDirIn(ForgeDirection.DOWN);
+		setDirIn(EnumFacing.DOWN);
 		setDirOut(null);
 		angle = 0;
+		xCoord = pos.getX();
+		yCoord = pos.getY();
+		zCoord = pos.getZ();
 	}
 	
 	//Sync
 	@Override
-	public Packet getDescriptionPacket()
+	public SPacketUpdateTileEntity getUpdatePacket()
 	{
 		NBTTagCompound syncData = new NBTTagCompound();
 		syncData.setFloat("angle", angle);
-		return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 1, syncData);
+		return new SPacketUpdateTileEntity(pos, 1, syncData);
 	}
 		
 	@Override
-	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt)
+	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt)
 	{
-		angle = pkt.func_148857_g().getFloat("angle");
+		angle = pkt.getNbtCompound().getFloat("angle");
 	}
 	
 	@Override
-	public void updateEntity()
+	public void update()
 	{
+		int xCoord = pos.getX();
+		int yCoord = pos.getY();
+		int zCoord = pos.getZ();
+		if(worldObj.getBlockState(pos.down()).getBlock() != null && worldObj.getBlockState(pos.down()).getBlock().equals(LabStuffMain.blockIndustrialMotorShaft))
+//			System.out.println(isMultiBlock() + "," + (getEnergy() >= 250000) + "," + torusComplete());
 		if(isMultiBlock() && this.getEnergy() >= 250000)
 		{
 			subEnergy(250000);
 			angle += 20f;
-			if(worldObj.getBlock(xCoord+10, yCoord+1, zCoord) != null && worldObj.getBlock(xCoord+10, yCoord+1, zCoord).equals(LabStuffMain.blockFusionPlasmaTap) && torusComplete())
+			if(getBlock(pos.add(10,1,0)) != null && getBlock(pos.add(10,1,0)).equals(LabStuffMain.blockFusionPlasmaTap) && torusComplete())
 			{
-				((TileEntityPlasmaTap)worldObj.getTileEntity(xCoord+10, yCoord+1, zCoord)).setRunning(true);
+				((TileEntityPlasmaTap)getTileEntity(pos.add(10,1,0))).setRunning(true);
 			}
-			if(worldObj.getBlock(xCoord-10, yCoord+1, zCoord) != null && worldObj.getBlock(xCoord-10, yCoord+1, zCoord).equals(LabStuffMain.blockFusionPlasmaTap) && torusComplete())
+			if(getBlock(xCoord-10, yCoord+1, zCoord) != null && getBlock(xCoord-10, yCoord+1, zCoord).equals(LabStuffMain.blockFusionPlasmaTap) && torusComplete())
 			{
-				((TileEntityPlasmaTap)worldObj.getTileEntity(xCoord-10, yCoord+1, zCoord)).setRunning(true);
+				((TileEntityPlasmaTap)getTileEntity(pos.subtract(new Vec3i(10,0,0)).add(0,1,0))).setRunning(true);
 			}
-			if(worldObj.getBlock(xCoord, yCoord+1, zCoord+10) != null && worldObj.getBlock(xCoord, yCoord+1, zCoord+10).equals(LabStuffMain.blockFusionPlasmaTap) && torusComplete())
+			if(getBlock(pos.add(0,1,10)) != null && getBlock(pos.add(0,1,10)).equals(LabStuffMain.blockFusionPlasmaTap) && torusComplete())
 			{
-				((TileEntityPlasmaTap)worldObj.getTileEntity(xCoord, yCoord+1, zCoord+10)).setRunning(true);
+				((TileEntityPlasmaTap)getTileEntity(pos.add(0,1,10))).setRunning(true);
 			}
-			if(worldObj.getBlock(xCoord, yCoord+1, zCoord-10) != null && worldObj.getBlock(xCoord, yCoord+1, zCoord-10).equals(LabStuffMain.blockFusionPlasmaTap) && torusComplete())
+			if(getBlock(pos.subtract(new Vec3i(0,0,10)).add(0,1,0)) != null && getBlock(pos.subtract(new Vec3i(0,0,10)).add(0,1,0)).equals(LabStuffMain.blockFusionPlasmaTap) && torusComplete())
 			{
-				((TileEntityPlasmaTap)worldObj.getTileEntity(xCoord, yCoord+1, zCoord-10)).setRunning(true);
+				((TileEntityPlasmaTap)getTileEntity(pos.subtract(new Vec3i(0,0,10)).add(0,1,0))).setRunning(true);
 			}
 			//Get the power
 			
-			if(worldObj.getBlock(xCoord+10, yCoord+1, zCoord) != null && torusComplete() && worldObj.getBlock(xCoord+10, yCoord+1, zCoord).equals(LabStuffMain.blockFusionPlasmaTap) && ((TileEntityPlasmaTap)worldObj.getTileEntity(xCoord+10, yCoord+1, zCoord)).getPlasma() > 250)
+			if(getBlock(pos.add(10,1,0)) != null && torusComplete() && getBlock(pos.add(10,1,0)).equals(LabStuffMain.blockFusionPlasmaTap) && ((TileEntityPlasmaTap)getTileEntity(pos.add(10,1,0))).getPlasma() > 250)
 			{
-				((TileEntityPlasmaTap)worldObj.getTileEntity(xCoord+10, yCoord+1, zCoord)).burnPlasma();
-				if(worldObj.getBlock(xCoord+10, yCoord, zCoord) != null && worldObj.getBlock(xCoord+10, yCoord+1, zCoord).equals(LabStuffMain.blockFusionHeatExchange))
+				((TileEntityPlasmaTap)getTileEntity(pos.add(10,1,0))).burnPlasma();
+				if(getBlock(xCoord+10, yCoord, zCoord) != null && getBlock(pos.add(10,0,0)).equals(LabStuffMain.blockFusionHeatExchange))
 				{
-					((TileEntityHeatExchange)worldObj.getTileEntity(xCoord+10, yCoord, zCoord)).addPower();
+					((TileEntityHeatExchange)getTileEntity(xCoord+10, yCoord, zCoord)).addPower();
 				}
 			}
-			if(worldObj.getBlock(xCoord-10, yCoord+1, zCoord) != null && torusComplete() && worldObj.getBlock(xCoord-10, yCoord+1, zCoord).equals(LabStuffMain.blockFusionPlasmaTap) && ((TileEntityPlasmaTap)worldObj.getTileEntity(xCoord, yCoord+1, zCoord+10)).getPlasma() > 250)
+			if(getBlock(xCoord-10, yCoord+1, zCoord) != null && torusComplete() && getBlock(xCoord-10, yCoord+1, zCoord).equals(LabStuffMain.blockFusionPlasmaTap) && ((TileEntityPlasmaTap)getTileEntity(pos.add(0,1,0).subtract(new Vec3i(0,0,10)))).getPlasma() > 250)
 			{
-				((TileEntityPlasmaTap)worldObj.getTileEntity(xCoord-10, yCoord+1, zCoord)).burnPlasma();
-				if(worldObj.getBlock(xCoord-10, yCoord, zCoord) != null && worldObj.getBlock(xCoord-10, yCoord, zCoord).equals(LabStuffMain.blockFusionHeatExchange))
+				((TileEntityPlasmaTap)getTileEntity(pos.subtract(new Vec3i(0,0,10)).add(0,1,0))).burnPlasma();
+				if(getBlock(xCoord-10, yCoord, zCoord) != null && getBlock(xCoord-10, yCoord, zCoord).equals(LabStuffMain.blockFusionHeatExchange))
 				{
-					((TileEntityHeatExchange)worldObj.getTileEntity(xCoord-10, yCoord, zCoord)).addPower();
+					((TileEntityHeatExchange)getTileEntity(xCoord-10, yCoord, zCoord)).addPower();
 				}
 			}
-			if(worldObj.getBlock(xCoord, yCoord+1, zCoord+10) != null && torusComplete() && worldObj.getBlock(xCoord, yCoord+1, zCoord+10).equals(LabStuffMain.blockFusionPlasmaTap) && ((TileEntityPlasmaTap)worldObj.getTileEntity(xCoord, yCoord+1, zCoord+10)).getPlasma() > 250)
+			if(getBlock(pos.add(0,1,10)) != null && torusComplete() && getBlock(pos.add(0,1,10)).equals(LabStuffMain.blockFusionPlasmaTap) && ((TileEntityPlasmaTap)getTileEntity(pos.add(0,1,10))).getPlasma() > 250)
 			{
-				((TileEntityPlasmaTap)worldObj.getTileEntity(xCoord, yCoord+1, zCoord+10)).burnPlasma();
-				if(worldObj.getBlock(xCoord, yCoord, zCoord+10) != null && worldObj.getBlock(xCoord, yCoord, zCoord+10).equals(LabStuffMain.blockFusionHeatExchange))
+				((TileEntityPlasmaTap)getTileEntity(pos.add(0,1,10))).burnPlasma();
+				if(getBlock(xCoord, yCoord, zCoord+10) != null && getBlock(xCoord, yCoord, zCoord+10).equals(LabStuffMain.blockFusionHeatExchange))
 				{
-					((TileEntityHeatExchange)worldObj.getTileEntity(xCoord, yCoord, zCoord+10)).addPower();
+					((TileEntityHeatExchange)getTileEntity(xCoord, yCoord, zCoord+10)).addPower();
 				}
 			}
-			if(worldObj.getBlock(xCoord, yCoord+1, zCoord-10) != null && torusComplete() && worldObj.getBlock(xCoord, yCoord+1, zCoord-10).equals(LabStuffMain.blockFusionPlasmaTap) && ((TileEntityPlasmaTap)worldObj.getTileEntity(xCoord, yCoord+1, zCoord+10)).getPlasma() > 250)
+			if(getBlock(pos.subtract(new Vec3i(0,0,10)).add(0,1,0)) != null && torusComplete() && getBlock(pos.subtract(new Vec3i(0,0,10)).add(0,1,0)).equals(LabStuffMain.blockFusionPlasmaTap) && ((TileEntityPlasmaTap)getTileEntity(pos.subtract(new Vec3i(0,0,10)).add(0,1,0))).getPlasma() > 250)
 			{
-				((TileEntityPlasmaTap)worldObj.getTileEntity(xCoord, yCoord+1, zCoord-10)).burnPlasma();
-				if(worldObj.getBlock(xCoord, yCoord, zCoord-10) != null && worldObj.getBlock(xCoord, yCoord, zCoord-10).equals(LabStuffMain.blockFusionHeatExchange))
+				((TileEntityPlasmaTap)getTileEntity(pos.subtract(new Vec3i(0,0,10)).add(0,1,0))).burnPlasma();
+				if(getBlock(xCoord, yCoord, zCoord-10) != null && getBlock(xCoord, yCoord, zCoord-10).equals(LabStuffMain.blockFusionHeatExchange))
 				{
-					((TileEntityHeatExchange)worldObj.getTileEntity(xCoord, yCoord, zCoord-10)).addPower();
+					((TileEntityHeatExchange)getTileEntity(xCoord, yCoord, zCoord-10)).addPower();
 				}
 			}
 		}
 			
 	}
 	
+	private TileEntity getTileEntity(BlockPos p) {
+		// TODO Auto-generated method stub
+		return worldObj.getTileEntity(p);
+	}
+	
+	private TileEntity getTileEntity(int x, int y, int z) {
+		// TODO Auto-generated method stub
+		return worldObj.getTileEntity(new BlockPos(x,y,z));
+	}
+
+
+	private Block getBlock(BlockPos p) {
+		// TODO Auto-generated method stub
+		return worldObj.getBlockState(p).getBlock();
+	}
+
 	private boolean torusComplete() 
-	{
-		if(worldObj.getBlock(xCoord+10, yCoord+1, zCoord-1).equals(LabStuffMain.blockFusionToroidalMagnet)
-			&& worldObj.getBlock(xCoord+10, yCoord+1, zCoord+1).equals(LabStuffMain.blockFusionToroidalMagnet)
-			&& worldObj.getBlock(xCoord-10, yCoord+1, zCoord-1).equals(LabStuffMain.blockFusionToroidalMagnet)
-			&& worldObj.getBlock(xCoord-10, yCoord+1, zCoord+1).equals(LabStuffMain.blockFusionToroidalMagnet)
-			&& worldObj.getBlock(xCoord+1, yCoord+1, zCoord-10).equals(LabStuffMain.blockFusionToroidalMagnet)
-			&& worldObj.getBlock(xCoord-1, yCoord+1, zCoord-10).equals(LabStuffMain.blockFusionToroidalMagnet)
-			&& worldObj.getBlock(xCoord+1, yCoord+1, zCoord+10).equals(LabStuffMain.blockFusionToroidalMagnet)
-			&& worldObj.getBlock(xCoord-1, yCoord+1, zCoord+10).equals(LabStuffMain.blockFusionToroidalMagnet)
-			&& worldObj.getBlock(xCoord+7, yCoord+1, zCoord+7).equals(LabStuffMain.blockFusionToroidalMagnet)
-			&& worldObj.getBlock(xCoord-7, yCoord+1, zCoord+7).equals(LabStuffMain.blockFusionToroidalMagnet)
-			&& worldObj.getBlock(xCoord+7, yCoord+1, zCoord-7).equals(LabStuffMain.blockFusionToroidalMagnet)
-			&& worldObj.getBlock(xCoord-7, yCoord+1, zCoord-7).equals(LabStuffMain.blockFusionToroidalMagnet)
-			&& worldObj.getBlock(xCoord+9, yCoord+1, zCoord+4).equals(LabStuffMain.blockFusionToroidalMagnet)
-			&& worldObj.getBlock(xCoord-9, yCoord+1, zCoord+4).equals(LabStuffMain.blockFusionToroidalMagnet)
-			&& worldObj.getBlock(xCoord+9, yCoord+1, zCoord-4).equals(LabStuffMain.blockFusionToroidalMagnet)
-			&& worldObj.getBlock(xCoord-9, yCoord+1, zCoord-4).equals(LabStuffMain.blockFusionToroidalMagnet)
-			&& worldObj.getBlock(xCoord+4, yCoord+1, zCoord+9).equals(LabStuffMain.blockFusionToroidalMagnet)
-			&& worldObj.getBlock(xCoord-4, yCoord+1, zCoord+9).equals(LabStuffMain.blockFusionToroidalMagnet)
-			&& worldObj.getBlock(xCoord+4, yCoord+1, zCoord-9).equals(LabStuffMain.blockFusionToroidalMagnet)
-			&& worldObj.getBlock(xCoord-4, yCoord+1, zCoord-9).equals(LabStuffMain.blockFusionToroidalMagnet)
-			&& worldObj.getBlockMetadata(xCoord+10, yCoord+1, zCoord-1)==4
-			&& worldObj.getBlockMetadata(xCoord+10, yCoord+1, zCoord+1)==4
-			&& worldObj.getBlockMetadata(xCoord-10, yCoord+1, zCoord-1)==4
-			&& worldObj.getBlockMetadata(xCoord-10, yCoord+1, zCoord+1)==4
-			&& worldObj.getBlockMetadata(xCoord+1, yCoord+1, zCoord-10)==0
-			&& worldObj.getBlockMetadata(xCoord-1, yCoord+1, zCoord-10)==0
-			&& worldObj.getBlockMetadata(xCoord+1, yCoord+1, zCoord+10)==0
-			&& worldObj.getBlockMetadata(xCoord-1, yCoord+1, zCoord+10)==0
-			&& worldObj.getBlockMetadata(xCoord+7, yCoord+1, zCoord+7)==2
-			&& worldObj.getBlockMetadata(xCoord-7, yCoord+1, zCoord+7)==6
-			&& worldObj.getBlockMetadata(xCoord+7, yCoord+1, zCoord-7)==6
-			&& worldObj.getBlockMetadata(xCoord-7, yCoord+1, zCoord-7)==2
-			&& worldObj.getBlockMetadata(xCoord+9, yCoord+1, zCoord+4)==3
-			&& worldObj.getBlockMetadata(xCoord-9, yCoord+1, zCoord+4)==5
-			&& worldObj.getBlockMetadata(xCoord+9, yCoord+1, zCoord-4)==5
-			&& worldObj.getBlockMetadata(xCoord-9, yCoord+1, zCoord-4)==3
-			&& worldObj.getBlockMetadata(xCoord+4, yCoord+1, zCoord+9)==1
-			&& worldObj.getBlockMetadata(xCoord-4, yCoord+1, zCoord+9)==7
-			&& worldObj.getBlockMetadata(xCoord+4, yCoord+1, zCoord-9)==7
-			&& worldObj.getBlockMetadata(xCoord-4, yCoord+1, zCoord-9)==1)
+	{	
+		int xCoord = pos.getX();
+		int yCoord = pos.getY();
+		int zCoord = pos.getZ();
+		if(getBlock(xCoord+10,yCoord+1,zCoord-1).equals(LabStuffMain.blockFusionToroidalMagnet)
+			&& getBlock(xCoord+10,yCoord+1,zCoord+1).equals(LabStuffMain.blockFusionToroidalMagnet)
+			&& getBlock(xCoord-10, yCoord+1, zCoord-1).equals(LabStuffMain.blockFusionToroidalMagnet)
+			&& getBlock(xCoord-10, yCoord+1, zCoord+1).equals(LabStuffMain.blockFusionToroidalMagnet)
+			&& getBlock(xCoord+1, yCoord+1, zCoord-10).equals(LabStuffMain.blockFusionToroidalMagnet)
+			&& getBlock(xCoord-1, yCoord+1, zCoord-10).equals(LabStuffMain.blockFusionToroidalMagnet)
+			&& getBlock(xCoord+1, yCoord+1, zCoord+10).equals(LabStuffMain.blockFusionToroidalMagnet)
+			&& getBlock(xCoord-1, yCoord+1, zCoord+10).equals(LabStuffMain.blockFusionToroidalMagnet)
+			&& getBlock(xCoord+7, yCoord+1, zCoord+7).equals(LabStuffMain.blockFusionToroidalMagnet)
+			&& getBlock(xCoord-7, yCoord+1, zCoord+7).equals(LabStuffMain.blockFusionToroidalMagnet)
+			&& getBlock(xCoord+7, yCoord+1, zCoord-7).equals(LabStuffMain.blockFusionToroidalMagnet)
+			&& getBlock(xCoord-7, yCoord+1, zCoord-7).equals(LabStuffMain.blockFusionToroidalMagnet)
+			&& getBlock(xCoord+9, yCoord+1, zCoord+4).equals(LabStuffMain.blockFusionToroidalMagnet)
+			&& getBlock(xCoord-9, yCoord+1, zCoord+4).equals(LabStuffMain.blockFusionToroidalMagnet)
+			&& getBlock(xCoord+9, yCoord+1, zCoord-4).equals(LabStuffMain.blockFusionToroidalMagnet)
+			&& getBlock(xCoord-9, yCoord+1, zCoord-4).equals(LabStuffMain.blockFusionToroidalMagnet)
+			&& getBlock(xCoord+4, yCoord+1, zCoord+9).equals(LabStuffMain.blockFusionToroidalMagnet)
+			&& getBlock(xCoord-4, yCoord+1, zCoord+9).equals(LabStuffMain.blockFusionToroidalMagnet)
+			&& getBlock(xCoord+4, yCoord+1, zCoord-9).equals(LabStuffMain.blockFusionToroidalMagnet)
+			&& getBlock(xCoord-4, yCoord+1, zCoord-9).equals(LabStuffMain.blockFusionToroidalMagnet)
+			&& getBlockMetadata(xCoord+10,yCoord+1,zCoord-1)==4
+			&& getBlockMetadata(xCoord+10,yCoord+1,zCoord+1)==4
+			&& getBlockMetadata(xCoord-10, yCoord+1, zCoord-1)==4
+			&& getBlockMetadata(xCoord-10, yCoord+1, zCoord+1)==4
+			&& getBlockMetadata(xCoord+1, yCoord+1, zCoord-10)==0
+			&& getBlockMetadata(xCoord-1, yCoord+1, zCoord-10)==0
+			&& getBlockMetadata(xCoord+1, yCoord+1, zCoord+10)==0
+			&& getBlockMetadata(xCoord-1, yCoord+1, zCoord+10)==0
+			&& getBlockMetadata(xCoord+7, yCoord+1, zCoord+7)==2
+			&& getBlockMetadata(xCoord-7, yCoord+1, zCoord+7)==6
+			&& getBlockMetadata(xCoord+7, yCoord+1, zCoord-7)==6
+			&& getBlockMetadata(xCoord-7, yCoord+1, zCoord-7)==2
+			&& getBlockMetadata(xCoord+9, yCoord+1, zCoord+4)==3
+			&& getBlockMetadata(xCoord-9, yCoord+1, zCoord+4)==5
+			&& getBlockMetadata(xCoord+9, yCoord+1, zCoord-4)==5
+			&& getBlockMetadata(xCoord-9, yCoord+1, zCoord-4)==3
+			&& getBlockMetadata(xCoord+4, yCoord+1, zCoord+9)==1
+			&& getBlockMetadata(xCoord-4, yCoord+1, zCoord+9)==7
+			&& getBlockMetadata(xCoord+4, yCoord+1, zCoord-9)==7
+			&& getBlockMetadata(xCoord-4, yCoord+1, zCoord-9)==1)
 			return true;
+		if(getBlock(xCoord+10,yCoord+1,zCoord-1).equals(LabStuffMain.blockFusionToroidalMagnet)
+				&& getBlock(xCoord+10,yCoord+1,zCoord+1).equals(LabStuffMain.blockFusionToroidalMagnet)
+				&& getBlock(xCoord-10, yCoord+1, zCoord-1).equals(LabStuffMain.blockFusionToroidalMagnet)
+				&& getBlock(xCoord-10, yCoord+1, zCoord+1).equals(LabStuffMain.blockFusionToroidalMagnet)
+				&& getBlock(xCoord+1, yCoord+1, zCoord-10).equals(LabStuffMain.blockFusionToroidalMagnet)
+				&& getBlock(xCoord-1, yCoord+1, zCoord-10).equals(LabStuffMain.blockFusionToroidalMagnet)
+				&& getBlock(xCoord+1, yCoord+1, zCoord+10).equals(LabStuffMain.blockFusionToroidalMagnet)
+				&& getBlock(xCoord-1, yCoord+1, zCoord+10).equals(LabStuffMain.blockFusionToroidalMagnet)
+				&& getBlock(xCoord+7, yCoord+1, zCoord+7).equals(LabStuffMain.blockFusionToroidalMagnet)
+				&& getBlock(xCoord-7, yCoord+1, zCoord+7).equals(LabStuffMain.blockFusionToroidalMagnet)
+				&& getBlock(xCoord+7, yCoord+1, zCoord-7).equals(LabStuffMain.blockFusionToroidalMagnet)
+				&& getBlock(xCoord-7, yCoord+1, zCoord-7).equals(LabStuffMain.blockFusionToroidalMagnet)
+				&& getBlock(xCoord+9, yCoord+1, zCoord+4).equals(LabStuffMain.blockFusionToroidalMagnet)
+				&& getBlock(xCoord-9, yCoord+1, zCoord+4).equals(LabStuffMain.blockFusionToroidalMagnet)
+				&& getBlock(xCoord+9, yCoord+1, zCoord-4).equals(LabStuffMain.blockFusionToroidalMagnet)
+				&& getBlock(xCoord-9, yCoord+1, zCoord-4).equals(LabStuffMain.blockFusionToroidalMagnet)
+				&& getBlock(xCoord+4, yCoord+1, zCoord+9).equals(LabStuffMain.blockFusionToroidalMagnet)
+				&& getBlock(xCoord-4, yCoord+1, zCoord+9).equals(LabStuffMain.blockFusionToroidalMagnet)
+				&& getBlock(xCoord+4, yCoord+1, zCoord-9).equals(LabStuffMain.blockFusionToroidalMagnet)
+				&& getBlock(xCoord-4, yCoord+1, zCoord-9).equals(LabStuffMain.blockFusionToroidalMagnet))
+		{
+				System.out.println("Toroid out of line");
+		}
+		else
+			System.out.println("Toroid broken");
+			
 		return false;
+	}
+
+	private int getBlockMetadata(int i, int j, int k) {
+		// TODO Auto-generated method stub
+		return worldObj.getBlockState(new BlockPos(i,j,k)).getValue(BlockFusionToroidalMagnet.ANGLE);
+	}
+
+	private Block getBlock(int i, int j, int k) {
+		// TODO Auto-generated method stub
+		return worldObj.getBlockState(new BlockPos(i,j,k)).getBlock();
 	}
 
 	public boolean isMultiBlock()
 	{
-		if(!(worldObj.getBlock(xCoord,  yCoord-1, zCoord).equals(LabStuffMain.blockFusionSolenoidAxel)))
+		
+		int xCoord = pos.getX();
+		int yCoord = pos.getY();
+		int zCoord = pos.getZ();
+		
+		if(!(getBlock(xCoord,  yCoord-1, zCoord).equals(LabStuffMain.blockFusionSolenoidAxel)))
 		{
-			if(worldObj.getBlock(xCoord, yCoord+2, zCoord).equals(LabStuffMain.blockFusionSolenoidAxel)
-					&& worldObj.getBlock(xCoord, yCoord+2, zCoord).equals(LabStuffMain.blockFusionSolenoidAxel)
-					&& worldObj.getBlock(xCoord+1, yCoord, zCoord).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord+1, yCoord+2, zCoord).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord+1, yCoord+2, zCoord).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord+2, yCoord, zCoord).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord+2, yCoord+2, zCoord).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord+2, yCoord+2, zCoord).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord+3, yCoord, zCoord).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord+3, yCoord+2, zCoord).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord+3, yCoord+2, zCoord).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord+4, yCoord, zCoord).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord+4, yCoord+2, zCoord).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord+4, yCoord+2, zCoord).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord-1, yCoord, zCoord).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord-1, yCoord+2, zCoord).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord-1, yCoord+2, zCoord).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord-2, yCoord, zCoord).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord-2, yCoord+2, zCoord).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord-2, yCoord+2, zCoord).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord-3, yCoord, zCoord).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord-3, yCoord+2, zCoord).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord-3, yCoord+2, zCoord).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord-4, yCoord, zCoord).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord-4, yCoord+2, zCoord).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord-4, yCoord+2, zCoord).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord, yCoord, zCoord+1).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord, yCoord+2, zCoord+1).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord, yCoord+2, zCoord+1).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord, yCoord, zCoord+2).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord, yCoord+2, zCoord+2).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord, yCoord+2, zCoord+2).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord, yCoord, zCoord+3).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord, yCoord+2, zCoord+3).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord, yCoord+2, zCoord+3).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord, yCoord, zCoord+4).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord, yCoord+2, zCoord+4).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord, yCoord+2, zCoord+4).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord, yCoord, zCoord-1).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord, yCoord+2, zCoord-1).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord, yCoord+2, zCoord-1).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord, yCoord, zCoord-2).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord, yCoord+2, zCoord-2).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord, yCoord+2, zCoord-2).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord, yCoord, zCoord-3).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord, yCoord+2, zCoord-3).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord, yCoord+2, zCoord-3).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord, yCoord, zCoord-4).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord, yCoord+2, zCoord-4).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord, yCoord+2, zCoord-4).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord+1, yCoord, zCoord+1).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord+1, yCoord, zCoord-1).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord-1, yCoord, zCoord-1).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord-1, yCoord, zCoord+1).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord+1, yCoord+2, zCoord+1).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord+1, yCoord+2, zCoord-1).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord-1, yCoord+2, zCoord-1).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord-1, yCoord+2, zCoord+1).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord+1, yCoord+2, zCoord+1).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord+1, yCoord+2, zCoord-1).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord-1, yCoord+2, zCoord-1).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord-1, yCoord+2, zCoord+1).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord+2, yCoord, zCoord+2).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord+2, yCoord, zCoord-2).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord-2, yCoord, zCoord-2).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord-2, yCoord, zCoord+2).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord+2, yCoord+2, zCoord+2).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord+2, yCoord+2, zCoord-2).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord-2, yCoord+2, zCoord-2).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord-2, yCoord+2, zCoord+2).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord+2, yCoord+2, zCoord+2).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord+2, yCoord+2, zCoord-2).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord-2, yCoord+2, zCoord-2).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord-2, yCoord+2, zCoord+2).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord+3, yCoord, zCoord+3).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord+3, yCoord, zCoord-3).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord-3, yCoord, zCoord-3).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord-3, yCoord, zCoord+3).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord+3, yCoord+2, zCoord+3).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord+3, yCoord+2, zCoord-3).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord-3, yCoord+2, zCoord-3).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord-3, yCoord+2, zCoord+3).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord+3, yCoord+2, zCoord+3).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord+3, yCoord+2, zCoord-3).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord-3, yCoord+2, zCoord-3).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord-3, yCoord+2, zCoord+3).equals(LabStuffMain.blockFusionSolenoidArm)
-					&& worldObj.getBlock(xCoord+5, yCoord, zCoord).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord+5, yCoord, zCoord+1).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord+4, yCoord, zCoord+2).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord+4, yCoord, zCoord+3).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord+3, yCoord, zCoord+4).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord+2, yCoord, zCoord+4).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord+1, yCoord, zCoord+5).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord, yCoord, zCoord+5).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord+5, yCoord, zCoord).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord+5, yCoord, zCoord-1).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord+4, yCoord, zCoord-2).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord+4, yCoord, zCoord-3).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord+3, yCoord, zCoord-4).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord+2, yCoord, zCoord-4).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord+1, yCoord, zCoord-5).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord, yCoord, zCoord-5).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord-5, yCoord, zCoord).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord-5, yCoord, zCoord-1).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord-4, yCoord, zCoord-2).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord-4, yCoord, zCoord-3).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord-3, yCoord, zCoord-4).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord-2, yCoord, zCoord-4).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord-1, yCoord, zCoord-5).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord, yCoord, zCoord-5).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord-5, yCoord, zCoord).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord-5, yCoord, zCoord+1).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord-4, yCoord, zCoord+2).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord-4, yCoord, zCoord+3).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord-3, yCoord, zCoord+4).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord-2, yCoord, zCoord+4).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord-1, yCoord, zCoord+5).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord, yCoord, zCoord+5).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord+5, yCoord+1, zCoord).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord+5, yCoord+1, zCoord+1).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord+4, yCoord+1, zCoord+2).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord+4, yCoord+1, zCoord+3).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord+3, yCoord+1, zCoord+4).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord+2, yCoord+1, zCoord+4).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord+1, yCoord+1, zCoord+5).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord, yCoord+1, zCoord+5).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord+5, yCoord+1, zCoord).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord+5, yCoord+1, zCoord-1).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord+4, yCoord+1, zCoord-2).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord+4, yCoord+1, zCoord-3).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord+3, yCoord+1, zCoord-4).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord+2, yCoord+1, zCoord-4).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord+1, yCoord+1, zCoord-5).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord, yCoord+1, zCoord-5).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord-5, yCoord+1, zCoord).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord-5, yCoord+1, zCoord-1).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord-4, yCoord+1, zCoord-2).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord-4, yCoord+1, zCoord-3).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord-3, yCoord+1, zCoord-4).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord-2, yCoord+1, zCoord-4).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord-1, yCoord+1, zCoord-5).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord, yCoord+1, zCoord-5).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord-5, yCoord+1, zCoord).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord-5, yCoord+1, zCoord+1).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord-4, yCoord+1, zCoord+2).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord-4, yCoord+1, zCoord+3).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord-3, yCoord+1, zCoord+4).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord-2, yCoord+1, zCoord+4).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord-1, yCoord+1, zCoord+5).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord, yCoord+1, zCoord+5).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord+5, yCoord+2, zCoord).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord+5, yCoord+2, zCoord+1).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord+4, yCoord+2, zCoord+2).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord+4, yCoord+2, zCoord+3).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord+3, yCoord+2, zCoord+4).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord+2, yCoord+2, zCoord+4).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord+1, yCoord+2, zCoord+5).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord, yCoord+2, zCoord+5).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord+5, yCoord+2, zCoord).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord+5, yCoord+2, zCoord-1).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord+4, yCoord+2, zCoord-2).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord+4, yCoord+2, zCoord-3).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord+3, yCoord+2, zCoord-4).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord+2, yCoord+2, zCoord-4).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord+1, yCoord+2, zCoord-5).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord, yCoord+2, zCoord-5).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord-5, yCoord+2, zCoord).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord-5, yCoord+2, zCoord-1).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord-4, yCoord+2, zCoord-2).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord-4, yCoord+2, zCoord-3).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord-3, yCoord+2, zCoord-4).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord-2, yCoord+2, zCoord-4).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord-1, yCoord+2, zCoord-5).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord, yCoord+2, zCoord-5).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord-5, yCoord+2, zCoord).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord-5, yCoord+2, zCoord+1).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord-4, yCoord+2, zCoord+2).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord-4, yCoord+2, zCoord+3).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord-3, yCoord+2, zCoord+4).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord-2, yCoord+2, zCoord+4).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord-1, yCoord+2, zCoord+5).equals(LabStuffMain.blockFusionSolenoid)
-					&& worldObj.getBlock(xCoord, yCoord+2, zCoord+5).equals(LabStuffMain.blockFusionSolenoid))
+			if(getBlock(xCoord, yCoord+2, zCoord).equals(LabStuffMain.blockFusionSolenoidAxel)
+					&& getBlock(xCoord, yCoord+2, zCoord).equals(LabStuffMain.blockFusionSolenoidAxel)
+					&& getBlock(xCoord+1, yCoord, zCoord).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord+1, yCoord+2, zCoord).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord+1, yCoord+2, zCoord).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord+2, yCoord, zCoord).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord+2, yCoord+2, zCoord).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord+2, yCoord+2, zCoord).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord+3, yCoord, zCoord).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord+3, yCoord+2, zCoord).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord+3, yCoord+2, zCoord).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord+4, yCoord, zCoord).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord+4, yCoord+2, zCoord).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord+4, yCoord+2, zCoord).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord-1, yCoord, zCoord).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord-1, yCoord+2, zCoord).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord-1, yCoord+2, zCoord).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord-2, yCoord, zCoord).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord-2, yCoord+2, zCoord).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord-2, yCoord+2, zCoord).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord-3, yCoord, zCoord).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord-3, yCoord+2, zCoord).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord-3, yCoord+2, zCoord).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord-4, yCoord, zCoord).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord-4, yCoord+2, zCoord).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord-4, yCoord+2, zCoord).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord, yCoord, zCoord+1).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord, yCoord+2, zCoord+1).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord, yCoord+2, zCoord+1).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord, yCoord, zCoord+2).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord, yCoord+2, zCoord+2).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord, yCoord+2, zCoord+2).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord, yCoord, zCoord+3).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord, yCoord+2, zCoord+3).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord, yCoord+2, zCoord+3).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord, yCoord, zCoord+4).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord, yCoord+2, zCoord+4).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord, yCoord+2, zCoord+4).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord, yCoord, zCoord-1).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord, yCoord+2, zCoord-1).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord, yCoord+2, zCoord-1).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord, yCoord, zCoord-2).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord, yCoord+2, zCoord-2).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord, yCoord+2, zCoord-2).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord, yCoord, zCoord-3).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord, yCoord+2, zCoord-3).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord, yCoord+2, zCoord-3).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord, yCoord, zCoord-4).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord, yCoord+2, zCoord-4).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord, yCoord+2, zCoord-4).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord+1, yCoord, zCoord+1).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord+1, yCoord, zCoord-1).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord-1, yCoord, zCoord-1).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord-1, yCoord, zCoord+1).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord+1, yCoord+2, zCoord+1).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord+1, yCoord+2, zCoord-1).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord-1, yCoord+2, zCoord-1).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord-1, yCoord+2, zCoord+1).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord+1, yCoord+2, zCoord+1).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord+1, yCoord+2, zCoord-1).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord-1, yCoord+2, zCoord-1).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord-1, yCoord+2, zCoord+1).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord+2, yCoord, zCoord+2).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord+2, yCoord, zCoord-2).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord-2, yCoord, zCoord-2).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord-2, yCoord, zCoord+2).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord+2, yCoord+2, zCoord+2).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord+2, yCoord+2, zCoord-2).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord-2, yCoord+2, zCoord-2).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord-2, yCoord+2, zCoord+2).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord+2, yCoord+2, zCoord+2).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord+2, yCoord+2, zCoord-2).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord-2, yCoord+2, zCoord-2).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord-2, yCoord+2, zCoord+2).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord+3, yCoord, zCoord+3).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord+3, yCoord, zCoord-3).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord-3, yCoord, zCoord-3).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord-3, yCoord, zCoord+3).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord+3, yCoord+2, zCoord+3).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord+3, yCoord+2, zCoord-3).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord-3, yCoord+2, zCoord-3).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord-3, yCoord+2, zCoord+3).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord+3, yCoord+2, zCoord+3).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord+3, yCoord+2, zCoord-3).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord-3, yCoord+2, zCoord-3).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord-3, yCoord+2, zCoord+3).equals(LabStuffMain.blockFusionSolenoidArm)
+					&& getBlock(xCoord+5, yCoord, zCoord).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord+5, yCoord, zCoord+1).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord+4, yCoord, zCoord+2).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord+4, yCoord, zCoord+3).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord+3, yCoord, zCoord+4).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord+2, yCoord, zCoord+4).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord+1, yCoord, zCoord+5).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord, yCoord, zCoord+5).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord+5, yCoord, zCoord).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord+5, yCoord, zCoord-1).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord+4, yCoord, zCoord-2).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord+4, yCoord, zCoord-3).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord+3, yCoord, zCoord-4).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord+2, yCoord, zCoord-4).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord+1, yCoord, zCoord-5).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord, yCoord, zCoord-5).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord-5, yCoord, zCoord).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord-5, yCoord, zCoord-1).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord-4, yCoord, zCoord-2).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord-4, yCoord, zCoord-3).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord-3, yCoord, zCoord-4).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord-2, yCoord, zCoord-4).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord-1, yCoord, zCoord-5).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord, yCoord, zCoord-5).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord-5, yCoord, zCoord).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord-5, yCoord, zCoord+1).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord-4, yCoord, zCoord+2).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord-4, yCoord, zCoord+3).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord-3, yCoord, zCoord+4).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord-2, yCoord, zCoord+4).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord-1, yCoord, zCoord+5).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord, yCoord, zCoord+5).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord+5, yCoord+1, zCoord).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord+5, yCoord+1, zCoord+1).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord+4, yCoord+1, zCoord+2).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord+4, yCoord+1, zCoord+3).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord+3, yCoord+1, zCoord+4).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord+2, yCoord+1, zCoord+4).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord+1, yCoord+1, zCoord+5).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord, yCoord+1, zCoord+5).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord+5, yCoord+1, zCoord).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord+5, yCoord+1, zCoord-1).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord+4, yCoord+1, zCoord-2).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord+4, yCoord+1, zCoord-3).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord+3, yCoord+1, zCoord-4).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord+2, yCoord+1, zCoord-4).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord+1, yCoord+1, zCoord-5).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord, yCoord+1, zCoord-5).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord-5, yCoord+1, zCoord).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord-5, yCoord+1, zCoord-1).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord-4, yCoord+1, zCoord-2).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord-4, yCoord+1, zCoord-3).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord-3, yCoord+1, zCoord-4).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord-2, yCoord+1, zCoord-4).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord-1, yCoord+1, zCoord-5).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord, yCoord+1, zCoord-5).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord-5, yCoord+1, zCoord).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord-5, yCoord+1, zCoord+1).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord-4, yCoord+1, zCoord+2).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord-4, yCoord+1, zCoord+3).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord-3, yCoord+1, zCoord+4).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord-2, yCoord+1, zCoord+4).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord-1, yCoord+1, zCoord+5).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord, yCoord+1, zCoord+5).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord+5, yCoord+2, zCoord).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord+5, yCoord+2, zCoord+1).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord+4, yCoord+2, zCoord+2).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord+4, yCoord+2, zCoord+3).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord+3, yCoord+2, zCoord+4).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord+2, yCoord+2, zCoord+4).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord+1, yCoord+2, zCoord+5).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord, yCoord+2, zCoord+5).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord+5, yCoord+2, zCoord).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord+5, yCoord+2, zCoord-1).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord+4, yCoord+2, zCoord-2).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord+4, yCoord+2, zCoord-3).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord+3, yCoord+2, zCoord-4).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord+2, yCoord+2, zCoord-4).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord+1, yCoord+2, zCoord-5).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord, yCoord+2, zCoord-5).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord-5, yCoord+2, zCoord).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord-5, yCoord+2, zCoord-1).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord-4, yCoord+2, zCoord-2).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord-4, yCoord+2, zCoord-3).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord-3, yCoord+2, zCoord-4).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord-2, yCoord+2, zCoord-4).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord-1, yCoord+2, zCoord-5).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord, yCoord+2, zCoord-5).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord-5, yCoord+2, zCoord).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord-5, yCoord+2, zCoord+1).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord-4, yCoord+2, zCoord+2).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord-4, yCoord+2, zCoord+3).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord-3, yCoord+2, zCoord+4).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord-2, yCoord+2, zCoord+4).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord-1, yCoord+2, zCoord+5).equals(LabStuffMain.blockFusionSolenoid)
+					&& getBlock(xCoord, yCoord+2, zCoord+5).equals(LabStuffMain.blockFusionSolenoid))
 				{
-					worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord, yCoord+1, zCoord,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord, yCoord+2, zCoord,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord+1, yCoord, zCoord,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord+1, yCoord+1, zCoord,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord+1, yCoord+2, zCoord,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord+2, yCoord, zCoord,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord+2, yCoord+1, zCoord,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord+2, yCoord+2, zCoord,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord+3, yCoord, zCoord,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord+3, yCoord+1, zCoord,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord+3, yCoord+2, zCoord,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord+4, yCoord, zCoord,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord+4, yCoord+1, zCoord,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord+4, yCoord+2, zCoord,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-1, yCoord, zCoord,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-1, yCoord+1, zCoord,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-1, yCoord+2, zCoord,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-2, yCoord, zCoord,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-2, yCoord+1, zCoord,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-2, yCoord+2, zCoord,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-3, yCoord, zCoord,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-3, yCoord+1, zCoord,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-3, yCoord+2, zCoord,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-4, yCoord, zCoord,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-4, yCoord+1, zCoord,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-4, yCoord+2, zCoord,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord+1,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord, yCoord+1, zCoord+1,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord, yCoord+2, zCoord+1,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord+2,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord, yCoord+1, zCoord+2,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord, yCoord+2, zCoord+2,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord+3,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord, yCoord+1, zCoord+3,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord, yCoord+2, zCoord+3,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord+4,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord, yCoord+1, zCoord+4,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord, yCoord+2, zCoord+4,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord-1,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord, yCoord+1, zCoord-1,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord, yCoord+2, zCoord-1,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord-2,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord, yCoord+1, zCoord-2,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord, yCoord+2, zCoord-2,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord-3,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord, yCoord+1, zCoord-3,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord, yCoord+2, zCoord-3,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord-4,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord, yCoord+1, zCoord-4,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord, yCoord+2, zCoord-4,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord+1, yCoord, zCoord+1,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-1, yCoord, zCoord+1,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-1, yCoord, zCoord-1,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord+1, yCoord, zCoord-1,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord+1, yCoord+1, zCoord+1,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-1, yCoord+1, zCoord+1,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-1, yCoord+1, zCoord-1,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord+1, yCoord+1, zCoord-1,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord+1, yCoord+2, zCoord+1,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-1, yCoord+2, zCoord+1,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-1, yCoord+2, zCoord-1,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord+1, yCoord+2, zCoord-1,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord+2, yCoord, zCoord+2,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-2, yCoord, zCoord+2,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-2, yCoord, zCoord-2,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord+2, yCoord, zCoord-2,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord+2, yCoord+1, zCoord+2,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-2, yCoord+1, zCoord+2,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-2, yCoord+1, zCoord-2,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord+2, yCoord+1, zCoord-2,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord+2, yCoord+2, zCoord+2,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-2, yCoord+2, zCoord+2,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-2, yCoord+2, zCoord-2,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord+2, yCoord+2, zCoord-2,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord+3, yCoord, zCoord+3,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-3, yCoord, zCoord+3,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-3, yCoord, zCoord-3,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord+3, yCoord, zCoord-3,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord+3, yCoord+1, zCoord+3,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-3, yCoord+1, zCoord+3,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-3, yCoord+1, zCoord-3,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord+3, yCoord+1, zCoord-3,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord+3, yCoord+2, zCoord+3,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-3, yCoord+2, zCoord+3,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-3, yCoord+2, zCoord-3,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord+3, yCoord+2, zCoord-3,1,1+2);
+					worldObj.setBlockState(pos, worldObj.getBlockState(pos).withProperty(BlockSolenoidAxel.RENDER, EnumRender.SOLENOID));
+					worldObj.setBlockState(pos.up(), worldObj.getBlockState(pos.up()).withProperty(BlockSolenoidAxel.RENDER, EnumRender.AIR));
+					worldObj.setBlockState(pos.up(2), worldObj.getBlockState(pos.up(2)).withProperty(BlockSolenoidAxel.RENDER, EnumRender.AIR));
+					setBlockMetadataWithNotify(xCoord, yCoord+1, zCoord,1,1+2);
+					setBlockMetadataWithNotify(xCoord, yCoord+2, zCoord,1,1+2);
+					setBlockMetadataWithNotify(xCoord+1, yCoord, zCoord,1,1+2);
+					setBlockMetadataWithNotify(xCoord+1, yCoord+1, zCoord,1,1+2);
+					setBlockMetadataWithNotify(xCoord+1, yCoord+2, zCoord,1,1+2);
+					setBlockMetadataWithNotify(xCoord+2, yCoord, zCoord,1,1+2);
+					setBlockMetadataWithNotify(xCoord+2, yCoord+1, zCoord,1,1+2);
+					setBlockMetadataWithNotify(xCoord+2, yCoord+2, zCoord,1,1+2);
+					setBlockMetadataWithNotify(xCoord+3, yCoord, zCoord,1,1+2);
+					setBlockMetadataWithNotify(xCoord+3, yCoord+1, zCoord,1,1+2);
+					setBlockMetadataWithNotify(xCoord+3, yCoord+2, zCoord,1,1+2);
+					setBlockMetadataWithNotify(xCoord+4, yCoord, zCoord,1,1+2);
+					setBlockMetadataWithNotify(xCoord+4, yCoord+1, zCoord,1,1+2);
+					setBlockMetadataWithNotify(xCoord+4, yCoord+2, zCoord,1,1+2);
+					setBlockMetadataWithNotify(xCoord-1, yCoord, zCoord,1,1+2);
+					setBlockMetadataWithNotify(xCoord-1, yCoord+1, zCoord,1,1+2);
+					setBlockMetadataWithNotify(xCoord-1, yCoord+2, zCoord,1,1+2);
+					setBlockMetadataWithNotify(xCoord-2, yCoord, zCoord,1,1+2);
+					setBlockMetadataWithNotify(xCoord-2, yCoord+1, zCoord,1,1+2);
+					setBlockMetadataWithNotify(xCoord-2, yCoord+2, zCoord,1,1+2);
+					setBlockMetadataWithNotify(xCoord-3, yCoord, zCoord,1,1+2);
+					setBlockMetadataWithNotify(xCoord-3, yCoord+1, zCoord,1,1+2);
+					setBlockMetadataWithNotify(xCoord-3, yCoord+2, zCoord,1,1+2);
+					setBlockMetadataWithNotify(xCoord-4, yCoord, zCoord,1,1+2);
+					setBlockMetadataWithNotify(xCoord-4, yCoord+1, zCoord,1,1+2);
+					setBlockMetadataWithNotify(xCoord-4, yCoord+2, zCoord,1,1+2);
+					setBlockMetadataWithNotify(xCoord, yCoord, zCoord+1,1,1+2);
+					setBlockMetadataWithNotify(xCoord, yCoord+1, zCoord+1,1,1+2);
+					setBlockMetadataWithNotify(xCoord, yCoord+2, zCoord+1,1,1+2);
+					setBlockMetadataWithNotify(xCoord, yCoord, zCoord+2,1,1+2);
+					setBlockMetadataWithNotify(xCoord, yCoord+1, zCoord+2,1,1+2);
+					setBlockMetadataWithNotify(xCoord, yCoord+2, zCoord+2,1,1+2);
+					setBlockMetadataWithNotify(xCoord, yCoord, zCoord+3,1,1+2);
+					setBlockMetadataWithNotify(xCoord, yCoord+1, zCoord+3,1,1+2);
+					setBlockMetadataWithNotify(xCoord, yCoord+2, zCoord+3,1,1+2);
+					setBlockMetadataWithNotify(xCoord, yCoord, zCoord+4,1,1+2);
+					setBlockMetadataWithNotify(xCoord, yCoord+1, zCoord+4,1,1+2);
+					setBlockMetadataWithNotify(xCoord, yCoord+2, zCoord+4,1,1+2);
+					setBlockMetadataWithNotify(xCoord, yCoord, zCoord-1,1,1+2);
+					setBlockMetadataWithNotify(xCoord, yCoord+1, zCoord-1,1,1+2);
+					setBlockMetadataWithNotify(xCoord, yCoord+2, zCoord-1,1,1+2);
+					setBlockMetadataWithNotify(xCoord, yCoord, zCoord-2,1,1+2);
+					setBlockMetadataWithNotify(xCoord, yCoord+1, zCoord-2,1,1+2);
+					setBlockMetadataWithNotify(xCoord, yCoord+2, zCoord-2,1,1+2);
+					setBlockMetadataWithNotify(xCoord, yCoord, zCoord-3,1,1+2);
+					setBlockMetadataWithNotify(xCoord, yCoord+1, zCoord-3,1,1+2);
+					setBlockMetadataWithNotify(xCoord, yCoord+2, zCoord-3,1,1+2);
+					setBlockMetadataWithNotify(xCoord, yCoord, zCoord-4,1,1+2);
+					setBlockMetadataWithNotify(xCoord, yCoord+1, zCoord-4,1,1+2);
+					setBlockMetadataWithNotify(xCoord, yCoord+2, zCoord-4,1,1+2);
+					setBlockMetadataWithNotify(xCoord+1, yCoord, zCoord+1,1,1+2);
+					setBlockMetadataWithNotify(xCoord-1, yCoord, zCoord+1,1,1+2);
+					setBlockMetadataWithNotify(xCoord-1, yCoord, zCoord-1,1,1+2);
+					setBlockMetadataWithNotify(xCoord+1, yCoord, zCoord-1,1,1+2);
+					setBlockMetadataWithNotify(xCoord+1, yCoord+1, zCoord+1,1,1+2);
+					setBlockMetadataWithNotify(xCoord-1, yCoord+1, zCoord+1,1,1+2);
+					setBlockMetadataWithNotify(xCoord-1, yCoord+1, zCoord-1,1,1+2);
+					setBlockMetadataWithNotify(xCoord+1, yCoord+1, zCoord-1,1,1+2);
+					setBlockMetadataWithNotify(xCoord+1, yCoord+2, zCoord+1,1,1+2);
+					setBlockMetadataWithNotify(xCoord-1, yCoord+2, zCoord+1,1,1+2);
+					setBlockMetadataWithNotify(xCoord-1, yCoord+2, zCoord-1,1,1+2);
+					setBlockMetadataWithNotify(xCoord+1, yCoord+2, zCoord-1,1,1+2);
+					setBlockMetadataWithNotify(xCoord+2, yCoord, zCoord+2,1,1+2);
+					setBlockMetadataWithNotify(xCoord-2, yCoord, zCoord+2,1,1+2);
+					setBlockMetadataWithNotify(xCoord-2, yCoord, zCoord-2,1,1+2);
+					setBlockMetadataWithNotify(xCoord+2, yCoord, zCoord-2,1,1+2);
+					setBlockMetadataWithNotify(xCoord+2, yCoord+1, zCoord+2,1,1+2);
+					setBlockMetadataWithNotify(xCoord-2, yCoord+1, zCoord+2,1,1+2);
+					setBlockMetadataWithNotify(xCoord-2, yCoord+1, zCoord-2,1,1+2);
+					setBlockMetadataWithNotify(xCoord+2, yCoord+1, zCoord-2,1,1+2);
+					setBlockMetadataWithNotify(xCoord+2, yCoord+2, zCoord+2,1,1+2);
+					setBlockMetadataWithNotify(xCoord-2, yCoord+2, zCoord+2,1,1+2);
+					setBlockMetadataWithNotify(xCoord-2, yCoord+2, zCoord-2,1,1+2);
+					setBlockMetadataWithNotify(xCoord+2, yCoord+2, zCoord-2,1,1+2);
+					setBlockMetadataWithNotify(xCoord+3, yCoord, zCoord+3,1,1+2);
+					setBlockMetadataWithNotify(xCoord-3, yCoord, zCoord+3,1,1+2);
+					setBlockMetadataWithNotify(xCoord-3, yCoord, zCoord-3,1,1+2);
+					setBlockMetadataWithNotify(xCoord+3, yCoord, zCoord-3,1,1+2);
+					setBlockMetadataWithNotify(xCoord+3, yCoord+1, zCoord+3,1,1+2);
+					setBlockMetadataWithNotify(xCoord-3, yCoord+1, zCoord+3,1,1+2);
+					setBlockMetadataWithNotify(xCoord-3, yCoord+1, zCoord-3,1,1+2);
+					setBlockMetadataWithNotify(xCoord+3, yCoord+1, zCoord-3,1,1+2);
+					setBlockMetadataWithNotify(xCoord+3, yCoord+2, zCoord+3,1,1+2);
+					setBlockMetadataWithNotify(xCoord-3, yCoord+2, zCoord+3,1,1+2);
+					setBlockMetadataWithNotify(xCoord-3, yCoord+2, zCoord-3,1,1+2);
+					setBlockMetadataWithNotify(xCoord+3, yCoord+2, zCoord-3,1,1+2);
 					
-					worldObj.setBlockMetadataWithNotify(xCoord+5, yCoord, zCoord,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord+5, yCoord, zCoord+1,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord+4, yCoord, zCoord+2,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord+4, yCoord, zCoord+3,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord+3, yCoord, zCoord+4,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord+2, yCoord, zCoord+4,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord+1, yCoord, zCoord+5,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord+5,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord+5, yCoord, zCoord,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord+5, yCoord, zCoord-1,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord+4, yCoord, zCoord-2,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord+4, yCoord, zCoord-3,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord+3, yCoord, zCoord-4,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord+2, yCoord, zCoord-4,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord+1, yCoord, zCoord-5,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord-5,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-5, yCoord, zCoord,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-5, yCoord, zCoord+1,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-4, yCoord, zCoord+2,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-4, yCoord, zCoord+3,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-3, yCoord, zCoord+4,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-2, yCoord, zCoord+4,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-1, yCoord, zCoord+5,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord+5,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-5, yCoord, zCoord,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-5, yCoord, zCoord-1,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-4, yCoord, zCoord-2,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-4, yCoord, zCoord-3,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-3, yCoord, zCoord-4,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-2, yCoord, zCoord-4,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-1, yCoord, zCoord-5,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord-5,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord+5, yCoord+1, zCoord,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord+5, yCoord+1, zCoord+1,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord+4, yCoord+1, zCoord+2,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord+4, yCoord+1, zCoord+3,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord+3, yCoord+1, zCoord+4,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord+2, yCoord+1, zCoord+4,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord+1, yCoord+1, zCoord+5,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord, yCoord+1, zCoord+5,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord+5, yCoord+1, zCoord,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord+5, yCoord+1, zCoord-1,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord+4, yCoord+1, zCoord-2,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord+4, yCoord+1, zCoord-3,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord+3, yCoord+1, zCoord-4,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord+2, yCoord+1, zCoord-4,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord+1, yCoord+1, zCoord-5,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord, yCoord+1, zCoord-5,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-5, yCoord+1, zCoord,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-5, yCoord+1, zCoord+1,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-4, yCoord+1, zCoord+2,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-4, yCoord+1, zCoord+3,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-3, yCoord+1, zCoord+4,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-2, yCoord+1, zCoord+4,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-1, yCoord+1, zCoord+5,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord, yCoord+1, zCoord+5,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-5, yCoord+1, zCoord,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-5, yCoord+1, zCoord-1,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-4, yCoord+1, zCoord-2,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-4, yCoord+1, zCoord-3,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-3, yCoord+1, zCoord-4,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-2, yCoord+1, zCoord-4,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-1, yCoord+1, zCoord-5,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord, yCoord+1, zCoord-5,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord+5, yCoord+2, zCoord,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord+5, yCoord+2, zCoord+1,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord+4, yCoord+2, zCoord+2,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord+4, yCoord+2, zCoord+3,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord+3, yCoord+2, zCoord+4,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord+2, yCoord+2, zCoord+4,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord+1, yCoord+2, zCoord+5,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord, yCoord+2, zCoord+5,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord+5, yCoord+2, zCoord,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord+5, yCoord+2, zCoord-1,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord+4, yCoord+2, zCoord-2,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord+4, yCoord+2, zCoord-3,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord+3, yCoord+2, zCoord-4,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord+2, yCoord+2, zCoord-4,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord+1, yCoord+2, zCoord-5,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord, yCoord+2, zCoord-5,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-5, yCoord+2, zCoord,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-5, yCoord+2, zCoord+1,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-4, yCoord+2, zCoord+2,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-4, yCoord+2, zCoord+3,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-3, yCoord+2, zCoord+4,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-2, yCoord+2, zCoord+4,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-1, yCoord+2, zCoord+5,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord, yCoord+2, zCoord+5,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-5, yCoord+2, zCoord,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-5, yCoord+2, zCoord-1,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-4, yCoord+2, zCoord-2,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-4, yCoord+2, zCoord-3,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-3, yCoord+2, zCoord-4,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-2, yCoord+2, zCoord-4,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord-1, yCoord+2, zCoord-5,1,1+2);
-					worldObj.setBlockMetadataWithNotify(xCoord, yCoord+2, zCoord-5,1,1+2);
+					setBlockMetadataWithNotify(xCoord+5, yCoord, zCoord,1,1+2);
+					setBlockMetadataWithNotify(xCoord+5, yCoord, zCoord+1,1,1+2);
+					setBlockMetadataWithNotify(xCoord+4, yCoord, zCoord+2,1,1+2);
+					setBlockMetadataWithNotify(xCoord+4, yCoord, zCoord+3,1,1+2);
+					setBlockMetadataWithNotify(xCoord+3, yCoord, zCoord+4,1,1+2);
+					setBlockMetadataWithNotify(xCoord+2, yCoord, zCoord+4,1,1+2);
+					setBlockMetadataWithNotify(xCoord+1, yCoord, zCoord+5,1,1+2);
+					setBlockMetadataWithNotify(xCoord, yCoord, zCoord+5,1,1+2);
+					setBlockMetadataWithNotify(xCoord+5, yCoord, zCoord,1,1+2);
+					setBlockMetadataWithNotify(xCoord+5, yCoord, zCoord-1,1,1+2);
+					setBlockMetadataWithNotify(xCoord+4, yCoord, zCoord-2,1,1+2);
+					setBlockMetadataWithNotify(xCoord+4, yCoord, zCoord-3,1,1+2);
+					setBlockMetadataWithNotify(xCoord+3, yCoord, zCoord-4,1,1+2);
+					setBlockMetadataWithNotify(xCoord+2, yCoord, zCoord-4,1,1+2);
+					setBlockMetadataWithNotify(xCoord+1, yCoord, zCoord-5,1,1+2);
+					setBlockMetadataWithNotify(xCoord, yCoord, zCoord-5,1,1+2);
+					setBlockMetadataWithNotify(xCoord-5, yCoord, zCoord,1,1+2);
+					setBlockMetadataWithNotify(xCoord-5, yCoord, zCoord+1,1,1+2);
+					setBlockMetadataWithNotify(xCoord-4, yCoord, zCoord+2,1,1+2);
+					setBlockMetadataWithNotify(xCoord-4, yCoord, zCoord+3,1,1+2);
+					setBlockMetadataWithNotify(xCoord-3, yCoord, zCoord+4,1,1+2);
+					setBlockMetadataWithNotify(xCoord-2, yCoord, zCoord+4,1,1+2);
+					setBlockMetadataWithNotify(xCoord-1, yCoord, zCoord+5,1,1+2);
+					setBlockMetadataWithNotify(xCoord, yCoord, zCoord+5,1,1+2);
+					setBlockMetadataWithNotify(xCoord-5, yCoord, zCoord,1,1+2);
+					setBlockMetadataWithNotify(xCoord-5, yCoord, zCoord-1,1,1+2);
+					setBlockMetadataWithNotify(xCoord-4, yCoord, zCoord-2,1,1+2);
+					setBlockMetadataWithNotify(xCoord-4, yCoord, zCoord-3,1,1+2);
+					setBlockMetadataWithNotify(xCoord-3, yCoord, zCoord-4,1,1+2);
+					setBlockMetadataWithNotify(xCoord-2, yCoord, zCoord-4,1,1+2);
+					setBlockMetadataWithNotify(xCoord-1, yCoord, zCoord-5,1,1+2);
+					setBlockMetadataWithNotify(xCoord, yCoord, zCoord-5,1,1+2);
+					setBlockMetadataWithNotify(xCoord+5, yCoord+1, zCoord,1,1+2);
+					setBlockMetadataWithNotify(xCoord+5, yCoord+1, zCoord+1,1,1+2);
+					setBlockMetadataWithNotify(xCoord+4, yCoord+1, zCoord+2,1,1+2);
+					setBlockMetadataWithNotify(xCoord+4, yCoord+1, zCoord+3,1,1+2);
+					setBlockMetadataWithNotify(xCoord+3, yCoord+1, zCoord+4,1,1+2);
+					setBlockMetadataWithNotify(xCoord+2, yCoord+1, zCoord+4,1,1+2);
+					setBlockMetadataWithNotify(xCoord+1, yCoord+1, zCoord+5,1,1+2);
+					setBlockMetadataWithNotify(xCoord, yCoord+1, zCoord+5,1,1+2);
+					setBlockMetadataWithNotify(xCoord+5, yCoord+1, zCoord,1,1+2);
+					setBlockMetadataWithNotify(xCoord+5, yCoord+1, zCoord-1,1,1+2);
+					setBlockMetadataWithNotify(xCoord+4, yCoord+1, zCoord-2,1,1+2);
+					setBlockMetadataWithNotify(xCoord+4, yCoord+1, zCoord-3,1,1+2);
+					setBlockMetadataWithNotify(xCoord+3, yCoord+1, zCoord-4,1,1+2);
+					setBlockMetadataWithNotify(xCoord+2, yCoord+1, zCoord-4,1,1+2);
+					setBlockMetadataWithNotify(xCoord+1, yCoord+1, zCoord-5,1,1+2);
+					setBlockMetadataWithNotify(xCoord, yCoord+1, zCoord-5,1,1+2);
+					setBlockMetadataWithNotify(xCoord-5, yCoord+1, zCoord,1,1+2);
+					setBlockMetadataWithNotify(xCoord-5, yCoord+1, zCoord+1,1,1+2);
+					setBlockMetadataWithNotify(xCoord-4, yCoord+1, zCoord+2,1,1+2);
+					setBlockMetadataWithNotify(xCoord-4, yCoord+1, zCoord+3,1,1+2);
+					setBlockMetadataWithNotify(xCoord-3, yCoord+1, zCoord+4,1,1+2);
+					setBlockMetadataWithNotify(xCoord-2, yCoord+1, zCoord+4,1,1+2);
+					setBlockMetadataWithNotify(xCoord-1, yCoord+1, zCoord+5,1,1+2);
+					setBlockMetadataWithNotify(xCoord, yCoord+1, zCoord+5,1,1+2);
+					setBlockMetadataWithNotify(xCoord-5, yCoord+1, zCoord,1,1+2);
+					setBlockMetadataWithNotify(xCoord-5, yCoord+1, zCoord-1,1,1+2);
+					setBlockMetadataWithNotify(xCoord-4, yCoord+1, zCoord-2,1,1+2);
+					setBlockMetadataWithNotify(xCoord-4, yCoord+1, zCoord-3,1,1+2);
+					setBlockMetadataWithNotify(xCoord-3, yCoord+1, zCoord-4,1,1+2);
+					setBlockMetadataWithNotify(xCoord-2, yCoord+1, zCoord-4,1,1+2);
+					setBlockMetadataWithNotify(xCoord-1, yCoord+1, zCoord-5,1,1+2);
+					setBlockMetadataWithNotify(xCoord, yCoord+1, zCoord-5,1,1+2);
+					setBlockMetadataWithNotify(xCoord+5, yCoord+2, zCoord,1,1+2);
+					setBlockMetadataWithNotify(xCoord+5, yCoord+2, zCoord+1,1,1+2);
+					setBlockMetadataWithNotify(xCoord+4, yCoord+2, zCoord+2,1,1+2);
+					setBlockMetadataWithNotify(xCoord+4, yCoord+2, zCoord+3,1,1+2);
+					setBlockMetadataWithNotify(xCoord+3, yCoord+2, zCoord+4,1,1+2);
+					setBlockMetadataWithNotify(xCoord+2, yCoord+2, zCoord+4,1,1+2);
+					setBlockMetadataWithNotify(xCoord+1, yCoord+2, zCoord+5,1,1+2);
+					setBlockMetadataWithNotify(xCoord, yCoord+2, zCoord+5,1,1+2);
+					setBlockMetadataWithNotify(xCoord+5, yCoord+2, zCoord,1,1+2);
+					setBlockMetadataWithNotify(xCoord+5, yCoord+2, zCoord-1,1,1+2);
+					setBlockMetadataWithNotify(xCoord+4, yCoord+2, zCoord-2,1,1+2);
+					setBlockMetadataWithNotify(xCoord+4, yCoord+2, zCoord-3,1,1+2);
+					setBlockMetadataWithNotify(xCoord+3, yCoord+2, zCoord-4,1,1+2);
+					setBlockMetadataWithNotify(xCoord+2, yCoord+2, zCoord-4,1,1+2);
+					setBlockMetadataWithNotify(xCoord+1, yCoord+2, zCoord-5,1,1+2);
+					setBlockMetadataWithNotify(xCoord, yCoord+2, zCoord-5,1,1+2);
+					setBlockMetadataWithNotify(xCoord-5, yCoord+2, zCoord,1,1+2);
+					setBlockMetadataWithNotify(xCoord-5, yCoord+2, zCoord+1,1,1+2);
+					setBlockMetadataWithNotify(xCoord-4, yCoord+2, zCoord+2,1,1+2);
+					setBlockMetadataWithNotify(xCoord-4, yCoord+2, zCoord+3,1,1+2);
+					setBlockMetadataWithNotify(xCoord-3, yCoord+2, zCoord+4,1,1+2);
+					setBlockMetadataWithNotify(xCoord-2, yCoord+2, zCoord+4,1,1+2);
+					setBlockMetadataWithNotify(xCoord-1, yCoord+2, zCoord+5,1,1+2);
+					setBlockMetadataWithNotify(xCoord, yCoord+2, zCoord+5,1,1+2);
+					setBlockMetadataWithNotify(xCoord-5, yCoord+2, zCoord,1,1+2);
+					setBlockMetadataWithNotify(xCoord-5, yCoord+2, zCoord-1,1,1+2);
+					setBlockMetadataWithNotify(xCoord-4, yCoord+2, zCoord-2,1,1+2);
+					setBlockMetadataWithNotify(xCoord-4, yCoord+2, zCoord-3,1,1+2);
+					setBlockMetadataWithNotify(xCoord-3, yCoord+2, zCoord-4,1,1+2);
+					setBlockMetadataWithNotify(xCoord-2, yCoord+2, zCoord-4,1,1+2);
+					setBlockMetadataWithNotify(xCoord-1, yCoord+2, zCoord-5,1,1+2);
+					setBlockMetadataWithNotify(xCoord, yCoord+2, zCoord-5,1,1+2);
 					return true;
 				}
-				
+				worldObj.setBlockState(pos, worldObj.getBlockState(pos).withProperty(BlockSolenoidAxel.RENDER, EnumRender.BLOCK));
 				for(int x = -5; x < 6; x++)
 				{
 					for(int z = -5; z < 6; z++)
 					{
 						for(int y =0; y < 3; y++)
 						{
-							if(worldObj.getBlock(xCoord+x, yCoord+y, zCoord+z) instanceof BlockSolenoid || worldObj.getBlock(xCoord+x, yCoord+y, zCoord+z) instanceof BlockSolenoidAxel)
-								worldObj.setBlockMetadataWithNotify(xCoord+x, yCoord+y, zCoord+z, 0, 1+2);
+							if(getBlock(xCoord+x, yCoord+y, zCoord+z) instanceof BlockSolenoid || getBlock(xCoord+x, yCoord+y, zCoord+z) instanceof BlockSolenoidAxel)
+								setBlockMetadataWithNotify(xCoord+x, yCoord+y, zCoord+z, 0, 1+2);
 						}
 					}
 				}
 				return false;
 		}
 		return false;
+	}
+
+	private void setBlockMetadataWithNotify(int i, int j, int k, int l, int m) {
+		BlockPos remote = new BlockPos(i,j,k);
+		if(worldObj.getBlockState(remote) != null && (worldObj.getBlockState(remote).getBlock() instanceof BlockSolenoid))
+		{
+			if(l == 0)
+				worldObj.setBlockState(remote, worldObj.getBlockState(remote).withProperty(BlockSolenoid.COMPLETE, false));
+			else
+				worldObj.setBlockState(remote, worldObj.getBlockState(remote).withProperty(BlockSolenoid.COMPLETE, true));
+		}
+		else if(worldObj.getBlockState(remote) != null && worldObj.getBlockState(remote).getBlock() instanceof BlockSolenoidAxel)
+		{
+			if(l == 0)
+				worldObj.setBlockState(remote, worldObj.getBlockState(remote).withProperty(BlockSolenoidAxel.RENDER, EnumRender.BLOCK));
+			else
+				worldObj.setBlockState(remote, worldObj.getBlockState(remote).withProperty(BlockSolenoidAxel.RENDER, EnumRender.AIR));
+
+		}
+		
 	}
 	
 }

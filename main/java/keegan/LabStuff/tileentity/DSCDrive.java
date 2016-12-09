@@ -5,8 +5,9 @@ import keegan.labstuff.recipes.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ITickable;
 
-public class DSCDrive extends DSCPart implements IInventory
+public class DSCDrive extends DSCPart implements IInventory, ITickable
 {
 	
 	private ItemStack[] chestContents;
@@ -18,9 +19,9 @@ public class DSCDrive extends DSCPart implements IInventory
 	}
 	
 	@Override
-	public void updateEntity()
+	public void update()
 	{
-		super.updateEntity();
+		super.update();
 	}
 	
 	public void install(AcceleratorDiscovery discov)
@@ -76,29 +77,11 @@ public class DSCDrive extends DSCPart implements IInventory
 		return stack;
 	}
 
-	@Override
-	public ItemStack getStackInSlotOnClosing(int slot)
-	{
-		return chestContents[slot];
-	}
 
 	@Override
 	public void setInventorySlotContents(int slot, ItemStack stack)
 	{
 		chestContents[slot] = stack;
-	}
-
-	@Override
-	public String getInventoryName()
-	{
-		return "DSCDrive";
-	}
-
-	@Override
-	public boolean hasCustomInventoryName()
-	{
-		// TODO Auto-generated method stub
-		return true;
 	}
 
 	@Override
@@ -116,26 +99,66 @@ public class DSCDrive extends DSCPart implements IInventory
 	}
 
 	@Override
-	public void openInventory()
-	{
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void closeInventory()
-	{
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public boolean isItemValidForSlot(int p_94041_1_, ItemStack stack)
 	{
 		// TODO Auto-generated method stub
 		if(stack.getItem() instanceof ItemDiscoveryDrive)
 			return true;
 		return false;
+	}
+
+	@Override
+	public String getName() {
+		// TODO Auto-generated method stub
+		return "DSCDrive";
+	}
+
+	@Override
+	public boolean hasCustomName() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public ItemStack removeStackFromSlot(int index) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void openInventory(EntityPlayer player) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void closeInventory(EntityPlayer player) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public int getField(int id) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void setField(int id, int value) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public int getFieldCount() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void clear() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

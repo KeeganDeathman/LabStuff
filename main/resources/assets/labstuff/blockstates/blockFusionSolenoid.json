@@ -1,0 +1,7 @@
+{
+	"variants": {
+		"complete=false":{ "model": "labstuff:blocksolenoid" },
+		"complete=true":{ "model": "labstuff:blocksolenoid" },
+		"normal": { "model": "labstuff:blocksolenoid" }
+	}
+}

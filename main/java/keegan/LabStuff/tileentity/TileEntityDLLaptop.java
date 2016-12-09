@@ -1,6 +1,7 @@
 package keegan.labstuff.tileentity;
 
 import keegan.labstuff.LabStuffMain;
+import keegan.labstuff.blocks.BlockDLLaptop;
 import keegan.labstuff.recipes.Recipes;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
@@ -22,7 +23,7 @@ public class TileEntityDLLaptop extends TileEntity
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound tag)
+	public NBTTagCompound writeToNBT(NBTTagCompound tag)
 	{
 		super.writeToNBT(tag);
 		tag.setBoolean("Tablet", isTablet());
@@ -30,6 +31,7 @@ public class TileEntityDLLaptop extends TileEntity
 			getTabletItem().writeToNBT(tag);
 		tag.setInteger("BeenOpened", getBeenOpened());
 		
+		return tag;
 	}
 	
 	@Override
@@ -65,6 +67,7 @@ public class TileEntityDLLaptop extends TileEntity
 			setTabletItem(inv.getStackInSlot(slot));
 			inv.decrStackSize(slot, 1);
 			setTablet(false);
+			worldObj.setBlockState(pos, worldObj.getBlockState(pos).withProperty(BlockDLLaptop.TABLET, true));
 		}
 	}
 	
@@ -76,6 +79,7 @@ public class TileEntityDLLaptop extends TileEntity
 			inv.addItemStackToInventory(getTabletItem());
 			setTabletItem(null);
 			setTablet(true);
+			worldObj.setBlockState(pos, worldObj.getBlockState(pos).withProperty(BlockDLLaptop.TABLET, false));
 		}
 	}
 	

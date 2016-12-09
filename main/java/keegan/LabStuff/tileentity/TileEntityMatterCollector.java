@@ -5,24 +5,83 @@ import java.util.*;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.*;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.oredict.OreDictionary;
 
 public class TileEntityMatterCollector extends TileEntityPowerConnection implements IInventory 
 {
 	public ItemStack[] chestContents = new ItemStack[12];
 	private ArrayList<ItemStack> ores;
-	private ForgeDirection chuck;
+	private EnumFacing chuck;
 	private Random rand = new Random();
 	private Random rando = new Random();
 
 	public TileEntityMatterCollector()
 	{
 		ores = new ArrayList<ItemStack>();
-		chuck = ForgeDirection.UNKNOWN;
+		chuck = null;
+	}
+	
+	@Override
+	public void openInventory(EntityPlayer player)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void closeInventory(EntityPlayer player)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public String getName() {
+		// TODO Auto-generated method stub
+		return "Matter Collector";
+	}
+
+	@Override
+	public boolean hasCustomName() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public ItemStack removeStackFromSlot(int index) {
+		// TODO Auto-generated method stub
+        return ItemStackHelper.getAndRemove(this.chestContents, index);
+	}
+	
+	@Override
+	public int getField(int id) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void setField(int id, int value) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public int getFieldCount() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void clear() {
+
+	        for (int i = 0; i < this.chestContents.length; ++i)
+	        {
+	            this.chestContents[i] = null;
+	        }		
 	}
 	
 	@Override
@@ -55,16 +114,6 @@ public class TileEntityMatterCollector extends TileEntityPowerConnection impleme
 	}
 
 	@Override
-	public ItemStack getStackInSlotOnClosing(int slot) {
-		// TODO Auto-generated method stub
-		ItemStack stack = getStackInSlot(slot);
-		if (stack != null) {
-			setInventorySlotContents(slot, null);
-		}
-		return stack;
-	}
-
-	@Override
 	public void setInventorySlotContents(int slot, ItemStack itemstack) {
 		chestContents[slot] = itemstack;
 		if (itemstack != null && itemstack.stackSize > getInventoryStackLimit()) {
@@ -91,31 +140,7 @@ public class TileEntityMatterCollector extends TileEntityPowerConnection impleme
 	}
 
 	@Override
-	public String getInventoryName() {
-		// TODO Auto-generated method stub
-		return "Enricher";
-	}
-
-	@Override
-	public void closeInventory() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public boolean hasCustomInventoryName() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public void openInventory() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void writeToNBT(NBTTagCompound tagCompound) {
+	public NBTTagCompound writeToNBT(NBTTagCompound tagCompound) {
 		super.writeToNBT(tagCompound);
 		NBTTagList itemList = new NBTTagList();
 		for (int i = 0; i < this.chestContents.length; i++) {
@@ -130,6 +155,8 @@ public class TileEntityMatterCollector extends TileEntityPowerConnection impleme
 		tagCompound.setTag("Inventory", itemList);
 		tagCompound.setInteger("chuck", chuck.ordinal());
 		
+		return tagCompound;
+		
 	}
 
 	@Override
@@ -142,13 +169,13 @@ public class TileEntityMatterCollector extends TileEntityPowerConnection impleme
 			if (slot >= 0 && slot < this.chestContents.length)
 				this.chestContents[slot] = ItemStack.loadItemStackFromNBT(tag);
 		}
-		chuck = ForgeDirection.getOrientation(tagCompound.getInteger("chuck"));
+		chuck = EnumFacing.getFront(tagCompound.getInteger("chuck"));
 	}
 	
 	@Override
-	public void updateEntity()
+	public void update()
 	{
-		if(!(worldObj.getTileEntity(xCoord, yCoord-1, zCoord) instanceof TileEntityMatterCollector))
+		if(!(worldObj.getTileEntity(pos.down()) instanceof TileEntityMatterCollector))
 		{
 			rand.nextInt();
 			rando.nextInt();
@@ -189,17 +216,17 @@ public class TileEntityMatterCollector extends TileEntityPowerConnection impleme
 					}
 				}
 			}
-			if(!chuck.equals(ForgeDirection.UNKNOWN))
+			if(chuck != null)
 			{
 				for(int i = 0; i < chestContents.length; i++)
 				{ 
 					if(getStackInSlot(i) != null)
 					{
-						if(!worldObj.getBlock(xCoord+chuck.offsetX, yCoord+chuck.offsetY, zCoord+chuck.offsetZ).equals(Blocks.air))
+						if(!worldObj.getBlockState(pos.offset(chuck)).getBlock().equals(Blocks.AIR))
 						{
-							if(worldObj.getTileEntity(xCoord+chuck.offsetX, yCoord+chuck.offsetY, zCoord+chuck.offsetZ) != null && worldObj.getTileEntity(xCoord+chuck.offsetX, yCoord+chuck.offsetY, zCoord+chuck.offsetZ) instanceof IInventory)
+							if(worldObj.getTileEntity(pos.offset(chuck)) != null && worldObj.getTileEntity(pos.offset(chuck)) instanceof IInventory)
 							{
-								IInventory chest = (IInventory) worldObj.getTileEntity(xCoord+chuck.offsetX, yCoord+chuck.offsetY, zCoord+chuck.offsetZ);
+								IInventory chest = (IInventory) worldObj.getTileEntity(pos.offset(chuck));
 								for(int j = 0; i < chest.getSizeInventory(); j++)
 								{
 									if(chest.getStackInSlot(j) != null)
@@ -224,7 +251,7 @@ public class TileEntityMatterCollector extends TileEntityPowerConnection impleme
 						}
 						else
 						{
-							worldObj.spawnEntityInWorld(new EntityItem(worldObj, xCoord+chuck.offsetX, yCoord+chuck.offsetY, zCoord+chuck.offsetZ, new ItemStack(getStackInSlot(i).getItem(), 1)));
+							worldObj.spawnEntityInWorld(new EntityItem(worldObj, pos.offset(chuck).getX(), pos.offset(chuck).getY(), pos.offset(chuck).getZ(), new ItemStack(getStackInSlot(i).getItem(), 1)));
 							decrStackSize(i, 1);
 							break;
 						}
@@ -234,20 +261,20 @@ public class TileEntityMatterCollector extends TileEntityPowerConnection impleme
 		}
 	}
 
-	public void setChuck(ForgeDirection dir) 
+	public void setChuck(EnumFacing dir) 
 	{
 		chuck = dir;
 	}
 
 	public String getDirAsButton() 
 	{
-		if(chuck.equals(ForgeDirection.EAST))
+		if(chuck.equals(EnumFacing.EAST))
 			return "East";
-		if(chuck.equals(ForgeDirection.NORTH))
+		if(chuck.equals(EnumFacing.NORTH))
 			return "North";
-		if(chuck.equals(ForgeDirection.WEST))
+		if(chuck.equals(EnumFacing.WEST))
 			return "West";
-		if(chuck.equals(ForgeDirection.SOUTH))
+		if(chuck.equals(EnumFacing.SOUTH))
 			return "South";
 		return "Store";
 	}
@@ -255,6 +282,6 @@ public class TileEntityMatterCollector extends TileEntityPowerConnection impleme
 	public boolean coreBlock() 
 	{
 		// TODO Auto-generated method stub
-		return (worldObj.getTileEntity(xCoord, yCoord+1, zCoord) != null && worldObj.getTileEntity(xCoord, yCoord+1, zCoord) instanceof TileEntityMatterCollector);
+		return (worldObj.getTileEntity(pos.up()) != null && worldObj.getTileEntity(pos.up()) instanceof TileEntityMatterCollector);
 	}
 }

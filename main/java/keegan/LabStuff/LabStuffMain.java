@@ -2,13 +2,8 @@ package keegan.labstuff;
 
 
 import java.io.File;
+import java.util.*;
 
-import cpw.mods.fml.common.*;
-import cpw.mods.fml.common.Mod.*;
-import cpw.mods.fml.common.event.*;
-import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.relauncher.FMLInjectionData;
 import keegan.labstuff.PacketHandling.*;
 import keegan.labstuff.blocks.*;
 import keegan.labstuff.client.GuiHandler;
@@ -19,10 +14,19 @@ import keegan.labstuff.tileentity.*;
 import keegan.labstuff.world.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
 import net.minecraft.item.*;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fluids.*;
+import net.minecraftforge.fml.common.*;
+import net.minecraftforge.fml.common.Mod.*;
+import net.minecraftforge.fml.common.event.*;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.FMLInjectionData;
 import net.minecraftforge.oredict.OreDictionary;
 
 @Mod(modid= "labstuff", name="LabStuff", version="2.5")
@@ -33,6 +37,10 @@ public class LabStuffMain
 	
 	@Instance("labstuff")
 	public static LabStuffMain instance;
+	
+	public static ArrayList<Block> labstuffBlocks = new ArrayList<Block>();
+	public static ArrayList<Item> labstuffItems = new ArrayList<Item>();
+
 	
 	//Blocks
 	public static Block blockCopperOre;
@@ -76,7 +84,6 @@ public class LabStuffMain
 	public static Block blockIndustrialMotorContact;
 	
 	public static Block blockRedstonePipe;
-	public static Block blockDataPipe;
 	public static Block blockRedstoneShaft;
 	public static Block blockDataShaft;
 	
@@ -226,332 +233,205 @@ public class LabStuffMain
     
 	public static final PacketPipeline packetPipeline = new PacketPipeline();
 	
-	public static Fluid steam = new Fluid("steam");
+	public static Fluid steam = new Fluid("steam", new ResourceLocation("labstuff:textures/blocks/steam_still.png"), new ResourceLocation("labstuff:textures/blocks/steam_flow.png"));
 	
 	@EventHandler
-	public void PreInit(FMLPreInitializationEvent event)
+	public void preInit(FMLPreInitializationEvent event)
 	{
 		System.out.println("Were doing stuff");
 		//Blocks
-		blockCopperOre = new BlockCopperOre(Material.rock).setHardness(10F).setResistance(20F).setStepSound(Block.soundTypeStone).setBlockName("blockCopperOre").setBlockTextureName("labstuff:blockCopperOre").setCreativeTab(tabLabStuff);
-		blockCircuitDesignTable = new BlockCircuitDesignTable(Material.iron).setCreativeTab(tabLabStuff).setBlockName("blockCircuitDesignTable");
-		blockCircuitMaker = new BlockCircuitMaker(Material.iron).setCreativeTab(tabLabStuff).setBlockName("blockCircuitMaker").setBlockTextureName("labstuff:blockCircuitMaker");
-		blockComputer = new BlockComputer(Material.iron).setBlockName("blockComputer").setCreativeTab(tabLabStuff);
-		blockZincOre = new BlockLabOre().setBlockName("blockZincOre").setBlockTextureName("labstuff:blockZincOre").setCreativeTab(tabLabStuff).setHardness(10F).setResistance(20F);
-		blockMangOre = new BlockLabOre().setBlockName("blockMangOre").setBlockTextureName("labstuff:blockMangOre").setCreativeTab(tabLabStuff).setHardness(10F).setResistance(20F);
-		blockElectrifier = new BlockElectrifier(Material.iron).setBlockName("blockElectrifier").setCreativeTab(tabLabStuff);
-		blockPlasmaPipe = new BlockPlasmaPipe(Material.iron).setBlockName("plasmaPipe").setCreativeTab(tabLabStuff);
-		blockGasChamberWall = new BlockGasChamberWall(Material.iron).setBlockName("blockGasChamberWall").setCreativeTab(tabLabStuff);
-		blockElectronGrabber = new BlockElectronGrabber(Material.iron).setBlockName("blockElectronGrabber").setCreativeTab(tabLabStuff);
-		blockGasChamberPort = new BlockGasChamberPort(Material.iron).setBlockName("blockGasChamberPort").setCreativeTab(tabLabStuff).setBlockTextureName("labstuff:gaschamberport");
-		blockPowerFurnace = new BlockPowerFurnace(Material.iron).setBlockName("blockPowerFurnace").setCreativeTab(tabLabStuff).setBlockTextureName("labstuff:blockCircuitMaker");
-		blockPowerCable = new BlockPowerCable(Material.cloth).setBlockName("blockPowerCable").setCreativeTab(tabLabStuff);
-		blockRFToLVConverter = new BlockRFtoLV(Material.iron).setBlockName("blockRFtoLV").setBlockTextureName("labstuff:blockRFToLV").setCreativeTab(tabLabStuff);
-		blockLVToRFConverter = new BlockLVToRF(Material.iron).setBlockName("blockLVToRF").setBlockTextureName("labstuff:blockLVToRF").setCreativeTab(tabLabStuff);
-		blockSolarPanel = new BlockSolarPanel(Material.iron).setBlockName("blockSolarPanel").setCreativeTab(tabLabStuff);
-		blockSolarGag = new BlockSolarGag(Material.iron).setBlockName("blockSolarGag");
-		blockCzochralskistor = new BlockCzo(Material.iron).setBlockName("blockCzo").setCreativeTab(tabLabStuff);
-		blockSiliconOre = new BlockLabOre().setBlockName("blockSiliconOre").setBlockTextureName("coal_ore").setCreativeTab(tabLabStuff);
-		blockWindTurbine = new BlockWindTurbine(Material.iron).setBlockName("blockWindTurbine").setCreativeTab(tabLabStuff);
-		blockWindGag = new BlockWindGag(Material.iron).setBlockName("blockWindGag");
-		blockDataCable = new BlockDataCable(Material.cloth).setBlockName("blockDataCable").setCreativeTab(tabLabStuff);
-		blockIndustrialMotor = new BlockIndustrialMotor(Material.iron).setBlockName("blockIndustrialMotor").setCreativeTab(tabLabStuff).setBlockTextureName("labstuff:blockIndustrialMotor");
-		blockIndustrialMotorShaft = new BlockIndustrialMotorShaft(Material.iron).setBlockName("blockindustrialMotorShaft").setCreativeTab(tabLabStuff).setBlockTextureName("labstuff:blockIndustrialMotorShaft");
-		blockIndustrialMotorContact = new BlockIndustrialMotorContact(Material.iron).setCreativeTab(tabLabStuff).setBlockName("blockIndustrialMotorContact").setBlockTextureName("labstuff:blockIndustrialMotorContact");
-		blockFusionSolenoidAxel = new BlockSolenoidAxel(Material.iron).setBlockName("blockFusionSolenoidAxel").setBlockTextureName("labstuff:blockSolenoid").setCreativeTab(tabLabStuff);
-		blockFusionSolenoidArm = new BlockSolenoid(Material.iron).setBlockName("blockFusionSolenoidArm").setBlockTextureName("labstuff:blockSolenoidArm").setCreativeTab(tabLabStuff);
-		blockFusionSolenoid = new BlockSolenoid(Material.iron).setBlockName("blockFusionSolenoid").setBlockTextureName("labstuff:blockSolenoid").setCreativeTab(tabLabStuff);
-		blockFusionPlasmaTap = new BlockFusionPlasmaTap(Material.iron).setBlockName("blockFusionPlasmaTap").setBlockTextureName("labstuff:blockPlasmaTap").setCreativeTab(tabLabStuff);
-		blockFusionToroidalMagnet = new BlockFusionToroidalMagnet(Material.iron).setBlockName("blockToroid").setCreativeTab(tabLabStuff);
-		blockFusionHeatExchange = new BlockFusionHeatExchange(Material.iron).setBlockName("blockFusionHeatExchange").setBlockTextureName("labstuff:heatexchange").setCreativeTab(tabLabStuff);
-		blockLiquidPipe = new BlockLiquidPipe(Material.iron).setBlockName("blockLiquidPipe").setCreativeTab(tabLabStuff);
-		blockReservoir=new BlockReservoir(Material.iron).setBlockName("blockReservoir").setCreativeTab(tabLabStuff);
-		blockRedstonePipe = new BlockRedstonePipe(Material.iron).setBlockName("blockRedstonePipe").setBlockTextureName("labstuff:redstonePipe").setCreativeTab(tabLabStuff);
-		blockDataPipe = new BlockDataPipe(Material.iron).setBlockName("blockDataPipe").setBlockTextureName("labstuff:dataPipe").setCreativeTab(tabLabStuff);
-		blockCharger = new BlockCharger(Material.iron).setBlockName("blockCharger").setBlockTextureName("labstuff:charger").setCreativeTab(tabLabStuff);
-		blockTurbineCasing = new BlockTurbine(Material.iron).setBlockName("blockTurbineCase").setBlockTextureName("labstuff:turbinecase").setCreativeTab(tabLabStuff);
-		blockTurbineGlass = new BlockTurbine(Material.iron).setBlockName("blockTurbineGlass").setBlockTextureName("labstuff:turbineglass").setCreativeTab(tabLabStuff);
-		blockTurbineRotor = new BlockTurbine(Material.iron).setBlockName("blockTurbineRotor").setCreativeTab(tabLabStuff);
-		blockTurbineValve = new BlockTurbine(Material.iron).setBlockName("blockTurbineValve").setBlockTextureName("labstuff:turbinevalve").setCreativeTab(tabLabStuff);
-		blockElectromagneticCoil = new BlockTurbine(Material.iron).setBlockName("blockEMCoil").setCreativeTab(tabLabStuff);
-		blockTurbineVent = new BlockTurbine(Material.iron).setBlockName("blockTurbineVent").setBlockTextureName("labstuff:turbinevent").setCreativeTab(tabLabStuff);
-		blockBattery = new BlockBattery(Material.iron).setBlockName("blockBattery").setBlockTextureName("labstuff:battery").setCreativeTab(tabLabStuff);
-		blockVent = new BlockVent(Material.iron).setBlockName("blockVent").setBlockTextureName("labstuff:vent").setCreativeTab(tabLabStuff);
-		blockEnricher = new BlockEnricher(Material.iron).setBlockName("blockEnricher").setCreativeTab(tabLabStuff);
+		labstuffBlocks.add(blockCopperOre = new BlockCopperOre(Material.ROCK).setHardness(10F).setResistance(20F).setCreativeTab(tabLabStuff).setRegistryName("labstuff:blockcopperore"));
+		labstuffBlocks.add(blockCircuitDesignTable = new BlockCircuitDesignTable(Material.IRON).setHardness(10F).setResistance(20F).setCreativeTab(tabLabStuff).setRegistryName("labstuff:blockcircuitdesigntable"));
+		labstuffBlocks.add(blockCircuitMaker = new BlockCircuitMaker(Material.IRON).setHardness(10F).setResistance(20F).setCreativeTab(tabLabStuff).setRegistryName("labstuff:blockcircuitmaker"));
+		labstuffBlocks.add(blockComputer = new BlockComputer(Material.IRON).setHardness(10F).setResistance(20F).setRegistryName("labstuff:blockcomputer").setCreativeTab(tabLabStuff));
+		labstuffBlocks.add(blockZincOre = new BlockLabOre().setRegistryName("labstuff:blockzincore").setCreativeTab(tabLabStuff).setHardness(10F).setResistance(20F));
+		labstuffBlocks.add(blockMangOre = new BlockLabOre().setRegistryName("labstuff:blockmangore").setCreativeTab(tabLabStuff).setHardness(10F).setResistance(20F));
+		labstuffBlocks.add(blockElectrifier = new BlockElectrifier(Material.IRON).setHardness(10F).setResistance(20F).setRegistryName("labstuff:blockelectrifier").setCreativeTab(tabLabStuff));
+		labstuffBlocks.add(blockPlasmaPipe = new BlockPlasmaPipe(Material.IRON).setHardness(10F).setResistance(20F).setRegistryName("labstuff:plasmapipe").setCreativeTab(tabLabStuff));
+		labstuffBlocks.add(blockGasChamberWall = new BlockGasChamberWall(Material.IRON).setHardness(10F).setResistance(20F).setRegistryName("labstuff:blockgaschamberwall").setCreativeTab(tabLabStuff));
+		labstuffBlocks.add(blockElectronGrabber = new BlockElectronGrabber(Material.IRON).setHardness(10F).setResistance(20F).setRegistryName("labstuff:blockelectrongrabber").setCreativeTab(tabLabStuff));
+		labstuffBlocks.add(blockGasChamberPort = new BlockGasChamberPort(Material.IRON).setHardness(10F).setResistance(20F).setRegistryName("labstuff:blockgaschamberport").setCreativeTab(tabLabStuff));
+		labstuffBlocks.add(blockPowerFurnace = new BlockPowerFurnace(Material.IRON).setHardness(10F).setResistance(20F).setRegistryName("labstuff:blockpowerfurnace").setCreativeTab(tabLabStuff));
+		labstuffBlocks.add(blockPowerCable = new BlockPowerCable(Material.CLOTH).setRegistryName("labstuff:blockPowerCable").setCreativeTab(tabLabStuff));
+		labstuffBlocks.add(blockRFToLVConverter = new BlockRFtoLV(Material.IRON).setHardness(10F).setResistance(20F).setRegistryName("labstuff:blockrftolv").setCreativeTab(tabLabStuff));
+		labstuffBlocks.add(blockLVToRFConverter = new BlockLVToRF(Material.IRON).setHardness(10F).setResistance(20F).setRegistryName("labstuff:blocklvtorf").setCreativeTab(tabLabStuff));
+		labstuffBlocks.add(blockSolarPanel = new BlockSolarPanel(Material.IRON).setHardness(10F).setResistance(20F).setRegistryName("labstuff:blocksolarpanel").setCreativeTab(tabLabStuff));
+		labstuffBlocks.add(blockSolarGag = new BlockSolarGag(Material.IRON).setHardness(10F).setResistance(20F).setRegistryName("labstuff:blockSolarGag"));
+		labstuffBlocks.add(blockCzochralskistor = new BlockCzo(Material.IRON).setHardness(10F).setResistance(20F).setRegistryName("labstuff:blockCzo").setCreativeTab(tabLabStuff));
+		labstuffBlocks.add(blockSiliconOre = new BlockLabOre().setRegistryName("labstuff:blockSiliconOre").setCreativeTab(tabLabStuff));
+		labstuffBlocks.add(blockWindTurbine = new BlockWindTurbine(Material.IRON).setHardness(10F).setResistance(20F).setRegistryName("labstuff:blockwindturbine").setCreativeTab(tabLabStuff));
+		labstuffBlocks.add(blockWindGag = new BlockWindGag(Material.IRON).setHardness(10F).setResistance(20F).setRegistryName("labstuff:blockWindGag"));
+		labstuffBlocks.add(blockDataCable = new BlockDataCable(Material.CLOTH).setRegistryName("labstuff:blockDataCable").setCreativeTab(tabLabStuff));
+		labstuffBlocks.add(blockIndustrialMotor = new BlockIndustrialMotor(Material.IRON).setHardness(10F).setResistance(20F).setRegistryName("labstuff:blockIndustrialMotor").setCreativeTab(tabLabStuff));
+		labstuffBlocks.add(blockIndustrialMotorShaft = new BlockIndustrialMotorShaft(Material.IRON).setHardness(10F).setResistance(20F).setRegistryName("labstuff:blockindustrialMotorShaft").setCreativeTab(tabLabStuff));
+		labstuffBlocks.add(blockIndustrialMotorContact = new BlockIndustrialMotorContact(Material.IRON).setHardness(10F).setResistance(20F).setCreativeTab(tabLabStuff).setRegistryName("labstuff:blockIndustrialMotorContact"));
+		labstuffBlocks.add(blockFusionSolenoidAxel = new BlockSolenoidAxel(Material.IRON).setHardness(10F).setResistance(20F).setRegistryName("labstuff:blockFusionSolenoidAxel").setCreativeTab(tabLabStuff));
+		labstuffBlocks.add(blockFusionSolenoidArm = new BlockSolenoid(Material.IRON).setHardness(10F).setResistance(20F).setRegistryName("labstuff:blockFusionSolenoidArm").setCreativeTab(tabLabStuff));
+		labstuffBlocks.add(blockFusionSolenoid = new BlockSolenoid(Material.IRON).setHardness(10F).setResistance(20F).setRegistryName("labstuff:blockFusionSolenoid").setCreativeTab(tabLabStuff));
+		labstuffBlocks.add(blockFusionPlasmaTap = new BlockFusionPlasmaTap(Material.IRON).setHardness(10F).setResistance(20F).setRegistryName("labstuff:blockFusionPlasmaTap").setCreativeTab(tabLabStuff));
+		labstuffBlocks.add(blockFusionToroidalMagnet = new BlockFusionToroidalMagnet(Material.IRON).setHardness(10F).setResistance(20F).setRegistryName("labstuff:blockfusiontoroid").setCreativeTab(tabLabStuff));
+		labstuffBlocks.add(blockFusionHeatExchange = new BlockFusionHeatExchange(Material.IRON).setHardness(10F).setResistance(20F).setRegistryName("labstuff:blockFusionHeatExchange").setCreativeTab(tabLabStuff));
+		labstuffBlocks.add(blockLiquidPipe = new BlockLiquidPipe(Material.IRON).setHardness(10F).setResistance(20F).setRegistryName("labstuff:blockLiquidPipe").setCreativeTab(tabLabStuff));
+		labstuffBlocks.add(blockReservoir=new BlockReservoir(Material.IRON).setHardness(10F).setResistance(20F).setRegistryName("labstuff:blockReservoir").setCreativeTab(tabLabStuff));
+//		labstuffBlocks.add(blockRedstonePipe = new BlockRedstonePipe(Material.IRON).setHardness(10F).setResistance(20F).setRegistryName("labstuff:blockRedstonePipe").setCreativeTab(tabLabStuff));
+		labstuffBlocks.add(blockCharger = new BlockCharger(Material.IRON).setHardness(10F).setResistance(20F).setRegistryName("labstuff:blockCharger").setCreativeTab(tabLabStuff));
+		labstuffBlocks.add(blockTurbineCasing = new BlockTurbine(Material.IRON).setHardness(10F).setResistance(20F).setRegistryName("labstuff:blockturbinecasing").setCreativeTab(tabLabStuff));
+		labstuffBlocks.add(blockTurbineGlass = new BlockTurbine(Material.IRON).setHardness(10F).setResistance(20F).setRegistryName("labstuff:blockturbineglass").setCreativeTab(tabLabStuff));
+		labstuffBlocks.add(blockTurbineRotor = new BlockTurbine(Material.IRON).setHardness(10F).setResistance(20F).setRegistryName("labstuff:blockTurbineRotor").setCreativeTab(tabLabStuff));
+		labstuffBlocks.add(blockTurbineValve = new BlockTurbine(Material.IRON).setHardness(10F).setResistance(20F).setRegistryName("labstuff:blockTurbineValve").setCreativeTab(tabLabStuff));
+		labstuffBlocks.add(blockElectromagneticCoil = new BlockTurbine(Material.IRON).setHardness(10F).setResistance(20F).setRegistryName("labstuff:blockEMCoil").setCreativeTab(tabLabStuff));
+		labstuffBlocks.add(blockTurbineVent = new BlockTurbine(Material.IRON).setHardness(10F).setResistance(20F).setRegistryName("labstuff:blockTurbineVent").setCreativeTab(tabLabStuff));
+		labstuffBlocks.add(blockBattery = new BlockBattery(Material.IRON).setHardness(10F).setResistance(20F).setRegistryName("labstuff:blockBatteryBlock").setCreativeTab(tabLabStuff));
+		labstuffBlocks.add(blockVent = new BlockVent(Material.IRON).setHardness(10F).setResistance(20F).setRegistryName("labstuff:blockVent").setCreativeTab(tabLabStuff));
+		labstuffBlocks.add(blockEnricher = new BlockEnricher(Material.IRON).setHardness(10F).setResistance(20F).setRegistryName("labstuff:blockEnricher").setCreativeTab(tabLabStuff));
 		
-		blockGag = new BlockGag(Material.iron).setBlockName("blockGag").setBlockTextureName("labstuff:blockGag");
-		blockAcceleratorControlPanel = new BlockAcceleratorControlPanel().setBlockName("blockAcceleratorControlPanel").setCreativeTab(tabLabStuff);
-		blockACPGag = new BlockACPGag(Material.iron).setBlockName("blockACPGag").setBlockTextureName("labstuff:blockGag");
-		blockAcceleratorInterface = new BlockAcceleratorInterface().setBlockName("blockAcceleratorInterface").setCreativeTab(tabLabStuff).setBlockTextureName("labstuff:acceleratorInterface");
-		blockAcceleratorTube = new BlockAcceleratorTube().setBlockName("blockAcceleratorTube").setCreativeTab(tabLabStuff);
-		blockAcceleratorDetectorCore = new BlockAcceleratorDetectorCore(Material.iron).setBlockName("blockAccleratorDetectorCore").setBlockTextureName("labstuff:detectorCore").setCreativeTab(tabLabStuff);
-		blockAcceleratorTrackingDetector = new BlockAcceleratorDetector().setBlockName("blockAcceleratorTrackingDetector").setBlockTextureName("labstuff:trackingDetector").setCreativeTab(tabLabStuff);
-		blockAcceleratorSolenoid = new BlockAcceleratorDetector().setBlockName("blockAcceleratorSolenoid").setBlockTextureName("labstuff:solenoid").setCreativeTab(tabLabStuff);
-		blockAcceleratorElectromagneticCalorimeter = new BlockAcceleratorDetector().setBlockName("blockAcceleratorElectromagneticCalorimeter").setBlockTextureName("labstuff:electroCalorimeter").setCreativeTab(tabLabStuff);
-		blockAcceleratorHadronCalorimeter = new BlockAcceleratorDetector().setBlockName("blockAcceleratorHadronCalorimeter").setBlockTextureName("labstuff:hadron").setCreativeTab(tabLabStuff);
-		blockAcceleratorMuonDetector = new BlockAcceleratorDetector().setBlockName("blockAcceleratorMuonDetector").setBlockTextureName("labstuff:muon").setCreativeTab(tabLabStuff);
-		blockAcceleratorPowerInput = new BlockAcceleratorPowerInput().setBlockName("blockAcceleratorPowerInput").setBlockTextureName("labstuff:acceleratorInterface").setCreativeTab(tabLabStuff);
+		labstuffBlocks.add(blockGag = new BlockGag(Material.IRON).setHardness(10F).setResistance(20F).setRegistryName("labstuff:blockGag"));
+		labstuffBlocks.add(blockAcceleratorControlPanel = new BlockAcceleratorControlPanel().setRegistryName("labstuff:blockAcceleratorControlPanel").setCreativeTab(tabLabStuff));
+		labstuffBlocks.add(blockACPGag = new BlockACPGag(Material.IRON).setHardness(10F).setResistance(20F).setRegistryName("labstuff:blockACPGag"));
+		labstuffBlocks.add(blockAcceleratorInterface = new BlockAcceleratorInterface().setRegistryName("labstuff:blockAcceleratorInterface").setCreativeTab(tabLabStuff));
+		labstuffBlocks.add(blockAcceleratorTube = new BlockAcceleratorTube().setRegistryName("labstuff:blockAcceleratorTube").setCreativeTab(tabLabStuff));
+		labstuffBlocks.add(blockAcceleratorDetectorCore = new BlockAcceleratorDetectorCore(Material.IRON).setHardness(10F).setResistance(20F).setRegistryName("labstuff:blockAcceleratorDetectorCore").setCreativeTab(tabLabStuff));
+		labstuffBlocks.add(blockAcceleratorTrackingDetector = new BlockAcceleratorDetector().setRegistryName("labstuff:blockAcceleratorTrackingDetector").setCreativeTab(tabLabStuff));
+		labstuffBlocks.add(blockAcceleratorSolenoid = new BlockAcceleratorDetector().setRegistryName("labstuff:blockAcceleratorSolenoid").setCreativeTab(tabLabStuff));
+		labstuffBlocks.add(blockAcceleratorElectromagneticCalorimeter = new BlockAcceleratorDetector().setRegistryName("labstuff:blockAcceleratorElectromagneticCalorimeter").setCreativeTab(tabLabStuff));
+		labstuffBlocks.add(blockAcceleratorHadronCalorimeter = new BlockAcceleratorDetector().setRegistryName("labstuff:blockAcceleratorHadronCalorimeter").setCreativeTab(tabLabStuff));
+		labstuffBlocks.add(blockAcceleratorMuonDetector = new BlockAcceleratorDetector().setRegistryName("labstuff:blockAcceleratorMuonDetector").setCreativeTab(tabLabStuff));
+		labstuffBlocks.add(blockAcceleratorPowerInput = new BlockAcceleratorPowerInput().setRegistryName("labstuff:blockAcceleratorPowerInput").setCreativeTab(tabLabStuff));
 		
-		blockDSCRibbonCable = new BlockDSCRibbonCable(Material.iron).setBlockName("blockDSCRibbonCable").setBlockTextureName("labstuff:dscribboncable").setCreativeTab(tabLabStuff);
-		blockDSCCore = new BlockDSCCore(Material.iron).setBlockName("blockDSCCore").setBlockTextureName("labstuff:dsccore").setCreativeTab(tabLabStuff);
-		blockDSCOS = new BlockDSCOS(Material.iron).setBlockName("blockDSCOS").setBlockTextureName("labstuff:dscos").setCreativeTab(tabLabStuff);
-		blockDSCRam = new BlockDSCRam(Material.iron).setBlockName("blockDSCRam").setBlockTextureName("labstuff:dscram").setCreativeTab(tabLabStuff);
-		blockDSCDrive = new BlockDSCDrive(Material.iron).setBlockName("blockDSCDrive").setBlockTextureName("labstuff:dscdrive").setCreativeTab(tabLabStuff);
-		blockDSCWorkbench = new BlockDSCBench(Material.iron).setBlockName("blockdscbench").setCreativeTab(tabLabStuff);
+		labstuffBlocks.add(blockDSCRibbonCable = new BlockDSCRibbonCable(Material.IRON).setHardness(10F).setResistance(20F).setRegistryName("labstuff:blockDSCRibbonCable").setCreativeTab(tabLabStuff));
+		labstuffBlocks.add(blockDSCCore = new BlockDSCCore(Material.IRON).setHardness(10F).setResistance(20F).setRegistryName("labstuff:blockDSCCore").setCreativeTab(tabLabStuff));
+		labstuffBlocks.add(blockDSCOS = new BlockDSCOS(Material.IRON).setHardness(10F).setResistance(20F).setRegistryName("labstuff:blockDSCOS").setCreativeTab(tabLabStuff));
+		labstuffBlocks.add(blockDSCRam = new BlockDSCRam(Material.IRON).setHardness(10F).setResistance(20F).setRegistryName("labstuff:blockDSCRam").setCreativeTab(tabLabStuff));
+		labstuffBlocks.add(blockDSCDrive = new BlockDSCDrive(Material.IRON).setHardness(10F).setResistance(20F).setRegistryName("labstuff:blockDSCDrive").setCreativeTab(tabLabStuff));
+		labstuffBlocks.add(blockDSCWorkbench = new BlockDSCBench(Material.IRON).setHardness(10F).setResistance(20F).setRegistryName("labstuff:blockdscbench").setCreativeTab(tabLabStuff));
 		
-		blockDLLaptop = new BlockDLLaptop(Material.iron).setBlockName("blockDLLaptop").setCreativeTab(tabLabStuff);
-		blockGravityManipulater = new BlockGravityManipulater(Material.iron).setCreativeTab(tabLabStuff).setBlockName("blockGravityManipulater").setBlockTextureName("labstuff:blockGravity");	
+		labstuffBlocks.add(blockDLLaptop = new BlockDLLaptop(Material.IRON).setHardness(10F).setResistance(20F).setRegistryName("labstuff:blockDLLaptop").setCreativeTab(tabLabStuff));
+		labstuffBlocks.add(blockGravityManipulater = new BlockGravityManipulater(Material.IRON).setHardness(10F).setResistance(20F).setCreativeTab(tabLabStuff).setRegistryName("labstuff:blockGravityManipulater"));	
 		
-		blockRubberLeaves = new BlockRubberLeaves().setBlockName("blockRubberLeaves");
-		blockRubberLog = new BlockRubberLog().setBlockName("blockRubberLog");
-		blockRubberSapling = new BlockRubberSapling().setBlockName("blockRubberSapling").setCreativeTab(tabLabStuff).setHardness(0f).setStepSound(Block.soundTypeGrass);
+		labstuffBlocks.add(blockRubberLeaves = new BlockRubberLeaves().setRegistryName("labstuff:blockRubberLeaves"));
+		labstuffBlocks.add(blockRubberLog = new BlockRubberLog().setRegistryName("labstuff:blockRubberLog"));
+		labstuffBlocks.add(blockRubberSapling = new BlockRubberSapling().setRegistryName("labstuff:blockRubberSapling").setCreativeTab(tabLabStuff).setHardness(0f));
 		
-		blockMatterCollector = new BlockMatterCollector(Material.iron).setBlockName("blockMatterCollector").setCreativeTab(tabLabStuff);
+		labstuffBlocks.add(blockMatterCollector = new BlockMatterCollector(Material.IRON).setHardness(10F).setResistance(20F).setRegistryName("labstuff:blockMatterCollector").setCreativeTab(tabLabStuff));
 		
-		blockSteel = new BlockLabBlock(Material.iron).setBlockName("blockSteel").setCreativeTab(tabLabStuff).setBlockTextureName("labstuff:blockcircuitmaker");
-		
-		//Items
-		itemFiberGlass = new ItemFiberGlass().setUnlocalizedName("itemFiberGlass").setCreativeTab(tabLabStuff);
-		itemRubber = new ItemLabIngot().setCreativeTab(tabLabStuff).setUnlocalizedName("itemRubber").setTextureName("labstuff:itemRubber");
-		itemCopperIngot = new ItemCopperIngot().setUnlocalizedName("itemCopperIngot").setCreativeTab(tabLabStuff);
-		itemCircuitBoardPlate = new ItemCircuitBoardPlate().setUnlocalizedName("itemCircuitBoardPlate").setCreativeTab(tabLabStuff).setTextureName("labstuff:itemCircuitBoardPlate");
-		itemBasicDrilledCircuitBoard = new ItemPartialCircuitBoard().setUnlocalizedName("itemBasicDrilledCircuitBoard").setTextureName("labstuff:itemDrilledCircuitBoard").setCreativeTab(tabLabStuff);
-		itemBasicEtchedCircuitBoard = new ItemPartialCircuitBoard().setUnlocalizedName("itemBasicEtchedCircuitBoard").setTextureName("labstuff:itemEtchedCircuitBoard").setCreativeTab(tabLabStuff);
-		itemComputerDrilledCircuitBoard = new ItemPartialCircuitBoard().setUnlocalizedName("itemComputerDrilledCircuitBoard").setTextureName("labstuff:itemDrilledCircuitBoard").setCreativeTab(tabLabStuff);
-		itemComputerEtchedCircuitBoard = new ItemPartialCircuitBoard().setUnlocalizedName("itemComputerEtchedCircuitBoard").setTextureName("labstuff:itemEtchedCircuitBoard").setCreativeTab(tabLabStuff);
-		itemBasicCircuitBoard = new ItemCircuitBoard().setUnlocalizedName("itemBasicCircuitboard").setTextureName("labstuff:itemCircuitBoard").setCreativeTab(tabLabStuff);
-		itemComputerCircuitBoard = new ItemCircuitBoard().setUnlocalizedName("itemComputerCircuitboard").setTextureName("labstuff:itemCircuitBoard").setCreativeTab(tabLabStuff);
-		itemBasicCircuitDesign = new ItemCircuitDesign().setUnlocalizedName("itemBasicCircuitDesign").setCreativeTab(tabLabStuff);
-		itemComputerCircuitDesign = new ItemCircuitDesign().setUnlocalizedName("itemComputerCircuitDesign").setCreativeTab(tabLabStuff);
-		itemMonitor = new ItemComputerPart().setUnlocalizedName("itemMonitor").setTextureName("labstuff:itemMonitor").setCreativeTab(tabLabStuff);
-		itemComputerTower = new ItemComputerPart().setUnlocalizedName("itemComputerTower").setTextureName("labstuff:itemComputerTower").setCreativeTab(tabLabStuff);
-		itemKeyboard = new ItemComputerPart().setUnlocalizedName("itemKeyboard").setTextureName("labstuff:itemKeyboard").setCreativeTab(tabLabStuff);
-		itemPlastic = new ItemPlastic().setCreativeTab(tabLabStuff).setUnlocalizedName("itemPlastic").setTextureName("labstuff:itemPlastic");
-		itemZinc = new ItemLabIngot().setCreativeTab(tabLabStuff).setUnlocalizedName("itemZinc").setTextureName("labstuff:itemZinc");
-		itemManganese = new ItemLabIngot().setCreativeTab(tabLabStuff).setUnlocalizedName("itemMang").setTextureName("labstuff:itemMang");
-		itemBattery = new ItemBattery().setCreativeTab(tabLabStuff).setTextureName("labstuff:itemBattery").setUnlocalizedName("itemBattery");
-		itemDeadBattery = new ItemBattery().setCreativeTab(tabLabStuff).setTextureName("labstuff:itemBattery").setUnlocalizedName("itemDeadBattery");
-		itemTestTube = new ItemTestTube().setCreativeTab(tabLabStuff).setTextureName("labstuff:itemTestTube").setUnlocalizedName("itemTestTube");
-		itemHydrogenTestTube = new ItemTestTube().setCreativeTab(tabLabStuff).setTextureName("labstuff:itemHydrogenTestTube").setUnlocalizedName("itemHydrogenTestTube");
-		itemOxygenTestTube = new ItemTestTube().setCreativeTab(tabLabStuff).setTextureName("labstuff:itemOxygenTestTube").setUnlocalizedName("itemOxygenTestTube");
-		itemSteel = new ItemLabIngot().setCreativeTab(tabLabStuff).setTextureName("labstuff:itemSteel").setUnlocalizedName("itemSteel");
-		itemInterCircuitDesign = new ItemCircuitDesign().setCreativeTab(tabLabStuff).setUnlocalizedName("itemIntermediateCircuitDesign");
-		itemInterDrilledCircuitBoard = new ItemPartialCircuitBoard().setUnlocalizedName("itemIntermediateDrilledCircuitBoard").setTextureName("labstuff:itemDrilledCircuitBoard").setCreativeTab(tabLabStuff);
-		itemInterEtchedCircuitBoard = new ItemPartialCircuitBoard().setUnlocalizedName("itemIntermediateEtchedCircuitBoard").setTextureName("labstuff:itemEtchedCircuitBoard").setCreativeTab(tabLabStuff);
-		itemInterCircuitBoard = new ItemCircuitBoard().setUnlocalizedName("itemIntermediateCircuitboard").setTextureName("labstuff:itemCircuitBoard").setCreativeTab(tabLabStuff);
-		itemSiliconIngot = new ItemLabIngot().setUnlocalizedName("itemSiliconIngot").setTextureName("labstuff:itemSilicon").setCreativeTab(tabLabStuff);
-		itemSiliconCrystalSeed = new ItemSiliconBoulePart().setUnlocalizedName("siliconSeed").setCreativeTab(tabLabStuff).setTextureName("labstuff:itemSiliconSeed");
-		itemSteelRod = new ItemSiliconBoulePart().setUnlocalizedName("itemSteelRod").setCreativeTab(tabLabStuff).setTextureName("labstuff:itemSteelRod");
-		itemRodMountedSiliconSeed = new ItemSiliconBoulePart().setUnlocalizedName("itemRodMountedSiliconSeed").setTextureName("labstuff:itemRodMountedSiliconSeed").setCreativeTab(tabLabStuff);
-		itemSiliconBoule = new ItemSiliconBoule().setUnlocalizedName("itemSiliconBoule").setCreativeTab(tabLabStuff).setTextureName("labstuff:itemSiliconBoule");
-		itemSaw = new ItemSaw().setUnlocalizedName("saw").setCreativeTab(tabLabStuff).setTextureName("labstuff:itemSaw");
-		itemSiliconWafer = new ItemSolarPanelPart().setUnlocalizedName("itemSiliconWafer").setCreativeTab(tabLabStuff).setTextureName("labstuff:itemSiliconWafer");
-		itemSolarCell = new ItemSolarPanelPart().setUnlocalizedName("itemSolarCell").setTextureName("labstuff:solarCell").setCreativeTab(tabLabStuff);
-		itemElectromagnet = new ItemElectromagnet().setCreativeTab(tabLabStuff).setUnlocalizedName("itemElectromagnet").setTextureName("labstuff:itemElectromagent");
-		itemWrench = new ItemWrench().setCreativeTab(tabLabStuff).setUnlocalizedName("itemWrench").setTextureName("labstuff:itemWrench");
-		itemDiscoveryDrive = new ItemDiscoveryDrive().setCreativeTab(tabLabStuff).setUnlocalizedName("itemDiscovery");
-		itemDiscoveryDesign = new ItemCircuitDesign().setCreativeTab(tabLabStuff).setUnlocalizedName("itemDiscoveryDriveCircuitDesign");
-		itemDrilledDiscovery = new ItemPartialCircuitBoard().setUnlocalizedName("itemDrilledDiscovery").setTextureName("labstuff:itemDrilledCircuitBoard").setCreativeTab(tabLabStuff);
-		itemEtchedDiscovery = new ItemPartialCircuitBoard().setUnlocalizedName("itemEtchedDiscovery").setTextureName("labstuff:itemEtchedCircuitBoard").setCreativeTab(tabLabStuff);
-		itemDSCCoreDesign = new ItemCircuitDesign().setCreativeTab(tabLabStuff).setUnlocalizedName("itemDSCCoreDesign");
-		itemDrilledDSCCore = new ItemPartialCircuitBoard().setUnlocalizedName("itemDrilledDSCCore").setTextureName("labstuff:itemDrilledCircuitBoard").setCreativeTab(tabLabStuff);
-		itemEtchedDSCCore = new ItemPartialCircuitBoard().setUnlocalizedName("itemEtchedDSCCore").setTextureName("labstuff:itemEtchedCircuitBoard").setCreativeTab(tabLabStuff);
-		itemDSCRamDesign = new ItemCircuitDesign().setCreativeTab(tabLabStuff).setUnlocalizedName("itemDSCRamDesign");
-		itemDrilledDSCRam = new ItemPartialCircuitBoard().setUnlocalizedName("itemDrilledDSCRam").setTextureName("labstuff:itemDrilledCircuitBoard").setCreativeTab(tabLabStuff);
-		itemEtchedDSCRam = new ItemPartialCircuitBoard().setUnlocalizedName("itemEtchedDSCRam").setTextureName("labstuff:itemEtchedCircuitBoard").setCreativeTab(tabLabStuff);
-		itemDSCOSDesign = new ItemCircuitDesign().setCreativeTab(tabLabStuff).setUnlocalizedName("itemDSCOSDesign");
-		itemDrilledDSCOS = new ItemPartialCircuitBoard().setUnlocalizedName("itemDrilledDSCOS").setTextureName("labstuff:itemDrilledCircuitBoard").setCreativeTab(tabLabStuff);
-		itemEtchedDSCOS = new ItemPartialCircuitBoard().setUnlocalizedName("itemEtchedDSCOS").setTextureName("labstuff:itemEtchedCircuitBoard").setCreativeTab(tabLabStuff);
-		itemDSCBenchDesign = new ItemCircuitDesign().setCreativeTab(tabLabStuff).setUnlocalizedName("itemDSCBenchDesign");
-		itemDrilledDSCBench = new ItemPartialCircuitBoard().setUnlocalizedName("itemDrilledDSCBench").setTextureName("labstuff:itemDrilledCircuitBoard").setCreativeTab(tabLabStuff);
-		itemEtchedDSCBench = new ItemPartialCircuitBoard().setUnlocalizedName("itemEtchedDSCBench").setTextureName("labstuff:itemEtchedCircuitBoard").setCreativeTab(tabLabStuff);
-		itemDSCDriveDesign = new ItemCircuitDesign().setCreativeTab(tabLabStuff).setUnlocalizedName("itemDSCDriveCircuitDesign");
-		itemDrilledDSCDrive = new ItemPartialCircuitBoard().setUnlocalizedName("itemDrilledDSCDrive").setTextureName("labstuff:itemDrilledCircuitBoard").setCreativeTab(tabLabStuff);
-		itemEtchedDSCDrive = new ItemPartialCircuitBoard().setUnlocalizedName("itemEtchedDSCDrive").setTextureName("labstuff:itemEtchedCircuitBoard").setCreativeTab(tabLabStuff);
-		itemGluonDetector = new ItemGluonDetector().setCreativeTab(tabLabStuff).setUnlocalizedName("itemGluonDetector").setTextureName("labstuff:gluon");
-		itemDPad = new ItemDPad().setUnlocalizedName("itemDPad").setTextureName("labstuff:itemDPad").setCreativeTab(tabLabStuff);
-		itemTouchMesh = new ItemDPadPart().setUnlocalizedName("itemTouchMesh").setCreativeTab(tabLabStuff).setTextureName("labstuff:itemTouchMesh");
-		itemTouchScreen = new ItemDPadPart().setCreativeTab(tabLabStuff).setTextureName("labstuff:itemTouchScreen").setUnlocalizedName("itemTouchScreen");
-		itemUnProgrammedDPad = new ItemDPadPart().setUnlocalizedName("itemBiosFailDPad").setTextureName("labstuff:itemBiosFailDPad").setCreativeTab(tabLabStuff);
-		itemWarpDriveBattery = new ItemWarpDriveBattery().setCreativeTab(tabLabStuff).setUnlocalizedName("itemWarpDriveBattery").setTextureName("labstuff:warpBattery");
-		itemEmptyWarpDriveBattery = new ItemEmptyWarpDriveBattery().setCreativeTab(tabLabStuff).setUnlocalizedName("itemEmptyWarpDriveBattery").setTextureName("labstuff:warpBattery");
-		itemDiscoveryAntiMatter = new ItemDiscoveryDrive().setCreativeTab(tabLabStuff).setUnlocalizedName("itemDiscoveryAntiMatter");
-		itemDiscoveryNegativeEnergy = new ItemDiscoveryDrive().setCreativeTab(tabLabStuff).setUnlocalizedName("itemDiscoveryNegativeEnergy");
-		itemDiscoveryWarp = new ItemDiscoveryDrive().setCreativeTab(tabLabStuff).setUnlocalizedName("itemDiscoveryWarp");
-		itemAdvancedAccelInterface = new ItemAcceInterfaceUpgrade().setCreativeTab(tabLabStuff).setUnlocalizedName("itemAccelInterfaceUpgrade").setTextureName("labstuff:discovDrive");
-		itemDiscoveryQuantum = new ItemDiscoveryDrive().setCreativeTab(tabLabStuff).setUnlocalizedName("itemDiscoveryQuantum");
-		
-		itemZincDust = new ItemDust().setCreativeTab(tabLabStuff).setTextureName("labstuff:zincDust").setUnlocalizedName("itemZincDust");
-		itemMangDust = new ItemDust().setCreativeTab(tabLabStuff).setTextureName("labstuff:mangDust").setUnlocalizedName("itemMangDust");
-		itemCopperDust = new ItemDust().setCreativeTab(tabLabStuff).setTextureName("labstuff:copperDust").setUnlocalizedName("itemCopperDust");
-		itemIronDust = new ItemDust().setCreativeTab(tabLabStuff).setTextureName("labstuff:ironDust").setUnlocalizedName("itemIronDust");
-		itemGoldDust = new ItemDust().setCreativeTab(tabLabStuff).setTextureName("labstuff:goldDust").setUnlocalizedName("itemGoldDust");
-		
-		itemMatterCollectorCore = new ItemMatterCollectorCore().setCreativeTab(tabLabStuff).setTextureName("labstuff:matterCollectorCore").setUnlocalizedName("itemMatterCollectorCore");
-		itemTurbineBlades = new ItemTurbineBlades().setCreativeTab(tabLabStuff).setTextureName("labstuff:itemTurbineBlades").setUnlocalizedName("itemTurbineBlades");
-		
-		//Registries
-		//Blocks
-		GameRegistry.registerBlock(blockCopperOre, blockCopperOre.getUnlocalizedName().substring(5));
-		GameRegistry.registerBlock(blockZincOre, "blockZincOre");
-		GameRegistry.registerBlock(blockMangOre, "blockMangOre");
-		GameRegistry.registerBlock(blockSiliconOre, "blockSiliconOre");
-		GameRegistry.registerBlock(blockCircuitDesignTable, "blockCircuitDesignTable");
-		GameRegistry.registerBlock(blockCircuitMaker, blockCircuitMaker.getUnlocalizedName().substring(5));
-		GameRegistry.registerBlock(blockElectrifier, "blockElectrifier");
-		GameRegistry.registerBlock(blockPlasmaPipe, "plasmaPipe");
-		GameRegistry.registerBlock(blockGasChamberWall, "blockGasChamberWall");
-		GameRegistry.registerBlock(blockGasChamberPort, "blockGasChamberPort");
-		GameRegistry.registerBlock(blockElectronGrabber, "blockElectronGrabber");
-		GameRegistry.registerBlock(blockPowerFurnace, "blockPowerFurnace");
-		GameRegistry.registerBlock(blockPowerCable, "blockPowerCable");
-		GameRegistry.registerBlock(blockRFToLVConverter, "blockRFToLV");
-		GameRegistry.registerBlock(blockLVToRFConverter, "blockLVToRF");
-		GameRegistry.registerBlock(blockSolarPanel, "blockSolarPanel");
-		GameRegistry.registerBlock(blockSolarGag, "blockSolarGag");
-		GameRegistry.registerBlock(blockWindTurbine, "blockWindTurbine");
-		GameRegistry.registerBlock(blockBattery, "blockBattery");
-		GameRegistry.registerBlock(blockCharger, "blockCharger");
-		GameRegistry.registerBlock(blockWindGag, "blockWindGag");
-		GameRegistry.registerBlock(blockCzochralskistor, "blockCzo");
-		GameRegistry.registerBlock(blockIndustrialMotor, "blockIndustrialMotor");
-		GameRegistry.registerBlock(blockIndustrialMotorContact, "blockIndustrialMotorContact");
-		GameRegistry.registerBlock(blockIndustrialMotorShaft, "blockIndustrialMotorShaft");
-		GameRegistry.registerBlock(blockFusionSolenoidAxel, "blockFusionSolenoidAxel");
-		GameRegistry.registerBlock(blockFusionSolenoidArm, "blockFusionSolenoidArm");
-		GameRegistry.registerBlock(blockFusionSolenoid, "blockFusionSolenoid");
-		GameRegistry.registerBlock(blockFusionPlasmaTap, "blockFusionPlasmaTap");
-		GameRegistry.registerBlock(blockFusionToroidalMagnet, "blockFusionToroidalMagnet");
-		GameRegistry.registerBlock(blockFusionHeatExchange, "blockFusionHeatExchange");
-		GameRegistry.registerBlock(blockTurbineCasing, "blockTurbineCase");
-		GameRegistry.registerBlock(blockTurbineGlass, "blockTurbineGlass");
-		GameRegistry.registerBlock(blockTurbineRotor, "blockTurbineRotor");
-		GameRegistry.registerBlock(blockTurbineValve, "blockTurbineValve");
-		GameRegistry.registerBlock(blockElectromagneticCoil, "blockEMCoil");
-		GameRegistry.registerBlock(blockTurbineVent, "blockTurbineVent");
-		GameRegistry.registerBlock(blockVent, "blockVent");
-		GameRegistry.registerBlock(blockGag, "gag");
-		GameRegistry.registerBlock(blockAcceleratorControlPanel, "blockAcceleratorControlPanel");
-		GameRegistry.registerBlock(blockACPGag, "blockACPGag");
-		GameRegistry.registerBlock(blockAcceleratorInterface, "blockAcceleratorInterface");
-		GameRegistry.registerBlock(blockAcceleratorTube, "blockAcceleratorTube");
-		GameRegistry.registerBlock(blockAcceleratorDetectorCore, "blockAccleratorDetectorCore");
-		GameRegistry.registerBlock(blockAcceleratorTrackingDetector, "blockAcceleratorTrackingDetector");
-		GameRegistry.registerBlock(blockAcceleratorSolenoid, "blockAcceleratorSolenoid");
-		GameRegistry.registerBlock(blockAcceleratorElectromagneticCalorimeter, "blockAcceleratorElectromagneticCalorimeter");
-		GameRegistry.registerBlock(blockAcceleratorHadronCalorimeter, "blockAcceleratorHadronCalorimeter");
-		GameRegistry.registerBlock(blockAcceleratorMuonDetector, "blockAcceleratorMuonDetector");
-		GameRegistry.registerBlock(blockAcceleratorPowerInput, "blockAcceleratorPowerInput");
-		GameRegistry.registerBlock(blockDSCRibbonCable, "blockDSCRibbonCable");
-		GameRegistry.registerBlock(blockDSCCore, "blockDSCCore");
-		GameRegistry.registerBlock(blockDSCOS, "blockDSCOS");
-		GameRegistry.registerBlock(blockDSCRam, "blockDSCRam");
-		GameRegistry.registerBlock(blockDSCDrive, "blockDSCDrive");
-		GameRegistry.registerBlock(blockDSCWorkbench, "blockDSCBench");
-		GameRegistry.registerBlock(blockReservoir, "reservoir");
-		GameRegistry.registerBlock(blockLiquidPipe, "blockLiquidPipe");
-		GameRegistry.registerBlock(blockGravityManipulater, "blockGravityManipulater");
-		GameRegistry.registerBlock(blockComputer, "Computer");
-		GameRegistry.registerBlock(blockDataCable, "blockDataCable");
-		GameRegistry.registerBlock(blockDLLaptop, "blockDLLaptop");	
-		GameRegistry.registerBlock(blockEnricher, "blockEnricher");
-		GameRegistry.registerBlock(blockRubberLog, "blockRubberLog");
-		GameRegistry.registerBlock(blockRubberLeaves, "blockRubberLeaves");
-		GameRegistry.registerBlock(blockRubberSapling, "blockRubberSapling");
-		GameRegistry.registerBlock(blockMatterCollector, "blockMatterCollector");
-		GameRegistry.registerBlock(blockSteel, "blockSteel");
-		//GameRegistry.registerBlock(blockRedstonePipe, "blockRedstonePipe");
-		//GameRegistry.registerBlock(blockDataPipe, "blockDataPipe");
+		labstuffBlocks.add(blockSteel = new BlockLabBlock(Material.IRON).setHardness(10F).setResistance(20F).setRegistryName("labstuff:blockSteelBlock").setCreativeTab(tabLabStuff));
 		
 		//Items
-		GameRegistry.registerItem(itemFiberGlass, "FiberGlass");
-		GameRegistry.registerItem(itemRubber, "itemRubber");
-		GameRegistry.registerItem(itemCopperIngot, "CopperIngot");
-		GameRegistry.registerItem(itemPlastic, "Plastic");
-		GameRegistry.registerItem(itemZinc, "itemZinc");
-		GameRegistry.registerItem(itemManganese, "itemMang");
-		GameRegistry.registerItem(itemSiliconIngot, "itemSiliconIngot");
-		GameRegistry.registerItem(itemSteel, "itemSteel");
-		GameRegistry.registerItem(itemCircuitBoardPlate, "CircuitBoardPlate");
-		GameRegistry.registerItem(itemBasicCircuitDesign, "BasicCircuitDesign");
-		GameRegistry.registerItem(itemBasicDrilledCircuitBoard, "BasicDrilledCircuitBoard");
-		GameRegistry.registerItem(itemBasicEtchedCircuitBoard, "BasicEtchedCircuitBoard");
-		GameRegistry.registerItem(itemBasicCircuitBoard, "BasicCircuitBoard");
-		GameRegistry.registerItem(itemInterCircuitDesign, "itemInterCircuitDesign");
-		GameRegistry.registerItem(itemInterEtchedCircuitBoard, "InterEtchedCircuitBoard");
-		GameRegistry.registerItem(itemInterDrilledCircuitBoard, "InterDrilledCircuitBoard");
-		GameRegistry.registerItem(itemInterCircuitBoard, "InterCircuitBoard");
-		GameRegistry.registerItem(itemComputerCircuitDesign, "ComputerCircuitDesign");
-		GameRegistry.registerItem(itemComputerDrilledCircuitBoard, "ComputerDrilledCircuitBoard");
-		GameRegistry.registerItem(itemComputerEtchedCircuitBoard, "ComputerEtchedCircuitBoard");
-		GameRegistry.registerItem(itemComputerCircuitBoard, "CompuuterCircuitBoard");
-		GameRegistry.registerItem(itemMonitor, "Monitor");
-		GameRegistry.registerItem(itemKeyboard, "Keyboard");
-		GameRegistry.registerItem(itemComputerTower, "ComputerTower");
-		GameRegistry.registerItem(itemBattery, "itemBattery");
-		GameRegistry.registerItem(itemDeadBattery, "itemDeadBattery");
-		GameRegistry.registerItem(itemTestTube, "itemTestTube");
-		GameRegistry.registerItem(itemHydrogenTestTube, "itemHydrogenTestTube");
-		GameRegistry.registerItem(itemOxygenTestTube, "itemOxygenTestTube");
-		GameRegistry.registerItem(itemSiliconCrystalSeed, "siliconSeed");
-		GameRegistry.registerItem(itemSteelRod, "itemSteelRod");
-		GameRegistry.registerItem(itemRodMountedSiliconSeed, "siliconOnRod");
-		GameRegistry.registerItem(itemSiliconBoule, "siliconBoule");
-		GameRegistry.registerItem(itemSaw, "saw");
-		GameRegistry.registerItem(itemSiliconWafer, "itemSiliconWafer");
-		GameRegistry.registerItem(itemSolarCell, "itemSolarCell");
-		GameRegistry.registerItem(itemElectromagnet, "itemElectromagnet");
-		GameRegistry.registerItem(itemWrench, "itemWrench");
-		GameRegistry.registerItem(itemDPad, "dPad");
-		GameRegistry.registerItem(itemTouchMesh, "touchMesh");
-		GameRegistry.registerItem(itemTouchScreen, "touchScreen");
-		GameRegistry.registerItem(itemUnProgrammedDPad, "biosFailDPad");
-		GameRegistry.registerItem(itemGluonDetector, "itemGluonDetector");
-		GameRegistry.registerItem(itemDiscoveryDrive, "itemDiscovery");
-		GameRegistry.registerItem(itemDiscoveryDesign, "itemDiscoveryDriveDesign");
-		GameRegistry.registerItem(itemDrilledDiscovery, "itemDrilledDiscovery");
-		GameRegistry.registerItem(itemEtchedDiscovery, "itemEtchedDiscovery");
-		GameRegistry.registerItem(itemDSCCoreDesign, "itemDSCCoreDesign");
-		GameRegistry.registerItem(itemDrilledDSCCore, "itemDrilledDSCCore");
-		GameRegistry.registerItem(itemEtchedDSCCore, "itemEtchedDSCCore");
-		GameRegistry.registerItem(itemDSCRamDesign, "itemDSCRamDesign");
-		GameRegistry.registerItem(itemDrilledDSCRam, "itemDrilledDSCRam");
-		GameRegistry.registerItem(itemEtchedDSCRam, "itemEtchedDSCRam");
-		GameRegistry.registerItem(itemDSCOSDesign, "itemDSCOSDesign");
-		GameRegistry.registerItem(itemDrilledDSCOS, "itemDrilledDSCOS");
-		GameRegistry.registerItem(itemEtchedDSCOS, "itemEtchedDSCOS");
-		GameRegistry.registerItem(itemDSCBenchDesign, "itemDSCBenchDesign");
-		GameRegistry.registerItem(itemDrilledDSCBench, "itemDrilledDSCBench");
-		GameRegistry.registerItem(itemEtchedDSCBench, "itemEtchedDSCBench");
-		GameRegistry.registerItem(itemDSCDriveDesign, "itemDSCDriveDesign");
-		GameRegistry.registerItem(itemDrilledDSCDrive, "itemDrilledDSCDrive");
-		GameRegistry.registerItem(itemEtchedDSCDrive, "itemEtchedDSCDrive");
-		GameRegistry.registerItem(itemDiscoveryAntiMatter, "itemDiscoveryAntiMatter");
-		GameRegistry.registerItem(itemDiscoveryNegativeEnergy, "itemDiscoveryNegativeEnergy");
-		GameRegistry.registerItem(itemDiscoveryWarp, "itemDiscoveryWarp");
-		GameRegistry.registerItem(itemAdvancedAccelInterface, "itemAccelInterfaceUpgrade");
-		GameRegistry.registerItem(itemWarpDriveBattery, "itemWarpDriveBattery");
-		GameRegistry.registerItem(itemEmptyWarpDriveBattery, "itemEmptyWarpDriveBattery");
-		GameRegistry.registerItem(itemZincDust, "itemZincDust");
-		GameRegistry.registerItem(itemMangDust, "itemMangDust");
-		GameRegistry.registerItem(itemCopperDust, "itemCopperDust");
-		GameRegistry.registerItem(itemIronDust, "itemIronDust");
-		GameRegistry.registerItem(itemGoldDust, "itemGoldDust");
-		GameRegistry.registerItem(itemDiscoveryQuantum, "itemDiscoveryQuantum");
-		GameRegistry.registerItem(itemMatterCollectorCore, "itemMatterCollectorCore");
-		GameRegistry.registerItem(itemTurbineBlades, "itemTurbineBlades");
+		labstuffItems.add(itemFiberGlass = new ItemFiberGlass().setRegistryName("labstuff:itemFiberGlass").setCreativeTab(tabLabStuff));
+		labstuffItems.add(itemRubber = new ItemLabIngot().setCreativeTab(tabLabStuff).setRegistryName("labstuff:itemRubber"));
+		labstuffItems.add(itemCopperIngot = new ItemCopperIngot().setRegistryName("labstuff:itemCopperIngot").setCreativeTab(tabLabStuff));
+		labstuffItems.add(itemCircuitBoardPlate = new ItemCircuitBoardPlate().setRegistryName("labstuff:itemCircuitBoardPlate").setCreativeTab(tabLabStuff));
+		labstuffItems.add(itemBasicDrilledCircuitBoard = new ItemPartialCircuitBoard().setRegistryName("labstuff:itemBasicDrilledCircuitBoard").setCreativeTab(tabLabStuff));
+		labstuffItems.add(itemBasicEtchedCircuitBoard = new ItemPartialCircuitBoard().setRegistryName("labstuff:itemBasicEtchedCircuitBoard").setCreativeTab(tabLabStuff));
+		labstuffItems.add(itemComputerDrilledCircuitBoard = new ItemPartialCircuitBoard().setRegistryName("labstuff:itemComputerDrilledCircuitBoard").setCreativeTab(tabLabStuff));
+		labstuffItems.add(itemComputerEtchedCircuitBoard = new ItemPartialCircuitBoard().setRegistryName("labstuff:itemComputerEtchedCircuitBoard").setCreativeTab(tabLabStuff));
+		labstuffItems.add(itemBasicCircuitBoard = new ItemCircuitBoard().setRegistryName("labstuff:itemBasicCircuitboard").setCreativeTab(tabLabStuff));
+		labstuffItems.add(itemComputerCircuitBoard = new ItemCircuitBoard().setRegistryName("labstuff:itemComputerCircuitboard").setCreativeTab(tabLabStuff));
+		labstuffItems.add(itemBasicCircuitDesign = new ItemCircuitDesign().setRegistryName("labstuff:itemBasicCircuitDesign").setCreativeTab(tabLabStuff));
+		labstuffItems.add(itemComputerCircuitDesign = new ItemCircuitDesign().setRegistryName("labstuff:itemComputerCircuitDesign").setCreativeTab(tabLabStuff));
+		labstuffItems.add(itemMonitor = new ItemComputerPart().setRegistryName("labstuff:itemMonitor").setCreativeTab(tabLabStuff));
+		labstuffItems.add(itemComputerTower = new ItemComputerPart().setRegistryName("labstuff:itemComputerTower").setCreativeTab(tabLabStuff));
+		labstuffItems.add(itemKeyboard = new ItemComputerPart().setRegistryName("labstuff:itemKeyboard").setCreativeTab(tabLabStuff));
+		labstuffItems.add(itemPlastic = new ItemPlastic().setCreativeTab(tabLabStuff).setRegistryName("labstuff:itemPlastic"));
+		labstuffItems.add(itemZinc = new ItemLabIngot().setCreativeTab(tabLabStuff).setRegistryName("labstuff:itemZinc"));
+		labstuffItems.add(itemManganese = new ItemLabIngot().setCreativeTab(tabLabStuff).setRegistryName("labstuff:itemMang"));
+		labstuffItems.add(itemBattery = new ItemBattery().setCreativeTab(tabLabStuff).setRegistryName("labstuff:itemBattery"));
+		labstuffItems.add(itemDeadBattery = new ItemBattery().setCreativeTab(tabLabStuff).setRegistryName("labstuff:itemDeadBattery"));
+		labstuffItems.add(itemTestTube = new ItemTestTube().setCreativeTab(tabLabStuff).setRegistryName("labstuff:itemTestTube"));
+		labstuffItems.add(itemHydrogenTestTube = new ItemTestTube().setCreativeTab(tabLabStuff).setRegistryName("labstuff:itemHydrogenTestTube"));
+		labstuffItems.add(itemOxygenTestTube = new ItemTestTube().setCreativeTab(tabLabStuff).setRegistryName("labstuff:itemOxygenTestTube"));
+		labstuffItems.add(itemSteel = new ItemLabIngot().setCreativeTab(tabLabStuff).setRegistryName("labstuff:itemSteel"));
+		labstuffItems.add(itemInterCircuitDesign = new ItemCircuitDesign().setCreativeTab(tabLabStuff).setRegistryName("labstuff:itemIntermediateCircuitDesign"));
+		labstuffItems.add(itemInterDrilledCircuitBoard = new ItemPartialCircuitBoard().setRegistryName("labstuff:itemIntermediateDrilledCircuitBoard").setCreativeTab(tabLabStuff));
+		labstuffItems.add(itemInterEtchedCircuitBoard = new ItemPartialCircuitBoard().setRegistryName("labstuff:itemIntermediateEtchedCircuitBoard").setCreativeTab(tabLabStuff));
+		labstuffItems.add(itemInterCircuitBoard = new ItemCircuitBoard().setRegistryName("labstuff:itemIntermediateCircuitboard").setCreativeTab(tabLabStuff));
+		labstuffItems.add(itemSiliconIngot = new ItemLabIngot().setRegistryName("labstuff:itemSiliconIngot").setCreativeTab(tabLabStuff));
+		labstuffItems.add(itemSiliconCrystalSeed = new ItemSiliconBoulePart().setRegistryName("labstuff:siliconSeed").setCreativeTab(tabLabStuff));
+		labstuffItems.add(itemSteelRod = new ItemSiliconBoulePart().setRegistryName("labstuff:itemSteelRod").setCreativeTab(tabLabStuff));
+		labstuffItems.add(itemRodMountedSiliconSeed = new ItemSiliconBoulePart().setRegistryName("labstuff:itemRodMountedSiliconSeed").setCreativeTab(tabLabStuff));
+		labstuffItems.add(itemSiliconBoule = new ItemSiliconBoule().setRegistryName("labstuff:itemSiliconBoule").setCreativeTab(tabLabStuff));
+		labstuffItems.add(itemSaw = new ItemSaw().setRegistryName("labstuff:saw").setCreativeTab(tabLabStuff));
+		labstuffItems.add(itemSiliconWafer = new ItemSolarPanelPart().setRegistryName("labstuff:itemSiliconWafer").setCreativeTab(tabLabStuff));
+		labstuffItems.add(itemSolarCell = new ItemSolarPanelPart().setRegistryName("labstuff:itemSolarCell").setCreativeTab(tabLabStuff));
+		labstuffItems.add(itemElectromagnet = new ItemElectromagnet().setCreativeTab(tabLabStuff).setRegistryName("labstuff:itemElectromagnet"));
+		labstuffItems.add(itemWrench = new ItemWrench().setCreativeTab(tabLabStuff).setRegistryName("labstuff:itemWrench"));
+		labstuffItems.add(itemDiscoveryDrive = new ItemDiscoveryDrive().setCreativeTab(tabLabStuff).setRegistryName("labstuff:itemDiscovery"));
+		labstuffItems.add(itemDiscoveryDesign = new ItemCircuitDesign().setCreativeTab(tabLabStuff).setRegistryName("labstuff:itemDiscoveryDriveCircuitDesign"));
+		labstuffItems.add(itemDrilledDiscovery = new ItemPartialCircuitBoard().setRegistryName("labstuff:itemDrilledDiscovery").setCreativeTab(tabLabStuff));
+		labstuffItems.add(itemEtchedDiscovery = new ItemPartialCircuitBoard().setRegistryName("labstuff:itemEtchedDiscovery").setCreativeTab(tabLabStuff));
+		labstuffItems.add(itemDSCCoreDesign = new ItemCircuitDesign().setCreativeTab(tabLabStuff).setRegistryName("labstuff:itemDSCCoreDesign"));
+		labstuffItems.add(itemDrilledDSCCore = new ItemPartialCircuitBoard().setRegistryName("labstuff:itemDrilledDSCCore").setCreativeTab(tabLabStuff));
+		labstuffItems.add(itemEtchedDSCCore = new ItemPartialCircuitBoard().setRegistryName("labstuff:itemEtchedDSCCore").setCreativeTab(tabLabStuff));
+		labstuffItems.add(itemDSCRamDesign = new ItemCircuitDesign().setCreativeTab(tabLabStuff).setRegistryName("labstuff:itemDSCRamDesign"));
+		labstuffItems.add(itemDrilledDSCRam = new ItemPartialCircuitBoard().setRegistryName("labstuff:itemDrilledDSCRam").setCreativeTab(tabLabStuff));
+		labstuffItems.add(itemEtchedDSCRam = new ItemPartialCircuitBoard().setRegistryName("labstuff:itemEtchedDSCRam").setCreativeTab(tabLabStuff));
+		labstuffItems.add(itemDSCOSDesign = new ItemCircuitDesign().setCreativeTab(tabLabStuff).setRegistryName("labstuff:itemDSCOSDesign"));
+		labstuffItems.add(itemDrilledDSCOS = new ItemPartialCircuitBoard().setRegistryName("labstuff:itemDrilledDSCOS").setCreativeTab(tabLabStuff));
+		labstuffItems.add(itemEtchedDSCOS = new ItemPartialCircuitBoard().setRegistryName("labstuff:itemEtchedDSCOS").setCreativeTab(tabLabStuff));
+		labstuffItems.add(itemDSCBenchDesign = new ItemCircuitDesign().setCreativeTab(tabLabStuff).setRegistryName("labstuff:itemDSCBenchDesign"));
+		labstuffItems.add(itemDrilledDSCBench = new ItemPartialCircuitBoard().setRegistryName("labstuff:itemDrilledDSCBench").setCreativeTab(tabLabStuff));
+		labstuffItems.add(itemEtchedDSCBench = new ItemPartialCircuitBoard().setRegistryName("labstuff:itemEtchedDSCBench").setCreativeTab(tabLabStuff));
+		labstuffItems.add(itemDSCDriveDesign = new ItemCircuitDesign().setCreativeTab(tabLabStuff).setRegistryName("labstuff:itemDSCDriveCircuitDesign"));
+		labstuffItems.add(itemDrilledDSCDrive = new ItemPartialCircuitBoard().setRegistryName("labstuff:itemDrilledDSCDrive").setCreativeTab(tabLabStuff));
+		labstuffItems.add(itemEtchedDSCDrive = new ItemPartialCircuitBoard().setRegistryName("labstuff:itemEtchedDSCDrive").setCreativeTab(tabLabStuff));
+		labstuffItems.add(itemGluonDetector = new ItemGluonDetector().setCreativeTab(tabLabStuff).setRegistryName("labstuff:itemGluonDetector"));
+		labstuffItems.add(itemDPad = new ItemDPad().setRegistryName("labstuff:itemDPad").setCreativeTab(tabLabStuff));
+		labstuffItems.add(itemTouchMesh = new ItemDPadPart().setRegistryName("labstuff:itemTouchMesh").setCreativeTab(tabLabStuff));
+		labstuffItems.add(itemTouchScreen = new ItemDPadPart().setCreativeTab(tabLabStuff).setRegistryName("labstuff:itemTouchScreen"));
+		labstuffItems.add(itemUnProgrammedDPad = new ItemDPadPart().setRegistryName("labstuff:itemBiosFailDPad").setCreativeTab(tabLabStuff));
+		labstuffItems.add(itemWarpDriveBattery = new ItemWarpDriveBattery().setCreativeTab(tabLabStuff).setRegistryName("labstuff:itemWarpDriveBattery"));
+		labstuffItems.add(itemEmptyWarpDriveBattery = new ItemEmptyWarpDriveBattery().setCreativeTab(tabLabStuff).setRegistryName("labstuff:itemEmptyWarpDriveBattery"));
+		labstuffItems.add(itemDiscoveryAntiMatter = new ItemDiscoveryDrive().setCreativeTab(tabLabStuff).setRegistryName("labstuff:itemDiscoveryAntiMatter"));
+		labstuffItems.add(itemDiscoveryNegativeEnergy = new ItemDiscoveryDrive().setCreativeTab(tabLabStuff).setRegistryName("labstuff:itemDiscoveryNegativeEnergy"));
+		labstuffItems.add(itemDiscoveryWarp = new ItemDiscoveryDrive().setCreativeTab(tabLabStuff).setRegistryName("labstuff:itemDiscoveryWarp"));
+		labstuffItems.add(itemAdvancedAccelInterface = new ItemAcceInterfaceUpgrade().setCreativeTab(tabLabStuff).setRegistryName("labstuff:itemAccelInterfaceUpgrade"));
+		labstuffItems.add(itemDiscoveryQuantum = new ItemDiscoveryDrive().setCreativeTab(tabLabStuff).setRegistryName("labstuff:itemDiscoveryQuantum"));
+		
+		labstuffItems.add(itemZincDust = new ItemDust().setCreativeTab(tabLabStuff).setRegistryName("labstuff:itemZincDust"));
+		labstuffItems.add(itemMangDust = new ItemDust().setCreativeTab(tabLabStuff).setRegistryName("labstuff:itemMangDust"));
+		labstuffItems.add(itemCopperDust = new ItemDust().setCreativeTab(tabLabStuff).setRegistryName("labstuff:itemCopperDust"));
+		labstuffItems.add(itemIronDust = new ItemDust().setCreativeTab(tabLabStuff).setRegistryName("labstuff:itemIronDust"));
+		labstuffItems.add(itemGoldDust = new ItemDust().setCreativeTab(tabLabStuff).setRegistryName("labstuff:itemGoldDust"));
+		
+		labstuffItems.add(itemMatterCollectorCore = new ItemMatterCollectorCore().setCreativeTab(tabLabStuff).setRegistryName("labstuff:itemMatterCollectorCore"));
+		labstuffItems.add(itemTurbineBlades = new ItemTurbineBlades().setCreativeTab(tabLabStuff).setRegistryName("labstuff:itemTurbineBlades"));
+		
+		proxy.preInit();
+		
 		
 		//steam liquid
 		steam.setLuminosity(5);
 		steam.setTemperature(20);
 		FluidRegistry.registerFluid(steam);
-		blockSteamBlock = new BlockSteam(steam, Material.water).setBlockName("blockSteam");
-		GameRegistry.registerBlock(blockSteamBlock, "blockSteam");
+		blockSteamBlock = new BlockSteam(steam, Material.WATER).setRegistryName("labstuff:blockSteam").setUnlocalizedName("labstuff:blockSteam");
+		
+		for(Block block : labstuffBlocks)
+		{
+			if(block.getRegistryName() != null)
+			{
+				ItemBlock item = new ItemBlock(block);
+				item.setRegistryName(block.getRegistryName());
+				block.setUnlocalizedName(block.getRegistryName().toString());
+				GameRegistry.register(block);
+				GameRegistry.register(item);
+				proxy.registerItemModel(item);
+			}
+		}
+		
+		for(Item item : labstuffItems)
+		{
+			item.setUnlocalizedName(item.getRegistryName().toString());
+			GameRegistry.register(item);
+			proxy.registerItemModel(item);
+		}
+		
+		
+		
 
 	}
 	
 	@EventHandler
-	public void load(FMLInitializationEvent event)
+	public void init(FMLInitializationEvent event)
 	{
 		System.out.println("Hi yah we get here.");		
 		
@@ -559,6 +439,7 @@ public class LabStuffMain
 		
 		//Proxy junk
 		proxy.registerRenders();
+		proxy.initMod();
 		
 		//Crafting Recipes
 		Recipes.registerShaplessCrafting();
@@ -577,15 +458,15 @@ public class LabStuffMain
 		Recipes.addCircuitDesign("DiscoveryDrive", itemDiscoveryDesign);
 		Recipes.addCircuitCreation("DiscoveryDrive", itemEtchedDiscovery, itemDrilledDiscovery, itemDiscoveryDrive);
 		Recipes.addCircuitDesign("DSCCore", itemDSCCoreDesign);
-		Recipes.addCircuitCreation("DSCCore", itemEtchedDSCCore, itemDrilledDSCCore, Item.getItemFromBlock(blockDSCCore));
+		Recipes.addCircuitCreation("DSCCore", itemEtchedDSCCore, itemDrilledDSCCore, get(blockDSCCore));
 		Recipes.addCircuitDesign("DSCRam", itemDSCRamDesign);
-		Recipes.addCircuitCreation("DSCRam", itemEtchedDSCRam, itemDrilledDSCRam, Item.getItemFromBlock(blockDSCRam));
+		Recipes.addCircuitCreation("DSCRam", itemEtchedDSCRam, itemDrilledDSCRam, get(blockDSCRam));
 		Recipes.addCircuitDesign("DSCOS", itemDSCOSDesign);
-		Recipes.addCircuitCreation("DSCOS", itemEtchedDSCOS, itemDrilledDSCOS, Item.getItemFromBlock(blockDSCOS));
+		Recipes.addCircuitCreation("DSCOS", itemEtchedDSCOS, itemDrilledDSCOS, get(blockDSCOS));
 		Recipes.addCircuitDesign("DSCBench", itemDSCBenchDesign);
-		Recipes.addCircuitCreation("DSCBench", itemEtchedDSCBench, itemDrilledDSCBench, Item.getItemFromBlock(blockDSCWorkbench));
+		Recipes.addCircuitCreation("DSCBench", itemEtchedDSCBench, itemDrilledDSCBench, get(blockDSCWorkbench));
 		Recipes.addCircuitDesign("DSCDrive", itemDSCDriveDesign);
-		Recipes.addCircuitCreation("DSCDrive", itemEtchedDSCDrive, itemDrilledDSCDrive, Item.getItemFromBlock(blockDSCDrive));
+		Recipes.addCircuitCreation("DSCDrive", itemEtchedDSCDrive, itemDrilledDSCDrive, get(blockDSCDrive));
 		
 		//Charges
 		Recipes.addCharge(itemDeadBattery, itemBattery, 50);
@@ -594,11 +475,12 @@ public class LabStuffMain
 		Recipes.addAccelDiscovery(Recipes.getDiscovFromDrive(itemDiscoveryAntiMatter), new ItemStack(itemDiscoveryNegativeEnergy));
 		Recipes.addAccelDiscovery(Recipes.getDiscovFromDrive(itemDiscoveryNegativeEnergy), new ItemStack(itemDiscoveryWarp));
 		Recipes.addAccelDiscovery(Recipes.getDiscovFromDrive(itemDiscoveryAntiMatter), new ItemStack(itemDiscoveryQuantum));
-		Recipes.addDiscovItem(new ItemStack(itemAdvancedAccelInterface, 1), new ItemStack(LabStuffMain.itemElectromagnet, 1), new ItemStack(LabStuffMain.itemCopperIngot,2), new ItemStack(Items.iron_ingot, 5), Recipes.getDiscovFromDrive(itemDiscoveryAntiMatter), "Advanced Accelerator Interface Upgrade");
-		Recipes.addDiscovItem(new ItemStack(itemEmptyWarpDriveBattery, 1), new ItemStack(LabStuffMain.itemElectromagnet, 1), new ItemStack(LabStuffMain.itemCopperIngot,2), new ItemStack(Items.iron_ingot, 5), Recipes.getDiscovFromDrive(itemDiscoveryWarp), "Warp Drive Battery (Empty)");
-		Recipes.addDiscovItem(new ItemStack(blockGravityManipulater), new ItemStack(Items.iron_ingot, 8), new ItemStack(LabStuffMain.itemElectromagnet), new ItemStack(itemTouchScreen), Recipes.getDiscovFromDrive(itemDiscoveryWarp), "Gravity Manipulater");
+		Recipes.addDiscovItem(new ItemStack(itemAdvancedAccelInterface, 1), new ItemStack(LabStuffMain.itemElectromagnet, 1), new ItemStack(LabStuffMain.itemCopperIngot,2), new ItemStack(Items.IRON_INGOT, 5), Recipes.getDiscovFromDrive(itemDiscoveryAntiMatter), "Advanced Accelerator Interface Upgrade");
+		Recipes.addDiscovItem(new ItemStack(itemEmptyWarpDriveBattery, 1), new ItemStack(LabStuffMain.itemElectromagnet, 1), new ItemStack(LabStuffMain.itemCopperIngot,2), new ItemStack(Items.IRON_INGOT, 5), Recipes.getDiscovFromDrive(itemDiscoveryWarp), "Warp Drive Battery (Empty)");
+		Recipes.addDiscovItem(new ItemStack(blockGravityManipulater), new ItemStack(Items.IRON_INGOT, 8), new ItemStack(LabStuffMain.itemElectromagnet), new ItemStack(itemTouchScreen), Recipes.getDiscovFromDrive(itemDiscoveryWarp), "Gravity Manipulater");
 		Recipes.addDiscovItem(new ItemStack(itemMatterCollectorCore, 1), new ItemStack(blockPowerCable, 2), new ItemStack(itemComputerCircuitBoard, 1), new ItemStack(itemElectromagnet, 5), Recipes.getDiscovFromDrive(itemDiscoveryQuantum), "Matter Collector Core");
 		Recipes.addDiscovItem(new ItemStack(blockMatterCollector, 1), new ItemStack(itemSteel, 20), new ItemStack(itemMatterCollectorCore, 1), new ItemStack(itemMonitor, 3), Recipes.getDiscovFromDrive(itemDiscoveryQuantum), "Matter Collector");		
+		
 		
 		//Tile Entities
 		GameRegistry.registerTileEntity(TileEntityCircuitDesignTable.class, "TileEntityCircuitDesignTable");
@@ -610,6 +492,7 @@ public class LabStuffMain
 		GameRegistry.registerTileEntity(TileEntityElectronGrabber.class, "TileEntityElectronGrabber");
 		GameRegistry.registerTileEntity(TileEntityGasChamberPort.class, "TileEntityGasChamberPort");
 		GameRegistry.registerTileEntity(TileEntityPower.class, "TileEntityPower");
+		GameRegistry.registerTileEntity(TileEntityWindTurbine.class, "TileEntityWindTurbine");
 		GameRegistry.registerTileEntity(TileEntityPowerFurnace.class, "TileEntityPowerFurnace");
 		GameRegistry.registerTileEntity(TileEntityPowerCable.class, "TileEntityPowerCable");
 		GameRegistry.registerTileEntity(TileEntitySolarPanel.class, "TileEntitySolarPanel");
@@ -619,16 +502,15 @@ public class LabStuffMain
 		GameRegistry.registerTileEntity(DataConnectedDevice.class, "DataConnectedDevice");
 		GameRegistry.registerTileEntity(TileEntityDataCable.class, "tileentityDataCable");
 		GameRegistry.registerTileEntity(TileEntityPowerConnection.class, "TileEntityPowerConnection");
-		//GameRegistry.registerTileEntity(TileEntityPlasmaConnection.class, "TileEntityPlasmaConnection");
 		GameRegistry.registerTileEntity(TileEntityReservoir.class, "Reservoir");
 		GameRegistry.registerTileEntity(TileEntityLiquidPipe.class, "LiquidPipe");
 		GameRegistry.registerTileEntity(TileEntityRedstonePipe.class, "RedstonePipe");
-		GameRegistry.registerTileEntity(TileEntityDataPipe.class, "DataPipe");
+		GameRegistry.registerTileEntity(TileEntityRotary.class, "TileEntityRotary");
 		GameRegistry.registerTileEntity(TileEntityIndustrialMotorContact.class, "IndustrialMotorContact");
 		GameRegistry.registerTileEntity(TileEntityIndustrialMotorShaft.class, "IndustrialMotorShaft");
 		GameRegistry.registerTileEntity(TileEntitySolenoidAxel.class, "SolenoidAxel");
-		GameRegistry.registerTileEntity(TileEntityFusionToroidalMagnet.class,"TileEntityToroid");
 		GameRegistry.registerTileEntity(TileEntityPlasmaTap.class, "TileEntityPlasmaTap");
+		GameRegistry.registerTileEntity(TileEntityToroid.class, "TileEntityToroid");
 		GameRegistry.registerTileEntity(TileEntityHeatExchange.class, "TileEntityHeatExchange");
 		GameRegistry.registerTileEntity(TileEntityCharger.class, "TileEntityCharger");
 		GameRegistry.registerTileEntity(TileEntityTurbine.class, "TileEntityTurbine");
@@ -687,12 +569,38 @@ public class LabStuffMain
 		OreDictionary.registerOre("dustCopper", new ItemStack(itemCopperDust));
 		OreDictionary.registerOre("dustIron", new ItemStack(itemIronDust));
 		OreDictionary.registerOre("dustGold", new ItemStack(itemGoldDust));		
+		OreDictionary.registerOre("blockSteel", new ItemStack(blockSteel));
 	}
 	
 	@EventHandler
 	public void postLoad(FMLPostInitializationEvent event)
 	{
 		packetPipeline.postInitialise();
+		//Enrichments
+		/**So placed because other mods load on their own time**/
+		Recipes.addEnrichment(get(blockRubberLog), itemRubber);
+		for(String dust : OreDictionary.getOreNames())
+		{
+			if(dust.startsWith("dust"))
+			{
+				String ore = "ore" + dust.substring(4);
+				if(OreDictionary.doesOreNameExist(ore))
+				{
+					List<ItemStack> ores = OreDictionary.getOres(ore);
+					List<ItemStack> dusts = OreDictionary.getOres(dust);
+					for(int i = 0; i < dusts.size(); i++)
+					{
+						if(ores.size() >= i+1 && dusts.size() >= i+1)
+							Recipes.addEnrichment(ores.get(i).getItem(), OreDictionary.getOres("dust" + ore.substring(3)).get(i).getItem());
+					}
+				}
+			}
+		}
+	}
+
+	public static Item get(Block block) {
+		// TODO Auto-generated method stub
+		return Item.getItemFromBlock(block);
 	}
 	
 }

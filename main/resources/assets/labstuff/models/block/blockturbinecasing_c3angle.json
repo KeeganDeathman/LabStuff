@@ -1,0 +1,13 @@
+{
+    "__comment": "Model for when three adjacent sides are connected.",
+	"parent": "block/cube",
+    "textures": {
+		"particle": "labstuff:blocks/blockturbinecasing/blockturbinecasing0C",
+        "down": "labstuff:blocks/blockturbinecasing/blockturbinecasing2C_ue",
+		"up": "labstuff:blocks/blockturbinecasing/blockturbinecasing4C",
+		"north": "labstuff:blocks/blockturbinecasing/blockturbinecasing2C_uw",
+		"south": "labstuff:blocks/blockturbinecasing/blockturbinecasing4C",
+		"west": "labstuff:blocks/blockturbinecasing/blockturbinecasing2C_ue",
+		"east": "labstuff:blocks/blockturbinecasing/blockturbinecasing4C"
+    }
+}

@@ -3,7 +3,10 @@ package keegan.labstuff.blocks;
 import keegan.labstuff.tileentity.TileEntityAcceleratorTube;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.*;
 
 public class BlockAcceleratorTube extends Block implements ITileEntityProvider
@@ -11,7 +14,7 @@ public class BlockAcceleratorTube extends Block implements ITileEntityProvider
 
 	public BlockAcceleratorTube()
 	{
-		super(Material.iron);
+		super(Material.IRON);
 	}
 
 	@Override
@@ -22,18 +25,19 @@ public class BlockAcceleratorTube extends Block implements ITileEntityProvider
 	}
 	
 	@Override
-    public boolean isOpaqueCube() 
+	public boolean isOpaqueCube(IBlockState state)
     {
             return false;
     }
     
-    public boolean shouldSideBeRendered(IBlockAccess access, int i, int j, int k, int l)
+	@Override
+    public boolean shouldSideBeRendered(IBlockState state, IBlockAccess access, BlockPos pos, EnumFacing side)
 	{
     	return false;
 	}
     
     @Override
-    public boolean renderAsNormalBlock()
+    public boolean isNormalCube(IBlockState state, IBlockAccess access, BlockPos pos) 
     {
     	return false;
     }

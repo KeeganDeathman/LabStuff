@@ -10,7 +10,7 @@ import keegan.labstuff.recipes.*;
 import keegan.labstuff.tileentity.DSCDrive;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Slot;
+import net.minecraft.inventory.*;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiDSCDrive extends GuiContainer
@@ -29,9 +29,9 @@ public class GuiDSCDrive extends GuiContainer
 	}
 
 	@Override
-	public void handleMouseClick(Slot slot, int x, int y, int theotherthing)
+	public void handleMouseClick(Slot slot, int x, int y, ClickType type)
 	{
-		super.handleMouseClick(slot, x, y, theotherthing);
+		super.handleMouseClick(slot, x, y, type);
 		if(slot != null && slot.getStack() != null)
 		{
 			if(slot.getStack().getItem() instanceof ItemDiscoveryDrive)
@@ -42,7 +42,7 @@ public class GuiDSCDrive extends GuiContainer
 					if(d.getDiscoveryFlashDrive().getItem().equals(slot.getStack().getItem()))
 					{
 						dis = d;
-						LabStuffMain.packetPipeline.sendToServer(new PacketDSCDrive(dis,tile.xCoord, tile.yCoord, tile.zCoord));
+						LabStuffMain.packetPipeline.sendToServer(new PacketDSCDrive(dis,tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ()));
 					}
 				}
 			}

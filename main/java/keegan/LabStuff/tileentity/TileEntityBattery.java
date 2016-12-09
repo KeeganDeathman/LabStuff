@@ -8,9 +8,9 @@ public class TileEntityBattery extends TileEntityPowerConnection
 	private int power = 0;
 	
 	@Override
-	public void updateEntity()
+	public void update()
 	{
-		if(worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord) && getPowerSource() != null)
+		if(worldObj.isBlockIndirectlyGettingPowered(pos) > 0 && getPowerSource() != null)
 		{
 			if(getPowerSource().subtractPower(500, this))
 				power += 500;

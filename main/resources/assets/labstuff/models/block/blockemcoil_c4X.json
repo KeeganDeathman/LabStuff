@@ -1,0 +1,13 @@
+{
+    "__comment": "Model file for four connected sides in a cross shape.",
+	"parent": "block/cube",
+    "textures": {
+		"particle": "labstuff:blocks/blockemcoil/blockemcoil0C",
+        "down": "labstuff:blocks/blockemcoil/blockemcoil4C",
+		"up": "labstuff:blocks/blockemcoil/blockemcoil4C",
+		"north": "labstuff:blocks/blockemcoil/blockemcoil4C",
+		"south": "labstuff:blocks/blockemcoil/blockemcoil4C",
+		"west": "labstuff:blocks/blockemcoil/blockemcoil4C",
+		"east": "labstuff:blocks/blockemcoil/blockemcoil4C"
+    }
+}

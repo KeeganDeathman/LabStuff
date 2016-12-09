@@ -1,0 +1,11 @@
+{
+	"parent": "block/cube",
+	"textures": {
+		"up": "labstuff:blocks/blockenrichertop",
+		"down": "labstuff:blocks/blockCircuitMaker",
+		"south": "labstuff:blocks/blockCircuitMakerSide",
+		"west": "labstuff:blocks/blockCircuitMakerSide",
+		"east": "labstuff:blocks/enricher-gear",
+		"north": "labstuff:blocks/enricher"
+	}
+}

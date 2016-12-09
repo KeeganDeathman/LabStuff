@@ -1,0 +1,13 @@
+{
+    "__comment": "Model for when only one side is connected.",
+	"parent": "block/cube",
+    "textures": {
+		"particle": "labstuff:blocks/blockturbinecasing/blockturbinecasing0C",
+        "down": "labstuff:blocks/blockturbinecasing/blockturbinecasing0C",
+		"up": "labstuff:blocks/blockturbinecasing/blockturbinecasing4C",
+		"north": "labstuff:blocks/blockturbinecasing/blockturbinecasing1C_u",
+		"south": "labstuff:blocks/blockturbinecasing/blockturbinecasing1C_u",
+		"west": "labstuff:blocks/blockturbinecasing/blockturbinecasing1C_u",
+		"east": "labstuff:blocks/blockturbinecasing/blockturbinecasing1C_u"
+    }
+}

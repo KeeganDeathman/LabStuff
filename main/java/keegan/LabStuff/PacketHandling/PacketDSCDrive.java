@@ -6,6 +6,7 @@ import keegan.labstuff.recipes.*;
 import keegan.labstuff.tileentity.DSCDrive;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
 
 public class PacketDSCDrive extends AbstractPacket
 {
@@ -54,7 +55,7 @@ public class PacketDSCDrive extends AbstractPacket
 	@Override
 	public void handleServerSide(EntityPlayer arg0)
 	{
-		TileEntity tile = arg0.worldObj.getTileEntity(x, y, z);
+		TileEntity tile = arg0.worldObj.getTileEntity(new BlockPos(x,y,z));
 		System.out.println(x);
 		System.out.println(y);
 		System.out.println(z);

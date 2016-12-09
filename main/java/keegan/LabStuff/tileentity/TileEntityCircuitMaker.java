@@ -4,7 +4,7 @@ import keegan.labstuff.LabStuffMain;
 import keegan.labstuff.items.ItemCircuitBoard;
 import keegan.labstuff.items.ItemPartialCircuitBoard;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -22,7 +22,7 @@ public class TileEntityCircuitMaker extends TileEntity implements IInventory
 	
 	
 	@Override
-	public void writeToNBT(NBTTagCompound tagCompound)
+	public NBTTagCompound writeToNBT(NBTTagCompound tagCompound)
 	{
 		super.writeToNBT(tagCompound);
 		NBTTagList itemList = new NBTTagList();
@@ -38,6 +38,8 @@ public class TileEntityCircuitMaker extends TileEntity implements IInventory
 			}
 		}
 		tagCompound.setTag("Inventory", itemList);
+		
+		return tagCompound;
 	}
 	
 
@@ -96,17 +98,6 @@ public class TileEntityCircuitMaker extends TileEntity implements IInventory
 	}
 
 	@Override
-	public ItemStack getStackInSlotOnClosing(int slot) 
-	{
-		// TODO Auto-generated method stub
-		ItemStack stack = getStackInSlot(slot);
-		if (stack != null) {
-			setInventorySlotContents(slot, null);
-		}
-		return stack;
-	}
-
-	@Override
 	public void setInventorySlotContents(int slot, ItemStack itemstack) 
 	{
 		chestContents[slot] = itemstack;
@@ -132,37 +123,6 @@ public class TileEntityCircuitMaker extends TileEntity implements IInventory
 	}
 
 
-
-	@Override
-	public String getInventoryName() {
-		// TODO Auto-generated method stub
-		return "Electrifier";
-	}
-
-
-
-	@Override
-	public void closeInventory() {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-
-
-	@Override
-	public boolean hasCustomInventoryName() {
-		// TODO Auto-generated method stub
-		return true;
-	}
-
-
-	@Override
-	public void openInventory() {
-		// TODO Auto-generated method stub
-		
-	}
-
 	@Override
 	public boolean isItemValidForSlot(int slot, ItemStack stack) 
 	{
@@ -170,6 +130,69 @@ public class TileEntityCircuitMaker extends TileEntity implements IInventory
 			return true;
 		else
 			return false;
+	}
+
+
+	@Override
+	public String getName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public boolean hasCustomName() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+	@Override
+	public ItemStack removeStackFromSlot(int index) {
+		// TODO Auto-generated method stub
+		return ItemStackHelper.getAndRemove(chestContents, index);
+	}
+
+
+	@Override
+	public void openInventory(EntityPlayer player) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void closeInventory(EntityPlayer player) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public int getField(int id) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+	@Override
+	public void setField(int id, int value) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public int getFieldCount() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+	@Override
+	public void clear() {
+		for(ItemStack stack : chestContents)
+			stack = null;
 	}
 	
 }

@@ -2,63 +2,55 @@ package keegan.labstuff.blocks;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.util.IIcon;
+import net.minecraft.block.properties.*;
+import net.minecraft.block.state.*;
+import net.minecraft.util.*;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
-import net.minecraftforge.common.util.ForgeDirection;
 
 public class BlockSolenoid extends Block {
 
-	public BlockSolenoid(Material p_i45394_1_) {
-		super(p_i45394_1_);
+	public BlockSolenoid(Material materialIn) {
+		super(materialIn);
 		// TODO Auto-generated constructor stub
+	}
+
+	public static final PropertyBool COMPLETE = PropertyBool.create("complete");
+	
+	@Override
+	public BlockStateContainer createBlockState()
+	{
+		return new BlockStateContainer(this, new IProperty[]{COMPLETE});
 	}
 	
 	@Override
-	public boolean isOpaqueCube()
+	public boolean isOpaqueCube(IBlockState state)
 	{
 		return false;
 		
 	}
 	
 	@Override
-	public boolean shouldSideBeRendered(IBlockAccess access, int x, int y, int z, int side)
+	public int getMetaFromState(IBlockState state)
 	{
-		if(access.getBlockMetadata(x - ForgeDirection.getOrientation(side).offsetX, y - ForgeDirection.getOrientation(side).offsetY, z - ForgeDirection.getOrientation(side).offsetZ) == 1)
-			return false;
-		return true;
-	}
-	
-	private IIcon side1;
-	private IIcon side2;
-	private IIcon side3;
-	
-	@Override
-    // registerIcons
-    public void registerBlockIcons(IIconRegister par1IconRegister)
-    {
-        // blockIcon - blockIcon
-		this.side1 = this.blockIcon = par1IconRegister.registerIcon("labstuff:blockSolenoid");
-        this.side2 = par1IconRegister.registerIcon("labstuff:blockSolenoidVert");
-        this.side3 = par1IconRegister.registerIcon("labStuff:blockSolenoidHoriz");
+		return (state.getValue(COMPLETE) ? 1 : 0);
 	}
 	
 	@Override
-	public IIcon getIcon(int side, int metadata)
+	public EnumBlockRenderType getRenderType(IBlockState state)
 	{
-		if(getUnlocalizedName().endsWith("Arm"))
-		{
-			if(side == 0 || side == 1)
-				return side2;
-			if(side == 2 || side == 3)
-				return side2;
-			return side1;
-		}
-		if(side == 0 || side == 1)
-			return side1;
-		if(side == 2 || side == 3)
-			return side3;
-		return side3;
+		return EnumBlockRenderType.MODEL;
+	}
+	
+	@Override
+	public IBlockState getStateFromMeta(int meta)
+	{
+		return this.getDefaultState().withProperty(COMPLETE, meta > 0);
+	}
+	
+	@Override
+	public boolean shouldSideBeRendered(IBlockState state, IBlockAccess access, BlockPos pos, EnumFacing side) {
+		return !state.getValue(COMPLETE);
 	}
 	
 	

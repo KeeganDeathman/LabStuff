@@ -5,6 +5,7 @@ import io.netty.channel.ChannelHandlerContext;
 import keegan.labstuff.tileentity.TileEntityGravityManipulater;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class PacketGravity extends AbstractPacket
@@ -53,7 +54,7 @@ public class PacketGravity extends AbstractPacket
 	public void handleServerSide(EntityPlayer player)
 	{
 		World world = player.worldObj;
-		TileEntity te = world.getTileEntity(x,y,z);
+		TileEntity te = world.getTileEntity(new BlockPos(x,y,z));
 		if(te instanceof TileEntityGravityManipulater)
 		{
 			System.out.println("Performing action");

@@ -2,23 +2,13 @@ package keegan.labstuff.items;
 
 import java.util.List;
 
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.item.*;
 
 public class ItemCircuitDesign extends Item {
 
 	public ItemCircuitDesign() {
 		super();
-	}
-	
-	@SideOnly(Side.CLIENT)
-	public void registerIcons(IIconRegister register)
-	{
-		this.itemIcon = register.registerIcon("labstuff:itemCircuitDesign");
 	}
 	
 	@Override

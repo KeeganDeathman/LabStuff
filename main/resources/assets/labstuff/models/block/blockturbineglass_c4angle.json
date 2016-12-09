@@ -1,0 +1,13 @@
+{
+    "__comment": "Model for when four connected sides at an angle.",
+	"parent": "block/cube",
+    "textures": {
+		"particle": "labstuff:blocks/blockturbineglass/blockturbineglass0C",
+        "down": "labstuff:blocks/blockturbineglass/blockturbineglass4C",
+		"up": "labstuff:blocks/blockturbineglass/blockturbineglass4C",
+		"north": "labstuff:blocks/blockturbineglass/blockturbineglass4C",
+		"south": "labstuff:blocks/blockturbineglass/blockturbineglass3C_uwd",
+		"west": "labstuff:blocks/blockturbineglass/blockturbineglass4C",
+		"east": "labstuff:blocks/blockturbineglass/blockturbineglass3C_ued"
+    }
+}

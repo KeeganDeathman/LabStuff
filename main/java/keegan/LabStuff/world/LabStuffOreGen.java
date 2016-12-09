@@ -2,19 +2,21 @@ package keegan.labstuff.world;
 
 import java.util.Random;
 
-import cpw.mods.fml.common.IWorldGenerator;
 import keegan.labstuff.LabStuffMain;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.chunk.IChunkProvider;
+import net.minecraft.world.chunk.*;
 import net.minecraft.world.gen.feature.WorldGenMinable;
+import net.minecraftforge.fml.common.IWorldGenerator;
 
 public class LabStuffOreGen implements IWorldGenerator
 {
 
     @Override
-    public void generate(Random random, int chunkX, int chunkZ, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider)
+	public void generate(Random random, int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider)
     {
-        switch (world.provider.dimensionId)
+        switch (world.provider.getDimension())
         {
             case -1:
                 this.generateNether(world, random, chunkX * 16, chunkZ * 16);
@@ -35,7 +37,7 @@ public class LabStuffOreGen implements IWorldGenerator
             int Ycoord = rand.nextInt(30);
             // Max Vein Size
             
-            new WorldGenMinable(LabStuffMain.blockCopperOre, 4).generate(world, rand, Xcoord,Ycoord,Zcoord);
+            new WorldGenMinable((IBlockState) LabStuffMain.blockCopperOre.getDefaultState(), 4).generate(world, rand, new BlockPos(Xcoord,Ycoord,Zcoord));
         }
 
         // rarity -smaller number = rarer
@@ -47,7 +49,7 @@ public class LabStuffOreGen implements IWorldGenerator
             int Ycoord = rand.nextInt(20) + 30;
             
             // Max Vein Size
-            new WorldGenMinable(LabStuffMain.blockZincOre, 5).generate(world, rand, Xcoord,Ycoord,Zcoord);
+            new WorldGenMinable((IBlockState) LabStuffMain.blockZincOre.getDefaultState(), 5).generate(world, rand, new BlockPos(Xcoord,Ycoord,Zcoord));
         }
         for (int x = 0; x < 25; x++)
         {
@@ -56,7 +58,7 @@ public class LabStuffOreGen implements IWorldGenerator
             int Ycoord = rand.nextInt(20) + 30;
             
             // Max Vein Size
-            new WorldGenMinable(LabStuffMain.blockMangOre, 5).generate(world, rand, Xcoord,Ycoord,Zcoord);
+            new WorldGenMinable((IBlockState) LabStuffMain.blockMangOre.getDefaultState(), 5).generate(world, rand, new BlockPos(Xcoord,Ycoord,Zcoord));
         }
         for (int x = 0; x < 25; x++)
         {
@@ -65,7 +67,7 @@ public class LabStuffOreGen implements IWorldGenerator
             int Ycoord = rand.nextInt(20) + 30;
             
             // Max Vein Size
-            new WorldGenMinable(LabStuffMain.blockSiliconOre, 5).generate(world, rand, Xcoord,Ycoord,Zcoord);
+            new WorldGenMinable((IBlockState) LabStuffMain.blockSiliconOre.getDefaultState(), 5).generate(world, rand, new BlockPos(Xcoord,Ycoord,Zcoord));
         }
         
     }

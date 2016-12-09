@@ -1,5 +1,17 @@
 {
 	"variants": {
-		"normal": { "model": "labstuff:blockpowerfurnace" }
+		"facing=south,powered=true": { "model": "labstuff:blockpowerfurnaceon", "y":270},
+		"facing=west,powered=true": { "model": "labstuff:blockpowerfurnaceon"},
+		"facing=east,powered=true": { "model": "labstuff:blockpowerfurnaceon", "y":180},
+		"facing=north,powered=true": { "model": "labstuff:blockpowerfurnaceon", "y":90},
+		"facing=down,powered=true": { "model": "labstuff:blockpowerfurnaceon" },
+		"facing=up,powered=true": { "model": "labstuff:blockpowerfurnaceon" },
+		"facing=south,powered=false": { "model": "labstuff:blockpowerfurnace", "y":270},
+		"facing=west,powered=false": { "model": "labstuff:blockpowerfurnace"},
+		"facing=east,powered=false": { "model": "labstuff:blockpowerfurnace", "y":180},
+		"facing=north,powered=false": { "model": "labstuff:blockpowerfurnace", "y":90},
+		"facing=down,powered=false": { "model": "labstuff:blockpowerfurnace" },
+		"facing=up,powered=false": { "model": "labstuff:blockpowerfurnace" },
+		"default": { "model": "labstuff:blockpowerfurnace" }
 	}
 }

@@ -1,14 +1,18 @@
 package keegan.labstuff.blocks;
 
-import keegan.labstuff.tileentity.*;
+import keegan.labstuff.LabStuffMain;
+import keegan.labstuff.tileentity.TileEntitySolenoidAxel;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.block.properties.*;
+import net.minecraft.block.state.*;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.*;
-import net.minecraftforge.common.util.ForgeDirection;
 
 public class BlockSolenoidAxel extends Block implements ITileEntityProvider
 {
@@ -16,7 +20,48 @@ public class BlockSolenoidAxel extends Block implements ITileEntityProvider
 	public BlockSolenoidAxel(Material p_i45394_1_)
 	{
 		super(p_i45394_1_);
+		this.setDefaultState(getDefaultState().withProperty(RENDER, EnumRender.BLOCK));
 		// TODO Auto-generated constructor stub
+	}
+	
+	public static final PropertyEnum<EnumRender> RENDER = PropertyEnum.create("render", EnumRender.class);
+
+	public static enum EnumRender implements IStringSerializable {
+	BLOCK("block"), AIR("air"), SOLENOID("solenoid");
+
+	private final String name;
+
+	private EnumRender(String name) {
+		this.name = name;
+	}
+
+	public String toString() {
+		return this.name;
+	}
+
+	public static EnumRender fromString(String string) {
+		switch (string) {
+		case "block":
+			return BLOCK;
+		case "air":
+			return AIR;
+		case "solenoid":
+			return SOLENOID;
+		default:
+			return BLOCK;
+		}
+	}
+
+	public String getName() {
+		return this.name;
+	}
+}
+
+
+	@Override
+	public BlockStateContainer createBlockState()
+	{
+		return new BlockStateContainer(this, new IProperty[]{RENDER});
 	}
 
 	@Override
@@ -27,24 +72,84 @@ public class BlockSolenoidAxel extends Block implements ITileEntityProvider
 	}
 	
 	@Override
-	public boolean isOpaqueCube()
+	public EnumBlockRenderType getRenderType(IBlockState state)
 	{
-		return false;
+		return EnumBlockRenderType.MODEL;
+	}
+	
+	@Override
+	public int getMetaFromState(IBlockState state)
+	{
+		switch(state.getValue(RENDER))
+		{
+			default:
+				return 0;
+			case BLOCK:
+				return 0;
+			case AIR:
+				return 1;
+			case SOLENOID:
+				return 2;
+		}
+	}
+	
+	@Override
+	public IBlockState getStateFromMeta(int meta)
+	{
+		switch(meta)
+		{
+			default:
+				return getDefaultState().withProperty(RENDER, EnumRender.BLOCK);
+			case 0:
+				return getDefaultState().withProperty(RENDER, EnumRender.BLOCK);
+			case 1:
+				return getDefaultState().withProperty(RENDER, EnumRender.AIR);
+			case 2:
+				return getDefaultState().withProperty(RENDER, EnumRender.SOLENOID);
+		}
+	}
+	
+	@Override
+	public boolean isOpaqueCube(IBlockState state)
+	{
+		return true;
 		
 	}
 	
 	@Override
-    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par5, float par6, float par7, float par8)
-    {
+    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack held, EnumFacing facing, float fx, float par8, float par9) {
     	if(!world.isRemote)
     	{
-    		TileEntity tile = world.getTileEntity(x, y-2, z);
+    		int xCoord = pos.getX();
+    		int yCoord = pos.getY();
+    		int zCoord = pos.getZ();
+    		setBlock(xCoord+10,yCoord+1,zCoord-1,LabStuffMain.blockFusionToroidalMagnet, world);
+			 setBlock(xCoord+10,yCoord+1,zCoord+1,LabStuffMain.blockFusionToroidalMagnet, world);
+			 setBlock(xCoord-10, yCoord+1, zCoord-1,LabStuffMain.blockFusionToroidalMagnet, world);
+			 setBlock(xCoord-10, yCoord+1, zCoord+1,LabStuffMain.blockFusionToroidalMagnet, world);
+			 setBlock(xCoord+1, yCoord+1, zCoord-10,LabStuffMain.blockFusionToroidalMagnet, world);
+			 setBlock(xCoord-1, yCoord+1, zCoord-10,LabStuffMain.blockFusionToroidalMagnet, world);
+			 setBlock(xCoord+1, yCoord+1, zCoord+10,LabStuffMain.blockFusionToroidalMagnet, world);
+			 setBlock(xCoord-1, yCoord+1, zCoord+10,LabStuffMain.blockFusionToroidalMagnet, world);
+			 setBlock(xCoord+7, yCoord+1, zCoord+7,LabStuffMain.blockFusionToroidalMagnet, world);
+			 setBlock(xCoord-7, yCoord+1, zCoord+7,LabStuffMain.blockFusionToroidalMagnet, world);
+			 setBlock(xCoord+7, yCoord+1, zCoord-7,LabStuffMain.blockFusionToroidalMagnet, world);
+			 setBlock(xCoord-7, yCoord+1, zCoord-7,LabStuffMain.blockFusionToroidalMagnet, world);
+			 setBlock(xCoord+9, yCoord+1, zCoord+4,LabStuffMain.blockFusionToroidalMagnet, world);
+			 setBlock(xCoord-9, yCoord+1, zCoord+4,LabStuffMain.blockFusionToroidalMagnet, world);
+			 setBlock(xCoord+9, yCoord+1, zCoord-4,LabStuffMain.blockFusionToroidalMagnet, world);
+			 setBlock(xCoord-9, yCoord+1, zCoord-4,LabStuffMain.blockFusionToroidalMagnet, world);
+			 setBlock(xCoord+4, yCoord+1, zCoord+9,LabStuffMain.blockFusionToroidalMagnet, world);
+			 setBlock(xCoord-4, yCoord+1, zCoord+9,LabStuffMain.blockFusionToroidalMagnet, world);
+			 setBlock(xCoord+4, yCoord+1, zCoord-9,LabStuffMain.blockFusionToroidalMagnet, world);
+			 setBlock(xCoord-4, yCoord+1, zCoord-9,LabStuffMain.blockFusionToroidalMagnet, world);
+    		TileEntity tile = world.getTileEntity(pos.down(2));
     		if(tile instanceof TileEntitySolenoidAxel)
     		{
     			if(((TileEntitySolenoidAxel)tile).isMultiBlock() && ((TileEntitySolenoidAxel)tile).getEnergy() >= 250000)
-    				player.addChatMessage(new ChatComponentText("Spinning"));
+    				player.addChatMessage(new TextComponentString("Spinning"));
     			else
-    					player.addChatMessage(new ChatComponentText("Still"));
+    					player.addChatMessage(new TextComponentString("Still"));
     			return true;
     		}
     		return false;
@@ -52,34 +157,13 @@ public class BlockSolenoidAxel extends Block implements ITileEntityProvider
     	return false;
     }
 	
-	private IIcon side1;
-	private IIcon side2;
-	
-	@Override
-    // registerIcons
-    public void registerBlockIcons(IIconRegister par1IconRegister)
-    {
-        // blockIcon - blockIcon
-        this.side1 = this.blockIcon = par1IconRegister.registerIcon("labstuff:blockSolenoidAxel");
-        this.side2 = par1IconRegister.registerIcon("labstuff:blockSolenoidVert");
-    }
-	
-	@Override
-	public IIcon getIcon(int side, int metadata)
-	{
-		if(side == 0|| side == 1)
-		{
-			return this.side1;
-		}
-		return this.side2;
+	private void setBlock(int i, int j, int k, Block block, World world) {
+		world.setBlockState(new BlockPos(i,j,k), block.getDefaultState());
 	}
-	
+
 	@Override
-	public boolean shouldSideBeRendered(IBlockAccess access, int x, int y, int z, int side)
-	{
-		if(access.getBlockMetadata(x - ForgeDirection.getOrientation(side).offsetX, y - ForgeDirection.getOrientation(side).offsetY, z - ForgeDirection.getOrientation(side).offsetZ) == 1)
-			return false;
-		return true;
+	public boolean shouldSideBeRendered(IBlockState state, IBlockAccess access, BlockPos pos, EnumFacing side) {
+		return !(state.getValue(RENDER).equals(EnumRender.AIR) || state.getValue(RENDER).equals(EnumRender.SOLENOID));
 	}
 	
 	

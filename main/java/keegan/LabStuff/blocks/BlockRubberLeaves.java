@@ -2,43 +2,64 @@ package keegan.labstuff.blocks;
 
 import java.util.*;
 
-import cpw.mods.fml.relauncher.*;
+import javax.annotation.Nullable;
+
 import keegan.labstuff.LabStuffMain;
 import net.minecraft.block.*;
-import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.block.BlockPlanks.EnumType;
+import net.minecraft.block.properties.*;
+import net.minecraft.block.state.*;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.*;
-import net.minecraft.util.IIcon;
+import net.minecraft.util.*;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.*;
 import net.minecraftforge.common.IShearable;
+import net.minecraftforge.fml.relauncher.*;
 
-public class BlockRubberLeaves extends BlockLeavesBase implements IShearable
+public class BlockRubberLeaves extends BlockLeaves implements IShearable
 {
-    int[] field_150128_a;
+	public static final PropertyBool DECAYABLE = PropertyBool.create("decayable");
+    public static final PropertyBool CHECK_DECAY = PropertyBool.create("check_decay");
+    
+    @Override
+	public BlockStateContainer createBlockState()
+	{
+		return new BlockStateContainer(this, new IProperty[]{DECAYABLE, CHECK_DECAY});
+	}
+    
+    @Override
+	public int getMetaFromState(IBlockState state)
+	{
+		return state.getValue(DECAYABLE) ? 2 : 1;
+	}
+	
+	@Override
+	public IBlockState getStateFromMeta(int meta)
+	{
+		return this.getDefaultState().withProperty(DECAYABLE, meta == 2);
+	}
+    
+    int[] numbers;
     @SideOnly(Side.CLIENT)
-    protected int field_150127_b;
-    protected IIcon[][] field_150129_M = new IIcon[2][];
-    private static final String __OBFID = "CL_00000263";
+    protected int integer1;
+    private static final String key = "CL_00000263";
+    int[] surroundings;
 
     public BlockRubberLeaves()
     {
-        super(Material.leaves, false);
+        super();
         this.setTickRandomly(true);
-        this.setCreativeTab(CreativeTabs.tabDecorations);
+        this.setCreativeTab(CreativeTabs.DECORATIONS);
         this.setHardness(0.2F);
         this.setLightOpacity(1);
-        this.setStepSound(soundTypeGrass);
     }
 
     @SideOnly(Side.CLIENT)
     public int getBlockColor()
     {
-    	double d0 = 0.5D;
-        double d1 = 1.0D;
-        return ColorizerFoliage.getFoliageColor(d0, d1);
+    	return 6396257;
     }
 
     /**
@@ -50,48 +71,28 @@ public class BlockRubberLeaves extends BlockLeavesBase implements IShearable
         return ColorizerFoliage.getFoliageColorBasic();
     }
 
-    /**
-     * Returns a integer with hex for 0xrrggbb with this color multiplied against the blocks color. Note only called
-     * when first determining what to render.
-     */
-    @SideOnly(Side.CLIENT)
-    public int colorMultiplier(IBlockAccess p_149720_1_, int p_149720_2_, int p_149720_3_, int p_149720_4_)
+    public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
     {
-        int l = 0;
-        int i1 = 0;
-        int j1 = 0;
+        int i = 1;
+        int j = 2;
+        int k = pos.getX();
+        int l = pos.getY();
+        int i1 = pos.getZ();
 
-        for (int k1 = -1; k1 <= 1; ++k1)
+        if (worldIn.isAreaLoaded(new BlockPos(k - 2, l - 2, i1 - 2), new BlockPos(k + 2, l + 2, i1 + 2)))
         {
-            for (int l1 = -1; l1 <= 1; ++l1)
+            for (int j1 = -1; j1 <= 1; ++j1)
             {
-                int i2 = p_149720_1_.getBiomeGenForCoords(p_149720_2_ + l1, p_149720_4_ + k1).getBiomeFoliageColor(p_149720_2_ + l1, p_149720_3_, p_149720_4_ + k1);
-                l += (i2 & 16711680) >> 16;
-                i1 += (i2 & 65280) >> 8;
-                j1 += i2 & 255;
-            }
-        }
-
-        return (l / 9 & 255) << 16 | (i1 / 9 & 255) << 8 | j1 / 9 & 255;
-    }
-
-    public void breakBlock(World p_149749_1_, int p_149749_2_, int p_149749_3_, int p_149749_4_, Block p_149749_5_, int p_149749_6_)
-    {
-        byte b0 = 1;
-        int i1 = b0 + 1;
-
-        if (p_149749_1_.checkChunksExist(p_149749_2_ - i1, p_149749_3_ - i1, p_149749_4_ - i1, p_149749_2_ + i1, p_149749_3_ + i1, p_149749_4_ + i1))
-        {
-            for (int j1 = -b0; j1 <= b0; ++j1)
-            {
-                for (int k1 = -b0; k1 <= b0; ++k1)
+                for (int k1 = -1; k1 <= 1; ++k1)
                 {
-                    for (int l1 = -b0; l1 <= b0; ++l1)
+                    for (int l1 = -1; l1 <= 1; ++l1)
                     {
-                        Block block = p_149749_1_.getBlock(p_149749_2_ + j1, p_149749_3_ + k1, p_149749_4_ + l1);
-                        if (block.isLeaves(p_149749_1_, p_149749_2_ + j1, p_149749_3_ + k1, p_149749_4_ + l1))
+                        BlockPos blockpos = pos.add(j1, k1, l1);
+                        IBlockState iblockstate = worldIn.getBlockState(blockpos);
+
+                        if (iblockstate.getBlock().isLeaves(iblockstate, worldIn, blockpos))
                         {
-                            block.beginLeavesDecay(p_149749_1_, p_149749_2_ + j1, p_149749_3_ + k1, p_149749_4_ + l1);
+                            iblockstate.getBlock().beginLeavesDecay(iblockstate, worldIn, blockpos);
                         }
                     }
                 }
@@ -102,97 +103,96 @@ public class BlockRubberLeaves extends BlockLeavesBase implements IShearable
     /**
      * Ticks the block if it's been scheduled
      */
-    public void updateTick(World p_149674_1_, int p_149674_2_, int p_149674_3_, int p_149674_4_, Random p_149674_5_)
+    public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
     {
-        if (!p_149674_1_.isRemote)
+        if (!worldIn.isRemote)
         {
-            int l = p_149674_1_.getBlockMetadata(p_149674_2_, p_149674_3_, p_149674_4_);
-
-            if ((l & 8) != 0 && (l & 4) == 0)
+            if (((Boolean)state.getValue(CHECK_DECAY)).booleanValue() && ((Boolean)state.getValue(DECAYABLE)).booleanValue())
             {
-                byte b0 = 4;
-                int i1 = b0 + 1;
-                byte b1 = 32;
-                int j1 = b1 * b1;
-                int k1 = b1 / 2;
+                int i = 4;
+                int j = 5;
+                int k = pos.getX();
+                int l = pos.getY();
+                int i1 = pos.getZ();
+                int j1 = 32;
+                int k1 = 1024;
+                int l1 = 16;
 
-                if (this.field_150128_a == null)
+                if (this.surroundings == null)
                 {
-                    this.field_150128_a = new int[b1 * b1 * b1];
+                    this.surroundings = new int[32768];
                 }
 
-                int l1;
-
-                if (p_149674_1_.checkChunksExist(p_149674_2_ - i1, p_149674_3_ - i1, p_149674_4_ - i1, p_149674_2_ + i1, p_149674_3_ + i1, p_149674_4_ + i1))
+                if (worldIn.isAreaLoaded(new BlockPos(k - 5, l - 5, i1 - 5), new BlockPos(k + 5, l + 5, i1 + 5)))
                 {
-                    int i2;
-                    int j2;
+                    BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos();
 
-                    for (l1 = -b0; l1 <= b0; ++l1)
+                    for (int i2 = -4; i2 <= 4; ++i2)
                     {
-                        for (i2 = -b0; i2 <= b0; ++i2)
+                        for (int j2 = -4; j2 <= 4; ++j2)
                         {
-                            for (j2 = -b0; j2 <= b0; ++j2)
+                            for (int k2 = -4; k2 <= 4; ++k2)
                             {
-                                Block block = p_149674_1_.getBlock(p_149674_2_ + l1, p_149674_3_ + i2, p_149674_4_ + j2);
+                                IBlockState iblockstate = worldIn.getBlockState(blockpos$mutableblockpos.setPos(k + i2, l + j2, i1 + k2));
+                                Block block = iblockstate.getBlock();
 
-                                if (!block.canSustainLeaves(p_149674_1_, p_149674_2_ + l1, p_149674_3_ + i2, p_149674_4_ + j2))
+                                if (!block.canSustainLeaves(iblockstate, worldIn, blockpos$mutableblockpos.setPos(k + i2, l + j2, i1 + k2)))
                                 {
-                                    if (block.isLeaves(p_149674_1_, p_149674_2_ + l1, p_149674_3_ + i2, p_149674_4_ + j2))
+                                    if (block.isLeaves(iblockstate, worldIn, blockpos$mutableblockpos.setPos(k + i2, l + j2, i1 + k2)))
                                     {
-                                        this.field_150128_a[(l1 + k1) * j1 + (i2 + k1) * b1 + j2 + k1] = -2;
+                                        this.surroundings[(i2 + 16) * 1024 + (j2 + 16) * 32 + k2 + 16] = -2;
                                     }
                                     else
                                     {
-                                        this.field_150128_a[(l1 + k1) * j1 + (i2 + k1) * b1 + j2 + k1] = -1;
+                                        this.surroundings[(i2 + 16) * 1024 + (j2 + 16) * 32 + k2 + 16] = -1;
                                     }
                                 }
                                 else
                                 {
-                                    this.field_150128_a[(l1 + k1) * j1 + (i2 + k1) * b1 + j2 + k1] = 0;
+                                    this.surroundings[(i2 + 16) * 1024 + (j2 + 16) * 32 + k2 + 16] = 0;
                                 }
                             }
                         }
                     }
 
-                    for (l1 = 1; l1 <= 4; ++l1)
+                    for (int i3 = 1; i3 <= 4; ++i3)
                     {
-                        for (i2 = -b0; i2 <= b0; ++i2)
+                        for (int j3 = -4; j3 <= 4; ++j3)
                         {
-                            for (j2 = -b0; j2 <= b0; ++j2)
+                            for (int k3 = -4; k3 <= 4; ++k3)
                             {
-                                for (int k2 = -b0; k2 <= b0; ++k2)
+                                for (int l3 = -4; l3 <= 4; ++l3)
                                 {
-                                    if (this.field_150128_a[(i2 + k1) * j1 + (j2 + k1) * b1 + k2 + k1] == l1 - 1)
+                                    if (this.surroundings[(j3 + 16) * 1024 + (k3 + 16) * 32 + l3 + 16] == i3 - 1)
                                     {
-                                        if (this.field_150128_a[(i2 + k1 - 1) * j1 + (j2 + k1) * b1 + k2 + k1] == -2)
+                                        if (this.surroundings[(j3 + 16 - 1) * 1024 + (k3 + 16) * 32 + l3 + 16] == -2)
                                         {
-                                            this.field_150128_a[(i2 + k1 - 1) * j1 + (j2 + k1) * b1 + k2 + k1] = l1;
+                                            this.surroundings[(j3 + 16 - 1) * 1024 + (k3 + 16) * 32 + l3 + 16] = i3;
                                         }
 
-                                        if (this.field_150128_a[(i2 + k1 + 1) * j1 + (j2 + k1) * b1 + k2 + k1] == -2)
+                                        if (this.surroundings[(j3 + 16 + 1) * 1024 + (k3 + 16) * 32 + l3 + 16] == -2)
                                         {
-                                            this.field_150128_a[(i2 + k1 + 1) * j1 + (j2 + k1) * b1 + k2 + k1] = l1;
+                                            this.surroundings[(j3 + 16 + 1) * 1024 + (k3 + 16) * 32 + l3 + 16] = i3;
                                         }
 
-                                        if (this.field_150128_a[(i2 + k1) * j1 + (j2 + k1 - 1) * b1 + k2 + k1] == -2)
+                                        if (this.surroundings[(j3 + 16) * 1024 + (k3 + 16 - 1) * 32 + l3 + 16] == -2)
                                         {
-                                            this.field_150128_a[(i2 + k1) * j1 + (j2 + k1 - 1) * b1 + k2 + k1] = l1;
+                                            this.surroundings[(j3 + 16) * 1024 + (k3 + 16 - 1) * 32 + l3 + 16] = i3;
                                         }
 
-                                        if (this.field_150128_a[(i2 + k1) * j1 + (j2 + k1 + 1) * b1 + k2 + k1] == -2)
+                                        if (this.surroundings[(j3 + 16) * 1024 + (k3 + 16 + 1) * 32 + l3 + 16] == -2)
                                         {
-                                            this.field_150128_a[(i2 + k1) * j1 + (j2 + k1 + 1) * b1 + k2 + k1] = l1;
+                                            this.surroundings[(j3 + 16) * 1024 + (k3 + 16 + 1) * 32 + l3 + 16] = i3;
                                         }
 
-                                        if (this.field_150128_a[(i2 + k1) * j1 + (j2 + k1) * b1 + (k2 + k1 - 1)] == -2)
+                                        if (this.surroundings[(j3 + 16) * 1024 + (k3 + 16) * 32 + (l3 + 16 - 1)] == -2)
                                         {
-                                            this.field_150128_a[(i2 + k1) * j1 + (j2 + k1) * b1 + (k2 + k1 - 1)] = l1;
+                                            this.surroundings[(j3 + 16) * 1024 + (k3 + 16) * 32 + (l3 + 16 - 1)] = i3;
                                         }
 
-                                        if (this.field_150128_a[(i2 + k1) * j1 + (j2 + k1) * b1 + k2 + k1 + 1] == -2)
+                                        if (this.surroundings[(j3 + 16) * 1024 + (k3 + 16) * 32 + l3 + 16 + 1] == -2)
                                         {
-                                            this.field_150128_a[(i2 + k1) * j1 + (j2 + k1) * b1 + k2 + k1 + 1] = l1;
+                                            this.surroundings[(j3 + 16) * 1024 + (k3 + 16) * 32 + l3 + 16 + 1] = i3;
                                         }
                                     }
                                 }
@@ -201,39 +201,45 @@ public class BlockRubberLeaves extends BlockLeavesBase implements IShearable
                     }
                 }
 
-                l1 = this.field_150128_a[k1 * j1 + k1 * b1 + k1];
+                int l2 = this.surroundings[16912];
 
-                if (l1 >= 0)
+                if (l2 >= 0)
                 {
-                    p_149674_1_.setBlockMetadataWithNotify(p_149674_2_, p_149674_3_, p_149674_4_, l & -9, 4);
+                    worldIn.setBlockState(pos, state.withProperty(CHECK_DECAY, Boolean.valueOf(false)), 4);
                 }
                 else
                 {
-                    this.removeLeaves(p_149674_1_, p_149674_2_, p_149674_3_, p_149674_4_);
+                    this.destroy(worldIn, pos);
                 }
             }
         }
+    }
+    
+    private void destroy(World worldIn, BlockPos pos)
+    {
+        this.dropBlockAsItem(worldIn, pos, worldIn.getBlockState(pos), 0);
+        worldIn.setBlockToAir(pos);
     }
 
     /**
      * A randomly called display update to be able to add particles or other items for display
      */
     @SideOnly(Side.CLIENT)
-    public void randomDisplayTick(World p_149734_1_, int p_149734_2_, int p_149734_3_, int p_149734_4_, Random p_149734_5_)
+    public void randomDisplayTick(World worldIn, BlockPos pos, Random rand)
     {
-        if (p_149734_1_.canLightningStrikeAt(p_149734_2_, p_149734_3_ + 1, p_149734_4_) && !World.doesBlockHaveSolidTopSurface(p_149734_1_, p_149734_2_, p_149734_3_ - 1, p_149734_4_) && p_149734_5_.nextInt(15) == 1)
+    	if (worldIn.isRainingAt(pos.up()) && !worldIn.getBlockState(pos.down()).isFullyOpaque() && rand.nextInt(15) == 1)
         {
-            double d0 = (double)((float)p_149734_2_ + p_149734_5_.nextFloat());
-            double d1 = (double)p_149734_3_ - 0.05D;
-            double d2 = (double)((float)p_149734_4_ + p_149734_5_.nextFloat());
-            p_149734_1_.spawnParticle("dripWater", d0, d1, d2, 0.0D, 0.0D, 0.0D);
+            double d0 = (double)((float)pos.getX() + rand.nextFloat());
+            double d1 = (double)pos.getY() - 0.05D;
+            double d2 = (double)((float)pos.getZ() + rand.nextFloat());
+            worldIn.spawnParticle(EnumParticleTypes.DRIP_WATER, d0, d1, d2, 0.0D, 0.0D, 0.0D, new int[0]);
         }
     }
 
     private void removeLeaves(World p_150126_1_, int p_150126_2_, int p_150126_3_, int p_150126_4_)
     {
-        this.dropBlockAsItem(p_150126_1_, p_150126_2_, p_150126_3_, p_150126_4_, p_150126_1_.getBlockMetadata(p_150126_2_, p_150126_3_, p_150126_4_), 0);
-        p_150126_1_.setBlockToAir(p_150126_2_, p_150126_3_, p_150126_4_);
+        this.dropBlockAsItem(p_150126_1_, new BlockPos(p_150126_2_, p_150126_3_, p_150126_4_), p_150126_1_.getBlockState(new BlockPos(p_150126_2_, p_150126_3_, p_150126_4_)), 0);
+        p_150126_1_.setBlockToAir(new BlockPos(p_150126_2_, p_150126_3_, p_150126_4_));
     }
 
     /**
@@ -244,38 +250,27 @@ public class BlockRubberLeaves extends BlockLeavesBase implements IShearable
         return p_149745_1_.nextInt(20) == 0 ? 1 : 0;
     }
 
-    public Item getItemDropped(int p_149650_1_, Random p_149650_2_, int p_149650_3_)
+    @Nullable
+    public Item getItemDropped(IBlockState state, Random rand, int fortune)
     {
-    	if(p_149650_2_.nextInt() % 3 == 0)
-    		return Item.getItemFromBlock(LabStuffMain.blockRubberSapling);
-        return null;
+        return Item.getItemFromBlock(LabStuffMain.blockRubberSapling);
     }
 
     /**
      * Drops the block items with a specified chance of dropping the specified items
      */
-    public void dropBlockAsItemWithChance(World p_149690_1_, int p_149690_2_, int p_149690_3_, int p_149690_4_, int p_149690_5_, float p_149690_6_, int p_149690_7_)
+    public void dropBlockAsItemWithChance(World worldIn, BlockPos pos, IBlockState state, float chance, int fortune)
     {
-        super.dropBlockAsItemWithChance(p_149690_1_, p_149690_2_, p_149690_3_, p_149690_4_, p_149690_5_, 1.0f, p_149690_7_);
+        super.dropBlockAsItemWithChance(worldIn, pos, state, chance, fortune);
     }
 
     protected void func_150124_c(World p_150124_1_, int p_150124_2_, int p_150124_3_, int p_150124_4_, int p_150124_5_, int p_150124_6_) {}
 
-    protected int func_150123_b(int p_150123_1_)
+    protected int getSaplingDropChance(IBlockState state)
     {
         return 20;
     }
 
-    /**
-     * Called when the player destroys a block with an item that can harvest it. (i, j, k) are the coordinates of the
-     * block and l is the block's subtype/damage.
-     */
-    public void harvestBlock(World p_149636_1_, EntityPlayer p_149636_2_, int p_149636_3_, int p_149636_4_, int p_149636_5_, int p_149636_6_)
-    {
-        {
-            super.harvestBlock(p_149636_1_, p_149636_2_, p_149636_3_, p_149636_4_, p_149636_5_, p_149636_6_);
-        }
-    }
 
     /**
      * Determines the damage on the item the block drops. Used in cloth and wood.
@@ -291,33 +286,17 @@ public class BlockRubberLeaves extends BlockLeavesBase implements IShearable
      */
     public boolean isOpaqueCube()
     {
-        return !this.field_150121_P;
-    }
-
-    
-    public void registerBlockIcons(IIconRegister par1IconRegister)
-    {
-        // blockIcon - blockIcon
-        this.blockIcon = par1IconRegister.registerIcon("minecraft:leaves_oak_opaque");
+        return !this.leavesFancy;
     }
     
-    /**
-     * Gets the block's texture. Args: side, meta
-     */
-    @SideOnly(Side.CLIENT)
-    public IIcon getIcon(int p_149691_1_, int p_149691_2_)
-    {
-    	return this.blockIcon;
-    }
-
     /**
      * Pass true to draw this block using fancy graphics, or false for fast graphics.
      */
     @SideOnly(Side.CLIENT)
     public void setGraphicsLevel(boolean p_150122_1_)
     {
-        this.field_150121_P = p_150122_1_;
-        this.field_150127_b = p_150122_1_ ? 0 : 1;
+        this.leavesFancy = p_150122_1_;
+        this.integer1 = p_150122_1_ ? 0 : 1;
     }
 
     /**
@@ -332,44 +311,41 @@ public class BlockRubberLeaves extends BlockLeavesBase implements IShearable
 
 
     @Override
-    public boolean isShearable(ItemStack item, IBlockAccess world, int x, int y, int z)
+    public boolean isShearable(ItemStack item, IBlockAccess world, BlockPos pos)
     {
         return true;
     }
 
     @Override
-    public ArrayList<ItemStack> onSheared(ItemStack item, IBlockAccess world, int x, int y, int z, int fortune)
+    public ArrayList<ItemStack> onSheared(ItemStack item, IBlockAccess world, BlockPos pos, int fortune)
     {
         ArrayList<ItemStack> ret = new ArrayList<ItemStack>();
-        ret.add(new ItemStack(this, 1, world.getBlockMetadata(x, y, z) & 3));
+        ret.add(new ItemStack(this, 1, getMetaFromState(world.getBlockState(pos)) & 3));
         return ret;
     }
 
     @Override
-    public void beginLeavesDecay(World world, int x, int y, int z)
+    public void beginLeavesDecay(IBlockState state, World world, BlockPos pos)
     {
-
-        int i2 = world.getBlockMetadata(x, y, z);
-
-        if ((i2 & 8) == 0)
+        if (!(Boolean)state.getValue(CHECK_DECAY))
         {
-            world.setBlockMetadataWithNotify(x, y, z, i2 | 8, 4);
+            world.setBlockState(pos, state.withProperty(CHECK_DECAY, true), 4);
         }
-        world.setBlockMetadataWithNotify(x, y, z, world.getBlockMetadata(x, y, z) | 8, 4);
     }
 
     @Override
-    public boolean isLeaves(IBlockAccess world, int x, int y, int z)
+    public boolean isLeaves(IBlockState state, IBlockAccess world, BlockPos pos)
     {
         return true;
     }
 
 
     @Override
-    public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune)
+    public java.util.List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune)
     {
-        ArrayList<ItemStack> ret = new ArrayList<ItemStack>();
-        int chance = this.func_150123_b(metadata);
+    	ArrayList<ItemStack> ret = new ArrayList<ItemStack>();
+        Random rand = world instanceof World ? ((World)world).rand : new Random();
+        int chance = this.getSaplingDropChance(state);
 
         if (fortune > 0)
         {
@@ -377,8 +353,8 @@ public class BlockRubberLeaves extends BlockLeavesBase implements IShearable
             if (chance < 10) chance = 10;
         }
 
-        if (world.rand.nextInt(chance) == 0)
-            ret.add(new ItemStack(this.getItemDropped(metadata, world.rand, fortune), 1, this.damageDropped(metadata)));
+        if (rand.nextInt(chance) == 0)
+            ret.add(new ItemStack(this.getItemDropped(state, rand, fortune), 1, this.damageDropped(state)));
 
         chance = 200;
         if (fortune > 0)
@@ -388,8 +364,15 @@ public class BlockRubberLeaves extends BlockLeavesBase implements IShearable
         }
 
         this.captureDrops(true);
-        this.func_150124_c(world, x, y, z, metadata, chance); // Dammet mojang
+        if (world instanceof World)
+            this.dropApple((World)world, pos, state, chance); // Dammet mojang
         ret.addAll(this.captureDrops(false));
         return ret;
     }
+
+	@Override
+	public EnumType getWoodType(int meta) {
+		// TODO Auto-generated method stub
+		return EnumType.OAK;
+	}
 }

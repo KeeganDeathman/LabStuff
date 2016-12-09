@@ -1,13 +1,13 @@
 package keegan.labstuff.PacketHandling;
 
-import keegan.labstuff.tileentity.TileEntityCircuitDesignTable;
-
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
+import keegan.labstuff.tileentity.TileEntityCircuitDesignTable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import cpw.mods.fml.common.network.ByteBufUtils;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 public class PacketCircuitDesignTable extends AbstractPacket {
 
@@ -54,7 +54,7 @@ public class PacketCircuitDesignTable extends AbstractPacket {
 	public void handleServerSide(EntityPlayer player) 
 	{
 		World world = player.worldObj;
-		TileEntity te = world.getTileEntity(x,y,z);
+		TileEntity te = world.getTileEntity(new BlockPos(x,y,z));
 		if(te instanceof TileEntityCircuitDesignTable)
 		{
 			((TileEntityCircuitDesignTable) te).drawCircuit(design);

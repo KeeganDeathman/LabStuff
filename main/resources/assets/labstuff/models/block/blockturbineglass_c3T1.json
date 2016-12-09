@@ -1,0 +1,13 @@
+{
+    "__comment": "Model for when three adjacent connected sides are a T shape.",
+	"parent": "block/cube",
+    "textures": {
+		"particle": "labstuff:blocks/blockturbineglass/blockturbineglass0C",
+        "down": "labstuff:blocks/blockturbineglass/blockturbineglass4C",
+		"up": "labstuff:blocks/blockturbineglass/blockturbineglass4C",
+		"north": "labstuff:blocks/blockturbineglass/blockturbineglass3C_ued",
+		"south": "labstuff:blocks/blockturbineglass/blockturbineglass3C_uwd",
+		"west": "labstuff:blocks/blockturbineglass/blockturbineglass4C",
+		"east": "labstuff:blocks/blockturbineglass/blockturbineglass2C_ud"
+    }
+}

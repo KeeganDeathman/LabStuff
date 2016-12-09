@@ -24,12 +24,14 @@ public class TileEntityAcceleratorControlPanel extends DataConnectedDevice
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound tag)
+	public NBTTagCompound writeToNBT(NBTTagCompound tag)
 	{
 		for (int i = 0; i < discovered.size(); i++)
 		{
 			tag.setInteger("discovered_" + i, discovered.get(i).getIndex());
 		}
+		
+		return tag;
 	}
 
 	@Override
@@ -78,14 +80,10 @@ public class TileEntityAcceleratorControlPanel extends DataConnectedDevice
 					{
 						launched = false;
 						Random r = new Random();
-						int Low = 0;
-						int High = 3;
-						int R = r.nextInt(High - Low) + Low;
+						int R = r.nextInt(3);
 						if (R == 2)
 						{
 							System.out.println("Cheese~!");
-							boolean good = false;
-							Random rn = new Random();
 							for(int j = 0; j < Recipes.accelDiscoveries.size(); j++)
 							{
 								System.out.println("Cheese~~!");
@@ -110,9 +108,9 @@ public class TileEntityAcceleratorControlPanel extends DataConnectedDevice
 	}
 
 	@Override
-	public void updateEntity()
+	public void update()
 	{
-		super.updateEntity();
+		super.update();
 	}
 
 	public void launch()
@@ -124,7 +122,7 @@ public class TileEntityAcceleratorControlPanel extends DataConnectedDevice
 				if (getNetwork().getDeviceByIndex(i) instanceof TileEntityAcceleratorInterface && hasMatter && isPowered && !launched)
 				{
 					getNetwork().sendMessage(new DataPackage(getNetwork().getDeviceByIndex(i), "launch"));
-					worldObj.scheduleBlockUpdate(xCoord, yCoord, zCoord, getBlockType(), 100);
+					worldObj.scheduleUpdate(pos, getBlockType(), 100);
 					launched = true;
 				}
 			}

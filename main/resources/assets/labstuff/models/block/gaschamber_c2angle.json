@@ -1,0 +1,13 @@
+{
+    "__comment": "Model for when two adgacent sides are connected.",
+	"parent": "block/cube",
+    "textures": {
+		"particle": "labstuff:blocks/gaschamber/gaschamber0C",
+        "down": "labstuff:blocks/gaschamber/gaschamber1C_e",
+		"up": "labstuff:blocks/gaschamber/gaschamber4C",
+		"north": "labstuff:blocks/gaschamber/gaschamber2C_uw",
+		"south": "labstuff:blocks/gaschamber/gaschamber2C_ue",
+		"west": "labstuff:blocks/gaschamber/gaschamber1C_u",
+		"east": "labstuff:blocks/gaschamber/gaschamber4C"
+    }
+}

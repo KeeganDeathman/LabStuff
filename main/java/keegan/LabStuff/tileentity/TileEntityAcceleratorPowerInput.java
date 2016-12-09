@@ -6,12 +6,12 @@ import net.minecraft.tileentity.TileEntity;
 public class TileEntityAcceleratorPowerInput extends TileEntityPowerConnection
 {
 	@Override
-	public void updateEntity()
+	public void update()
 	{
 		TileEntityPowerCable cable = (TileEntityPowerCable) this.getPowerSource();
 		if(cable != null)
 		{
-			TileEntity core = worldObj.getTileEntity(xCoord + 6, yCoord, zCoord);
+			TileEntity core = worldObj.getTileEntity(pos.add(6, 0, 0));
 			if(core instanceof TileEntityAcceleratorDetectorCore)
 			{
 				if(cable.getPower() > 500)

@@ -47,7 +47,7 @@ public class GuiDLLaptop extends GuiContainer
 	public void initGui()
 	{
 		super.initGui();
-			this.deviceInput = new GuiTextField(this.fontRendererObj, 200, 160, 80, 10);
+			this.deviceInput = new GuiTextField(0, this.fontRendererObj, 200, 160, 80, 10);
 			this.deviceInput.setText(this.deviceUSB);
 	}
 	
@@ -121,7 +121,7 @@ public class GuiDLLaptop extends GuiContainer
 						if(texX > 159 && texX < 191 && texY > 137 && texY < 150)
 						{
 							usbScreen = "main";
-							LabStuffMain.packetPipeline.sendToServer(new PacketDLLaptopUSB(tile.xCoord, tile.yCoord, tile.zCoord, Integer.parseInt(deviceUSB), ""));
+							LabStuffMain.packetPipeline.sendToServer(new PacketDLLaptopUSB(tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ(), Integer.parseInt(deviceUSB), ""));
 							this.deviceInput.setText("");
 						}
 						break;
@@ -130,7 +130,7 @@ public class GuiDLLaptop extends GuiContainer
 						if(texX > 159 && texX < 191 && texY > 137 && texY < 150)
 						{
 							usbScreen = "main";
-							LabStuffMain.packetPipeline.sendToServer(new PacketDLLaptopUSB(tile.xCoord, tile.yCoord, tile.zCoord, 42, deviceUSB));
+							LabStuffMain.packetPipeline.sendToServer(new PacketDLLaptopUSB(tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ(), 42, deviceUSB));
 							this.deviceInput.setText("");
 						}
 						break;
@@ -168,7 +168,7 @@ public class GuiDLLaptop extends GuiContainer
 					}
 					else if(texX > 113 && texX < 137 && texY > 99 && texY < 143)
 					{
-						LabStuffMain.packetPipeline.sendToServer(new PacketDLLaptopWeb(tile.xCoord, tile.yCoord, tile.zCoord, "download-dPadOS"));
+						LabStuffMain.packetPipeline.sendToServer(new PacketDLLaptopWeb(tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ(), "download-dPadOS"));
 					}
 				}
 			}

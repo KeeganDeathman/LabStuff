@@ -1,0 +1,11 @@
+{
+	"variants": {
+		"facing=south": { "model": "labstuff:blockenricher", "y":180},
+		"facing=west": { "model": "labstuff:blockenricher", "y":270},
+		"facing=east": { "model": "labstuff:blockenricher", "y":90},
+		"facing=north": { "model": "labstuff:blockenricher" },
+		"facing=down": { "model": "labstuff:blockenricher" },
+		"facing=up": { "model": "labstuff:blockenricher" },
+		"default": { "model": "labstuff:blockenricher" }
+	}
+}

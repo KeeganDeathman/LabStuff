@@ -3,8 +3,10 @@ package keegan.labstuff.tileentity;
 import java.util.ArrayList;
 
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ITickable;
+import net.minecraft.util.math.BlockPos;
 
-public class TileEntityDataCable extends TileEntity 
+public class TileEntityDataCable extends TileEntity implements ITickable
 {
 	private ArrayList<DataConnectedDevice> devices;
 	private boolean networked;
@@ -39,18 +41,18 @@ public class TileEntityDataCable extends TileEntity
 	public TileEntityDataCable getNetwork()
 	{
 		if(!worldObj.isRemote) {
-			if (worldObj.getTileEntity(xCoord + 1, yCoord, zCoord) != null  && worldObj.getTileEntity(xCoord + 1, yCoord, zCoord) instanceof TileEntityDataCable) {
-				return (TileEntityDataCable)worldObj.getTileEntity(xCoord + 1, yCoord, zCoord);
-			}if (worldObj.getTileEntity(xCoord - 1, yCoord, zCoord) != null  && worldObj.getTileEntity(xCoord - 1, yCoord, zCoord) instanceof TileEntityDataCable) {
-				return (TileEntityDataCable)worldObj.getTileEntity(xCoord - 1, yCoord, zCoord);
-			}if (worldObj.getTileEntity(xCoord, yCoord + 1, zCoord) != null  && worldObj.getTileEntity(xCoord, yCoord + 1, zCoord) instanceof TileEntityDataCable) {
-				return (TileEntityDataCable)worldObj.getTileEntity(xCoord, yCoord + 1, zCoord);
-			}if (worldObj.getTileEntity(xCoord, yCoord - 1, zCoord) != null  && worldObj.getTileEntity(xCoord, yCoord - 1, zCoord) instanceof TileEntityDataCable) {
-				return (TileEntityDataCable)worldObj.getTileEntity(xCoord, yCoord - 1, zCoord);
-			}if (worldObj.getTileEntity(xCoord, yCoord, zCoord + 1) != null  && worldObj.getTileEntity(xCoord, yCoord, zCoord + 1) instanceof TileEntityDataCable) {
-				return (TileEntityDataCable)worldObj.getTileEntity(xCoord, yCoord, zCoord + 1);
-			}if (worldObj.getTileEntity(xCoord, yCoord, zCoord - 1) != null  && worldObj.getTileEntity(xCoord, yCoord, zCoord - 1) instanceof TileEntityDataCable) {
-				return (TileEntityDataCable)worldObj.getTileEntity(xCoord, yCoord, zCoord - 1);
+			if (worldObj.getTileEntity(new BlockPos(getPos().getX() + 1, getPos().getY(), getPos().getZ())) != null  && worldObj.getTileEntity(new BlockPos(getPos().getX() + 1, getPos().getY(), getPos().getZ())) instanceof TileEntityDataCable) {
+				return (TileEntityDataCable)worldObj.getTileEntity(new BlockPos(getPos().getX() + 1, getPos().getY(), getPos().getZ()));
+			}if (worldObj.getTileEntity(new BlockPos(getPos().getX() - 1, getPos().getY(), getPos().getZ())) != null  && worldObj.getTileEntity(new BlockPos(getPos().getX() - 1, getPos().getY(), getPos().getZ())) instanceof TileEntityDataCable) {
+				return (TileEntityDataCable)worldObj.getTileEntity(new BlockPos(getPos().getX() - 1, getPos().getY(), getPos().getZ()));
+			}if (worldObj.getTileEntity(new BlockPos(getPos().getX(), getPos().getY() + 1, getPos().getZ())) != null  && worldObj.getTileEntity(new BlockPos(getPos().getX(), getPos().getY() + 1, getPos().getZ())) instanceof TileEntityDataCable) {
+				return (TileEntityDataCable)worldObj.getTileEntity(new BlockPos(getPos().getX(), getPos().getY() + 1, getPos().getZ()));
+			}if (worldObj.getTileEntity(new BlockPos(getPos().getX(), getPos().getY() - 1, getPos().getZ())) != null  && worldObj.getTileEntity(new BlockPos(getPos().getX(), getPos().getY() - 1, getPos().getZ())) instanceof TileEntityDataCable) {
+				return (TileEntityDataCable)worldObj.getTileEntity(new BlockPos(getPos().getX(), getPos().getY() - 1, getPos().getZ()));
+			}if (worldObj.getTileEntity(new BlockPos(getPos().getX(), getPos().getY(), getPos().getZ() +1)) != null  && worldObj.getTileEntity(new BlockPos(getPos().getX(), getPos().getY(), getPos().getZ() +1)) instanceof TileEntityDataCable) {
+				return (TileEntityDataCable)worldObj.getTileEntity(new BlockPos(getPos().getX(), getPos().getY(), getPos().getZ() + 1));
+			}if (worldObj.getTileEntity(new BlockPos(getPos().getX(), getPos().getY(), getPos().getZ() -1)) != null  && worldObj.getTileEntity(new BlockPos(getPos().getX(), getPos().getY(), getPos().getZ() -1)) instanceof TileEntityDataCable) {
+				return (TileEntityDataCable)worldObj.getTileEntity(new BlockPos(getPos().getX(), getPos().getY(), getPos().getZ() - 1));
 			}
 		}
 		return null;
@@ -59,12 +61,12 @@ public class TileEntityDataCable extends TileEntity
 	public TileEntityDataCable getNetwork(TileEntityDataCable src)
 	{
 		if(!worldObj.isRemote) {
-			TileEntity posX = worldObj.getTileEntity(xCoord + 1, yCoord, zCoord);
-			TileEntity negX = worldObj.getTileEntity(xCoord - 1, yCoord, zCoord);
-			TileEntity posY = worldObj.getTileEntity(xCoord, yCoord + 1, zCoord);
-			TileEntity negY = worldObj.getTileEntity(xCoord, yCoord - 1, zCoord);
-			TileEntity posZ = worldObj.getTileEntity(xCoord, yCoord, zCoord + 1);
-			TileEntity negZ = worldObj.getTileEntity(xCoord, yCoord, zCoord - 1);
+			TileEntity posX = worldObj.getTileEntity(new BlockPos(getPos().getX() + 1, getPos().getY(), getPos().getZ()));
+			TileEntity negX = worldObj.getTileEntity(new BlockPos(getPos().getX() - 1, getPos().getY(), getPos().getZ()));
+			TileEntity posY = worldObj.getTileEntity(new BlockPos(getPos().getX(), getPos().getY() + 1, getPos().getZ()));
+			TileEntity negY = worldObj.getTileEntity(new BlockPos(getPos().getX(), getPos().getY() - 1, getPos().getZ()));
+			TileEntity posZ = worldObj.getTileEntity(new BlockPos(getPos().getX(), getPos().getY(), getPos().getZ() + 1));
+			TileEntity negZ = worldObj.getTileEntity(new BlockPos(getPos().getX(), getPos().getY(), getPos().getZ() - 1));
 			if (posX != null  && posX instanceof TileEntityDataCable && !posX.equals(src) && !posX.equals(src)) {
 				return (TileEntityDataCable)posX;
 			}if (negX != null  && negX instanceof TileEntityDataCable && !negX.equals(src)) {
@@ -85,28 +87,28 @@ public class TileEntityDataCable extends TileEntity
 	public TileEntityDataCable getNetworkWithDevices()
 	{
 		if(!worldObj.isRemote) {
-			if (worldObj.getTileEntity(xCoord + 1, yCoord, zCoord) != null  && worldObj.getTileEntity(xCoord + 1, yCoord, zCoord) instanceof TileEntityDataCable) {
-				TileEntityDataCable cable =   (TileEntityDataCable)worldObj.getTileEntity(xCoord + 1, yCoord, zCoord);
+			if (worldObj.getTileEntity(new BlockPos(getPos().getX() + 1, getPos().getY(), getPos().getZ())) != null  && worldObj.getTileEntity(new BlockPos(getPos().getX() + 1, getPos().getY(), getPos().getZ())) instanceof TileEntityDataCable) {
+				TileEntityDataCable cable =   (TileEntityDataCable)worldObj.getTileEntity(new BlockPos(getPos().getX() + 1, getPos().getY(), getPos().getZ()));
 				if(cable.devices != null && cable.getDeviceCount() > 0)
 					return cable;
-			}if (worldObj.getTileEntity(xCoord - 1, yCoord, zCoord) != null  && worldObj.getTileEntity(xCoord - 1, yCoord, zCoord) instanceof TileEntityDataCable) {
-				TileEntityDataCable cable =   (TileEntityDataCable)worldObj.getTileEntity(xCoord - 1, yCoord, zCoord);
+			}if (worldObj.getTileEntity(new BlockPos(getPos().getX() - 1, getPos().getY(), getPos().getZ())) != null  && worldObj.getTileEntity(new BlockPos(getPos().getX() - 1, getPos().getY(), getPos().getZ())) instanceof TileEntityDataCable) {
+				TileEntityDataCable cable =   (TileEntityDataCable)worldObj.getTileEntity(new BlockPos(getPos().getX() - 1, getPos().getY(), getPos().getZ()));
 				if(cable.devices != null && cable.getDeviceCount() > 0)
 					return cable;
-			}if (worldObj.getTileEntity(xCoord, yCoord + 1, zCoord) != null  && worldObj.getTileEntity(xCoord, yCoord + 1, zCoord) instanceof TileEntityDataCable) {
-				TileEntityDataCable cable =   (TileEntityDataCable)worldObj.getTileEntity(xCoord, yCoord + 1, zCoord);
+			}if (worldObj.getTileEntity(new BlockPos(getPos().getX(), getPos().getY() + 1, getPos().getZ())) != null  && worldObj.getTileEntity(new BlockPos(getPos().getX(), getPos().getY() + 1, getPos().getZ())) instanceof TileEntityDataCable) {
+				TileEntityDataCable cable =   (TileEntityDataCable)worldObj.getTileEntity(new BlockPos(getPos().getX(), getPos().getY() + 1, getPos().getZ()));
 				if(cable.devices != null && cable.getDeviceCount() > 0)
 					return cable;
-			}if (worldObj.getTileEntity(xCoord, yCoord - 1, zCoord) != null  && worldObj.getTileEntity(xCoord, yCoord - 1, zCoord) instanceof TileEntityDataCable) {
-				TileEntityDataCable cable =   (TileEntityDataCable)worldObj.getTileEntity(xCoord, yCoord - 1, zCoord);
+			}if (worldObj.getTileEntity(new BlockPos(getPos().getX(), getPos().getY() - 1, getPos().getZ())) != null  && worldObj.getTileEntity(new BlockPos(getPos().getX(), getPos().getY() - 1, getPos().getZ())) instanceof TileEntityDataCable) {
+				TileEntityDataCable cable =   (TileEntityDataCable)worldObj.getTileEntity(new BlockPos(getPos().getX(), getPos().getY() - 1, getPos().getZ()));
 				if(cable.devices != null && cable.getDeviceCount() > 0)
 					return cable;
-			}if (worldObj.getTileEntity(xCoord, yCoord, zCoord + 1) != null  && worldObj.getTileEntity(xCoord, yCoord, zCoord + 1) instanceof TileEntityDataCable) {
-				TileEntityDataCable cable =   (TileEntityDataCable)worldObj.getTileEntity(xCoord, yCoord, zCoord + 1);
+			}if (worldObj.getTileEntity(new BlockPos(getPos().getX(), getPos().getY(), getPos().getZ() +1)) != null  && worldObj.getTileEntity(new BlockPos(getPos().getX(), getPos().getY(), getPos().getZ() +1)) instanceof TileEntityDataCable) {
+				TileEntityDataCable cable =   (TileEntityDataCable)worldObj.getTileEntity(new BlockPos(getPos().getX(), getPos().getY(), getPos().getZ() + 1));
 				if(cable.devices != null && cable.getDeviceCount() > 0)
 					return cable;
-			}if (worldObj.getTileEntity(xCoord, yCoord, zCoord - 1) != null  && worldObj.getTileEntity(xCoord, yCoord, zCoord - 1) instanceof TileEntityDataCable) {
-				TileEntityDataCable cable =  (TileEntityDataCable)worldObj.getTileEntity(xCoord, yCoord, zCoord - 1);
+			}if (worldObj.getTileEntity(new BlockPos(getPos().getX(), getPos().getY(), getPos().getZ() - 1)) != null  && worldObj.getTileEntity(new BlockPos(getPos().getX(), getPos().getY(), getPos().getZ() - 1)) instanceof TileEntityDataCable) {
+				TileEntityDataCable cable =  (TileEntityDataCable)worldObj.getTileEntity(new BlockPos(getPos().getX(), getPos().getY(), getPos().getZ() - 1));
 				if(cable.devices != null && cable.getDeviceCount() > 0)
 					return cable;
 			}
@@ -118,7 +120,7 @@ public class TileEntityDataCable extends TileEntity
 	{
 		for(DataConnectedDevice device : devices)
 		{
-			if(worldObj.getTileEntity(device.xCoord, device.yCoord, device.zCoord).equals(device)){}
+			if(worldObj.getTileEntity(new BlockPos(device.getPos().getX(), device.getPos().getY(), device.getPos().getZ())).equals(device)){}
 			else
 			{ 
 				removeDeviceById(device.getId());
@@ -215,7 +217,7 @@ public class TileEntityDataCable extends TileEntity
 	}
 	
 	@Override
-	public void updateEntity()
+	public void update()
 	{
 		tickCount++;
 		if(tickCount>=120)

@@ -3,16 +3,16 @@ package keegan.labstuff.blocks;
 import keegan.labstuff.tileentity.TileEntityAcceleratorDetectorCore;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.*;
+import net.minecraft.block.state.*;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
 public class BlockAcceleratorDetectorCore extends Block implements ITileEntityProvider
 {
 
-	public BlockAcceleratorDetectorCore(Material p_i45394_1_)
-	{
-		super(p_i45394_1_);
-		this.setLightLevel(5f);
+	public BlockAcceleratorDetectorCore(Material materialIn) {
+		super(materialIn);
 		// TODO Auto-generated constructor stub
 	}
 

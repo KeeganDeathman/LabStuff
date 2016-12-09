@@ -4,9 +4,9 @@ public class DSCOS extends DSCPart
 {
 
 	@Override
-	public void updateEntity()
+	public void update()
 	{
-		super.updateEntity();
+		super.update();
 	}
 	
 }

@@ -1,11 +1,12 @@
 package keegan.labstuff.tileentity;
 
-import java.util.*;
+import java.util.List;
 
+import keegan.labstuff.LabStuffMain;
+import keegan.labstuff.recipes.*;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.nbt.*;
 import net.minecraftforge.oredict.OreDictionary;
 
@@ -52,16 +53,7 @@ public class TileEntityEnricher extends TileEntityPowerConnection implements IIn
 		return stack;
 	}
 
-	@Override
-	public ItemStack getStackInSlotOnClosing(int slot) 
-	{
-		// TODO Auto-generated method stub
-		ItemStack stack = getStackInSlot(slot);
-		if (stack != null) {
-			setInventorySlotContents(slot, null);
-		}
-		return stack;
-	}
+
 
 	@Override
 	public void setInventorySlotContents(int slot, ItemStack itemstack) 
@@ -96,37 +88,66 @@ public class TileEntityEnricher extends TileEntityPowerConnection implements IIn
 	}
 
 	@Override
-	public String getInventoryName() {
+	public void openInventory(EntityPlayer player)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void closeInventory(EntityPlayer player)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public String getName() {
 		// TODO Auto-generated method stub
 		return "Enricher";
 	}
 
-
-
 	@Override
-	public void closeInventory() {
+	public boolean hasCustomName() {
 		// TODO Auto-generated method stub
-		
+		return true;
 	}
 
-
-
-
 	@Override
-	public boolean hasCustomInventoryName() {
+	public ItemStack removeStackFromSlot(int index) {
 		// TODO Auto-generated method stub
-		return false;
-	}
-
-
-	@Override
-	public void openInventory() {
-		// TODO Auto-generated method stub
-		
+        return ItemStackHelper.getAndRemove(this.chestContents, index);
 	}
 	
 	@Override
-	public void writeToNBT(NBTTagCompound tagCompound)
+	public int getField(int id) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void setField(int id, int value) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public int getFieldCount() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void clear() {
+
+	        for (int i = 0; i < this.chestContents.length; ++i)
+	        {
+	            this.chestContents[i] = null;
+	        }		
+	}
+	
+	@Override
+	public NBTTagCompound writeToNBT(NBTTagCompound tagCompound)
 	{
 		super.writeToNBT(tagCompound);
 		NBTTagList itemList = new NBTTagList();
@@ -142,8 +163,12 @@ public class TileEntityEnricher extends TileEntityPowerConnection implements IIn
             }
         }
         tagCompound.setTag("Inventory", itemList);
-        dust.writeToNBT(tagCompound);
-        ore.writeToNBT(tagCompound);
+        if(dust != null)
+        	dust.writeToNBT(tagCompound);
+        if(ore != null)
+        	ore.writeToNBT(tagCompound);
+        
+        return tagCompound;
 	}
 	
 	@Override
@@ -165,36 +190,33 @@ public class TileEntityEnricher extends TileEntityPowerConnection implements IIn
 	private ItemStack dust;
 	
 	@Override
-	public void updateEntity()
+	public void update()
 	{
-		super.updateEntity();
-		ItemStack input = getStackInSlot(0);
-		int[] inputID = OreDictionary.getOreIDs(input);
-		if(input != null && inputID.length > 0)
+		super.update();
+		if(getStackInSlot(0) != null && getPowerSource().powerInt >= 50)
 		{
-			for(int i = 0; i < inputID.length; i++)
+			ItemStack input = getStackInSlot(0);
+			if(input != null)
 			{
-				String inputName = OreDictionary.getOreName(inputID[i]);
-				if(inputName.startsWith("ore"))
+				for(Enrichment enrich : Recipes.enrichments)
 				{
-					ore = getStackInSlot(0);
-					if(OreDictionary.doesOreNameExist("dust" + inputName.substring(3)))
+					if(enrich.getInput().equals(input.getItem()))
 					{
-						ArrayList<ItemStack> dusts = OreDictionary.getOres("dust" + inputName.substring(3));
-						if(dusts.size() > 0)
-						{
-							dust = dusts.get(1);
-							if(getStackInSlot(1) == null || getStackInSlot(1).isItemEqual(dust))
-							{
-								worldObj.scheduleBlockUpdate(xCoord, yCoord, zCoord, blockType, 1200);
-								enriching = true;
-								getPowerSource().subtractPower(50, this);
-							}
-						}
+						ore = getStackInSlot(0);
+						dust = new ItemStack(enrich.getOutput());
+						worldObj.scheduleUpdate(pos, LabStuffMain.blockEnricher, 1200);
+						enriching = true;
+						getPowerSource().subtractPower(50, this);
 					}
 				}
 			}
+
 		}
+	}
+	
+	public boolean isEnriching()
+	{
+		return enriching;
 	}
 
 	public void completeEnrichment() 

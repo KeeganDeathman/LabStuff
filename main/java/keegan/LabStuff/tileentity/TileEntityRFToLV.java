@@ -1,12 +1,11 @@
 package keegan.labstuff.tileentity;
 
+import cofh.api.energy.*;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
-import cofh.api.energy.EnergyStorage;
-import cofh.api.energy.IEnergyHandler;
+import net.minecraft.util.*;
 
-public class TileEntityRFToLV extends TileEntity implements IEnergyHandler
+public class TileEntityRFToLV extends TileEntity implements IEnergyReceiver, ITickable
 {
 	
 	public EnergyStorage storage;
@@ -22,10 +21,12 @@ public class TileEntityRFToLV extends TileEntity implements IEnergyHandler
 	}
 	
 	@Override
-	public void writeToNBT(NBTTagCompound tag)
+	public NBTTagCompound writeToNBT(NBTTagCompound tag)
 	{
 		super.writeToNBT(tag);
 		storage.writeToNBT(tag);
+		
+		return tag;
 	}
 	
 	@Override
@@ -36,15 +37,15 @@ public class TileEntityRFToLV extends TileEntity implements IEnergyHandler
 	}
 	
 	@Override
-	public void updateEntity()
+	public void update()
 	{
 		TileEntity[] connectedTEs = new TileEntity[6];
-		connectedTEs[0] = worldObj.getTileEntity(xCoord+1, yCoord, zCoord);
-		connectedTEs[1] = worldObj.getTileEntity(xCoord-1, yCoord, zCoord);
-		connectedTEs[2] = worldObj.getTileEntity(xCoord, yCoord+1, zCoord);
-		connectedTEs[3] = worldObj.getTileEntity(xCoord, yCoord-1, zCoord);
-		connectedTEs[4] = worldObj.getTileEntity(xCoord, yCoord, zCoord+1);
-		connectedTEs[5] = worldObj.getTileEntity(xCoord, yCoord, zCoord-1);
+		connectedTEs[0] = worldObj.getTileEntity(pos.east());
+		connectedTEs[1] = worldObj.getTileEntity(pos.west());
+		connectedTEs[2] = worldObj.getTileEntity(pos.up());
+		connectedTEs[3] = worldObj.getTileEntity(pos.down());
+		connectedTEs[4] = worldObj.getTileEntity(pos.north());
+		connectedTEs[5] = worldObj.getTileEntity(pos.south());
 		for(int i = 0; i < connectedTEs.length; i++)
 		{
 			if(connectedTEs[i] != null && connectedTEs[i] instanceof TileEntityPower)
@@ -56,31 +57,25 @@ public class TileEntityRFToLV extends TileEntity implements IEnergyHandler
 	}
 	
 	@Override
-	public boolean canConnectEnergy(ForgeDirection from) 
+	public boolean canConnectEnergy(EnumFacing from) 
 	{
 		return true;
 	}
 
 	@Override
-	public int receiveEnergy(ForgeDirection from, int maxReceive,boolean simulate) 
+	public int receiveEnergy(EnumFacing from, int maxReceive,boolean simulate) 
 	{
 		return storage.receiveEnergy(maxReceive, simulate);
 	}
 
 	@Override
-	public int extractEnergy(ForgeDirection from, int maxExtract, boolean simulate) 
-	{
-		return storage.extractEnergy(maxExtract, simulate);
-	}
-
-	@Override
-	public int getEnergyStored(ForgeDirection from) 
+	public int getEnergyStored(EnumFacing from) 
 	{
 		return storage.getEnergyStored();
 	}
 
 	@Override
-	public int getMaxEnergyStored(ForgeDirection from) 
+	public int getMaxEnergyStored(EnumFacing from) 
 	{
 		return storage.getMaxEnergyStored();
 	}

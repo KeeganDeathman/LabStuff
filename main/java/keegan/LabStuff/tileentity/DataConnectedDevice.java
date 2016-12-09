@@ -1,9 +1,10 @@
 package keegan.labstuff.tileentity;
 
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ITickable;
+import net.minecraft.util.math.BlockPos;
 
-public class DataConnectedDevice extends TileEntity
+public class DataConnectedDevice extends TileEntity implements ITickable
 {
 	private String id;
 	private TileEntityDataCable network;
@@ -11,7 +12,7 @@ public class DataConnectedDevice extends TileEntity
 	
 	
 	@Override
-	public void updateEntity()
+	public void update()
 	{
 		tickCount++;
 		if(tickCount>=100)
@@ -26,18 +27,18 @@ public class DataConnectedDevice extends TileEntity
 	{
 		if(!worldObj.isRemote) {
 			System.out.println("remote");
-			if (worldObj.getBlock(xCoord + 1, yCoord, zCoord) != null && id == null) {
-				register(xCoord + 1, yCoord, zCoord);
-			}if (worldObj.getBlock(xCoord - 1, yCoord, zCoord) != null && id == null) {
-				register(xCoord - 1, yCoord, zCoord);
-			}if (worldObj.getBlock(xCoord, yCoord + 1, zCoord) != null && id == null) {
-				register(xCoord, yCoord + 1, zCoord);
-			}if (worldObj.getBlock(xCoord, yCoord - 1, zCoord) != null && id == null) {
-				register(xCoord, yCoord - 1, zCoord);
-			}if (worldObj.getBlock(xCoord, yCoord, zCoord + 1) != null && id == null) {
-				register(xCoord, yCoord, zCoord + 1);
-			}if (worldObj.getBlock(xCoord, yCoord, zCoord - 1) != null && id == null) {
-				register(xCoord, yCoord, zCoord - 1);
+			if (worldObj.getBlockState(pos.east()).getBlock() != null && id == null) {
+				register(pos.east());
+			}if (worldObj.getBlockState(pos.west()).getBlock() != null && id == null) {
+				register(pos.west());
+			}if (worldObj.getBlockState(pos.up()).getBlock() != null && id == null) {
+				register(pos.up());
+			}if (worldObj.getBlockState(pos.down()).getBlock() != null && id == null) {
+				register(pos.down());
+			}if (worldObj.getBlockState(pos.south()).getBlock() != null && id == null) {
+				register(pos.south());
+			}if (worldObj.getBlockState(pos.north()).getBlock() != null && id == null) {
+				register(pos.north());
 			}
 		}
 		else
@@ -46,13 +47,13 @@ public class DataConnectedDevice extends TileEntity
 		}
 	}
 	
-	public void register(int x, int y, int z)
+	public void register(BlockPos pos)
 	{
 		int idPossible = 0;
-		if(worldObj.getTileEntity(x, y, z) instanceof TileEntityDataCable)
+		if(worldObj.getTileEntity(pos) instanceof TileEntityDataCable)
 		while(id == null)
 		{
-			network = (TileEntityDataCable)worldObj.getTileEntity(x, y, z);
+			network = (TileEntityDataCable)worldObj.getTileEntity(pos);
 			if(network.getDeviceById("_" + idPossible) != null)
 			{
 				idPossible += 1;

@@ -1,5 +1,7 @@
 package keegan.labstuff.client.gui;
 
+import java.io.IOException;
+
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
@@ -10,8 +12,8 @@ import keegan.labstuff.tileentity.TileEntityMatterCollector;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.*;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.*;
+import net.minecraft.util.text.TextComponentTranslation;
 
 public class GuiMatterCollector extends GuiContainer
 {
@@ -33,17 +35,17 @@ public class GuiMatterCollector extends GuiContainer
 	public void initGui()
 	{
 		super.initGui();
-		this.buttonList.add(chuckDirection = new GuiButton(0, xSize + 40 + 2, ySize + 2, 100, 20, tile.getDirAsButton()));
+		this.buttonList.add(chuckDirection = new GuiButton(0, 0, 0, 100, 20, tile.getDirAsButton()));
 	}
 
 	@Override
-	public void mouseClicked(int mouseX, int mouseY, int par3)
+	public void mouseClicked(int mouseX, int mouseY, int par3) throws IOException
 	{
 		super.mouseClicked(mouseX, mouseY, par3);
 	}
 
 	@Override
-	protected void keyTyped(char par1, int par2)
+	protected void keyTyped(char par1, int par2) throws IOException
 	{
 		super.keyTyped(par1, par2);
 		// Checks to see if were dealing with the console
@@ -65,27 +67,27 @@ public class GuiMatterCollector extends GuiContainer
 			if(par1.displayString == "Store")
 			{
 				chuckDirection.displayString = "West";
-				LabStuffMain.packetPipeline.sendToServer(new PacketMatterCollector(tile.xCoord, tile.yCoord, tile.zCoord, ForgeDirection.WEST));
+				LabStuffMain.packetPipeline.sendToServer(new PacketMatterCollector(tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ(), EnumFacing.WEST));
 			}
 			else if(par1.displayString == "West")
 			{
 				chuckDirection.displayString = "North";
-				LabStuffMain.packetPipeline.sendToServer(new PacketMatterCollector(tile.xCoord, tile.yCoord, tile.zCoord, ForgeDirection.NORTH));
+				LabStuffMain.packetPipeline.sendToServer(new PacketMatterCollector(tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ(), EnumFacing.NORTH));
 			}
 			else if(par1.displayString == "North")
 			{
 				chuckDirection.displayString = "East";
-				LabStuffMain.packetPipeline.sendToServer(new PacketMatterCollector(tile.xCoord, tile.yCoord, tile.zCoord, ForgeDirection.EAST));
+				LabStuffMain.packetPipeline.sendToServer(new PacketMatterCollector(tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ(), EnumFacing.EAST));
 			}
 			else if(par1.displayString == "East")
 			{
 				chuckDirection.displayString = "South";
-				LabStuffMain.packetPipeline.sendToServer(new PacketMatterCollector(tile.xCoord, tile.yCoord, tile.zCoord, ForgeDirection.SOUTH));
+				LabStuffMain.packetPipeline.sendToServer(new PacketMatterCollector(tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ(), EnumFacing.SOUTH));
 			}
 			else if(par1.displayString == "South")
 			{
 				chuckDirection.displayString = "Store";
-				LabStuffMain.packetPipeline.sendToServer(new PacketMatterCollector(tile.xCoord, tile.yCoord, tile.zCoord, ForgeDirection.UNKNOWN));
+				LabStuffMain.packetPipeline.sendToServer(new PacketMatterCollector(tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ(), null));
 			}
 		}
 	}
@@ -107,6 +109,12 @@ public class GuiMatterCollector extends GuiContainer
 		super.drawScreen(par1, par2, par3);
 	}
 
+	@Override
+	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
+	{
+		this.fontRendererObj.drawString("WIP", 8, ySize - 255 + 2, 4210752);
+	}
+	
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float p_146976_1_, int p_146976_2_, int p_146976_3_)
 	{

@@ -1,0 +1,13 @@
+{
+    "__comment": "Model for when two sides are connected.",
+	"parent": "block/cube",
+    "textures": {
+		"particle": "labstuff:blocks/blockturbinecasing/blockturbinecasing0C",
+        "down": "labstuff:blocks/blockturbinecasing/blockturbinecasing4C",
+		"up": "labstuff:blocks/blockturbinecasing/blockturbinecasing4C",
+		"north": "labstuff:blocks/blockturbinecasing/blockturbinecasing2C_ud",
+		"south": "labstuff:blocks/blockturbinecasing/blockturbinecasing2C_ud",
+		"west": "labstuff:blocks/blockturbinecasing/blockturbinecasing2C_ud",
+		"east": "labstuff:blocks/blockturbinecasing/blockturbinecasing2C_ud"
+    }
+}

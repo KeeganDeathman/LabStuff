@@ -4,5 +4,8 @@ import net.minecraft.item.Item;
 
 public class ItemLabIngot extends Item 
 {
-
+	public ItemLabIngot()
+	{
+		super();
+	}
 }

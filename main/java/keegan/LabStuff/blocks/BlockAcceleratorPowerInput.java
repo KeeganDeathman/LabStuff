@@ -11,7 +11,7 @@ public class BlockAcceleratorPowerInput extends Block implements ITileEntityProv
 
 	public BlockAcceleratorPowerInput()
 	{
-		super(Material.iron);
+		super(Material.IRON);
 		// TODO Auto-generated constructor stub
 	}
 

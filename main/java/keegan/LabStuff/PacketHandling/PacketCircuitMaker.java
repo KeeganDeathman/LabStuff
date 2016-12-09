@@ -1,19 +1,18 @@
 package keegan.labstuff.PacketHandling;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.channel.ChannelHandlerContext;
-
 import java.util.ArrayList;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.channel.ChannelHandlerContext;
 import keegan.labstuff.LabStuffMain;
-import keegan.labstuff.recipes.CircuitCreation;
-import keegan.labstuff.recipes.Recipes;
+import keegan.labstuff.recipes.*;
 import keegan.labstuff.tileentity.TileEntityCircuitMaker;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import cpw.mods.fml.common.network.ByteBufUtils;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 public class PacketCircuitMaker extends AbstractPacket {
 
@@ -62,7 +61,7 @@ public class PacketCircuitMaker extends AbstractPacket {
 	public void handleServerSide(EntityPlayer player) 
 	{
 		World world = player.worldObj;
-		TileEntity te = world.getTileEntity(x,y,z);
+		TileEntity te = world.getTileEntity(new BlockPos(x,y,z));
 		ArrayList<CircuitCreation> recipes = Recipes.getCircuitCreations();
 		System.out.println("Validating tile entity.");
 		if(te instanceof TileEntityCircuitMaker)

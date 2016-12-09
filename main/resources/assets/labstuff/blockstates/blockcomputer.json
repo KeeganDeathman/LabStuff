@@ -1,5 +1,11 @@
 {
 	"variants": {
-		"normal": { "model": "labstuff:blockcomputer" }
+		"facing=south": { "model": "labstuff:blockComputer", "y":180},
+		"facing=west": { "model": "labstuff:blockComputer", "y":270},
+		"facing=east": { "model": "labstuff:blockComputer", "y":90},
+		"facing=north": { "model": "labstuff:blockComputer" },
+		"facing=down": { "model": "labstuff:blockComputer" },
+		"facing=up": { "model": "labstuff:blockComputer" },
+		"default": { "model": "labstuff:blockComputer" }
 	}
 }

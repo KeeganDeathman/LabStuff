@@ -18,7 +18,7 @@ public class SlotCircuitDesignTable extends Slot {
 	@Override
 	public boolean isItemValid(ItemStack par1ItemStack)
 	{
-		if(par1ItemStack.getItem() == Items.paper || par1ItemStack.getItem() instanceof ItemCircuitDesign)
+		if(par1ItemStack.getItem() == Items.PAPER || par1ItemStack.getItem() instanceof ItemCircuitDesign)
 		{
 			return true;
 		}

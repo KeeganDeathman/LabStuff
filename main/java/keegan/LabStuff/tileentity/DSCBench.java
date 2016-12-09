@@ -4,8 +4,9 @@ import java.util.ArrayList;
 
 import keegan.labstuff.recipes.*;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.*;
 
 public class DSCBench extends DSCPart implements IInventory
 {
@@ -50,28 +51,15 @@ public class DSCBench extends DSCPart implements IInventory
 	}
 
 	@Override
-	public ItemStack getStackInSlotOnClosing(int slot)
-	{
-		return chestContents[slot];
-	}
-
-	@Override
 	public void setInventorySlotContents(int slot, ItemStack stack)
 	{
 		chestContents[slot] = stack;
 	}
 
 	@Override
-	public String getInventoryName()
+	public ITextComponent getDisplayName()
 	{
-		return "DSCBench";
-	}
-
-	@Override
-	public boolean hasCustomInventoryName()
-	{
-		// TODO Auto-generated method stub
-		return true;
+		return new TextComponentString("DSCBench");
 	}
 
 	@Override
@@ -86,20 +74,6 @@ public class DSCBench extends DSCPart implements IInventory
 	{
 		// TODO Auto-generated method stub
 		return true;
-	}
-
-	@Override
-	public void openInventory()
-	{
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void closeInventory()
-	{
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -138,6 +112,65 @@ public class DSCBench extends DSCPart implements IInventory
 					}
 				}
 			}
+	}
+	
+	@Override
+	public void openInventory(EntityPlayer player)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void closeInventory(EntityPlayer player)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public String getName() {
+		// TODO Auto-generated method stub
+		return "DSCBench";
+	}
+
+	@Override
+	public boolean hasCustomName() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public ItemStack removeStackFromSlot(int index) {
+		// TODO Auto-generated method stub
+        return ItemStackHelper.getAndRemove(this.chestContents, index);
+	}
+	
+	@Override
+	public int getField(int id) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void setField(int id, int value) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public int getFieldCount() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void clear() {
+
+	        for (int i = 0; i < this.chestContents.length; ++i)
+	        {
+	            this.chestContents[i] = null;
+	        }		
 	}
 
 }

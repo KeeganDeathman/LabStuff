@@ -1,90 +1,63 @@
 package keegan.labstuff.tileentity;
 
 import keegan.labstuff.blocks.BlockPowerFurnace;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityFurnace;
+import net.minecraft.nbt.*;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
+import net.minecraft.tileentity.*;
+import net.minecraft.util.ITickable;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
-public class TileEntityPowerFurnace extends TileEntity implements IInventory
+public class TileEntityPowerFurnace extends TileEntity implements IInventory, ITickable
 {
+	private ItemStack[] chestContents;
 	
-	private ItemStack[] chestContents = new ItemStack[1];
-	private int burnTime;
+	public int burnTime;
 	
 	public TileEntityPowerFurnace()
 	{
+		chestContents = new ItemStack[1];
 	}
 	
 	@Override
-	public void writeToNBT(NBTTagCompound tagCompound)
-	{
-		super.writeToNBT(tagCompound);
-		NBTTagList itemList = new NBTTagList();
-		for (int i = 0; i < chestContents.length; i++) 
-		{
-			ItemStack stack = chestContents[i];
-			if (stack != null) 
-			{
-				NBTTagCompound tag = new NBTTagCompound();
-				tag.setByte("Slot", (byte) i);
-				stack.writeToNBT(tag);
-				itemList.appendTag(tag);
-			}
-		}
-		tagCompound.setTag("Inventory", itemList);
-		tagCompound.setInteger("burnTime", getBurnTime());
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
+	    super.writeToNBT(nbt);
+
+	    NBTTagList list = new NBTTagList();
+	    for (int i = 0; i < this.getSizeInventory(); ++i) {
+	        if (this.getStackInSlot(i) != null) {
+	            NBTTagCompound stackTag = new NBTTagCompound();
+	            stackTag.setByte("Slot", (byte) i);
+	            this.getStackInSlot(i).writeToNBT(stackTag);
+	            list.appendTag(stackTag);
+	        }
+	    }
+	    nbt.setTag("Items", list);
+	    nbt.setInteger("burnTime", getBurnTime());
+	    
+	    return nbt;
+	}
+
+
+	@Override
+	public void readFromNBT(NBTTagCompound nbt) {
+	    super.readFromNBT(nbt);
+
+	    NBTTagList list = nbt.getTagList("Items", 10);
+	    for (int i = 0; i < list.tagCount(); ++i) {
+	        NBTTagCompound stackTag = list.getCompoundTagAt(i);
+	        int slot = stackTag.getByte("Slot") & 255;
+	        this.setInventorySlotContents(slot, ItemStack.loadItemStackFromNBT(stackTag));
+	    }
+	    setBurnTime(nbt.getInteger("burnTime"));
+
 	}
 	
-	@Override
-	public void readFromNBT(NBTTagCompound tagCompound)
-	{
-		super.readFromNBT(tagCompound);
-		NBTTagList tagList = tagCompound.getTagList("Inventory", 10);
-		for (int i = 0; i < tagList.tagCount(); i++) 
-		{
-			NBTTagCompound tag = (NBTTagCompound) tagList.getCompoundTagAt(i);
-			byte slot = tag.getByte("Slot");
-			if (slot >= 0 && slot < chestContents.length) 
-			{
-				chestContents[slot] = ItemStack.loadItemStackFromNBT(tag);
-			}
-		}
-		setBurnTime(tagCompound.getInteger("burnTime"));
-	}
-	
-	@Override
-	public void updateEntity()
-	{
-		if(worldObj.isRemote == false)
-		{
-			switch(getBurnTime())
-			{
-				default:
-					//System.out.println("Burn time " + getBurnTime());
-					setBurnTime(getBurnTime() - 1);
-					if(worldObj.getTileEntity(xCoord, yCoord+1, zCoord) instanceof TileEntityPower)
-						((TileEntityPower)worldObj.getTileEntity(xCoord, yCoord+1, zCoord)).addPower(10, this);
-					((BlockPowerFurnace)worldObj.getBlock(xCoord, yCoord, zCoord)).setOn(worldObj, xCoord, yCoord, zCoord, true);
-				case 0:
-					if(getBurnTime() == 0)
-					{
-						if(getStackInSlot(0) != null)
-						{
-							setBurnTime(getBurnTime() + TileEntityFurnace.getItemBurnTime(getStackInSlot(0)));
-							decrStackSize(0, 1);
-							((BlockPowerFurnace)worldObj.getBlock(xCoord, yCoord, zCoord)).setOn(worldObj, xCoord, yCoord, zCoord, true);
-						}
-						else
-							((BlockPowerFurnace)worldObj.getBlock(xCoord, yCoord, zCoord)).setOn(worldObj, xCoord, yCoord, zCoord, false);
-					}
-			}
-		}
-		
-	}
 
 	@Override
 	public int getSizeInventory() 
@@ -124,17 +97,6 @@ public class TileEntityPowerFurnace extends TileEntity implements IInventory
 	}
 
 	@Override
-	public ItemStack getStackInSlotOnClosing(int slot) 
-	{
-		// TODO Auto-generated method stub
-		ItemStack stack = getStackInSlot(slot);
-		if (stack != null) {
-			setInventorySlotContents(slot, null);
-		}
-		return stack;
-	}
-
-	@Override
 	public void setInventorySlotContents(int slot, ItemStack itemstack) 
 	{
 		chestContents[slot] = itemstack;
@@ -160,41 +122,101 @@ public class TileEntityPowerFurnace extends TileEntity implements IInventory
 	}
 
 
-
 	@Override
-	public String getInventoryName() {
-		// TODO Auto-generated method stub
-		return "Power Furnace";
-	}
-
-
-
-	@Override
-	public void closeInventory() {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-
-
-	@Override
-	public boolean hasCustomInventoryName() {
+	public boolean isItemValidForSlot(int arg0, ItemStack arg1) {
 		// TODO Auto-generated method stub
 		return true;
 	}
 
-
 	@Override
-	public void openInventory() {
+	public void openInventory(EntityPlayer player)
+	{
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int slot, ItemStack item) 
+	public void closeInventory(EntityPlayer player)
 	{
-		return TileEntityFurnace.isItemFuel(item);
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public String getName() {
+		// TODO Auto-generated method stub
+		return "Power Furnace";
+	}
+
+	@Override
+	public boolean hasCustomName() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public ItemStack removeStackFromSlot(int index) {
+		// TODO Auto-generated method stub
+        return ItemStackHelper.getAndRemove(this.chestContents, index);
+	}
+	
+	@Override
+	public int getField(int id) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void setField(int id, int value) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public int getFieldCount() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void clear() {
+
+	        for (int i = 0; i < this.chestContents.length; ++i)
+	        {
+	            this.chestContents[i] = null;
+	        }		
+	}
+
+	@Override
+	public void update() {
+		if(worldObj.isRemote == false)
+		{
+			if(getBurnTime() == 0)
+			{
+				if(getStackInSlot(0) != null && TileEntityFurnace.isItemFuel(getStackInSlot(0)))
+				{
+					setBurnTime(getBurnTime() + TileEntityFurnace.getItemBurnTime(getStackInSlot(0)));
+					decrStackSize(0, 1);
+					worldObj.setBlockState(pos, worldObj.getBlockState(pos).withProperty(BlockPowerFurnace.POWERED, true), 1+2);
+				}
+				else
+					worldObj.setBlockState(pos, worldObj.getBlockState(pos).withProperty(BlockPowerFurnace.POWERED, false), 1+2);
+			}
+			else
+			{
+				setBurnTime(getBurnTime()-1);
+				if(worldObj.getTileEntity(pos.up()) instanceof TileEntityPower)
+					((TileEntityPower)worldObj.getTileEntity(pos.up())).addPower(10, this);
+			}
+		}
+		
+	}
+	
+	@Override
+	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState)
+	{
+		super.shouldRefresh(world, pos, oldState, newState);
+		return oldState.getBlock() != newState.getBlock();
 	}
 
 	public int getBurnTime() {
@@ -204,5 +226,5 @@ public class TileEntityPowerFurnace extends TileEntity implements IInventory
 	public void setBurnTime(int burnTime) {
 		this.burnTime = burnTime;
 	}
-
+	
 }

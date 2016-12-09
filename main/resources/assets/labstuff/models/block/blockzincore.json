@@ -1,6 +1,6 @@
 {
 	"parent": "block/cube_all",
 	"textures": {
-		"all": "labstuff:blocks/blockzincore"
+		"all": "labstuff:blocks/blockZincOre"
 	}
 }

@@ -3,85 +3,95 @@ package keegan.labstuff.blocks;
 import keegan.labstuff.LabStuffMain;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.scoreboard.IScoreCriteria.EnumRenderType;
+import net.minecraft.util.*;
+import net.minecraft.util.math.*;
 import net.minecraft.world.*;
 
 public class BlockACPGag extends Block
 {
 
-	private int[] coreCoords;
 
 	public BlockACPGag(Material p_i45394_1_)
 	{
 		super(p_i45394_1_);
-		coreCoords = new int[3];
 	}
 
-	public void setCore(int x, int y, int z, World world)
+	public BlockPos setCore(BlockPos pos, World world)
 	{
-		if(world.getBlock(x, y-1, z).equals(LabStuffMain.blockAcceleratorControlPanel))
-			y -= 1;
-		else if(world.getBlock(x, y, z-1).equals(LabStuffMain.blockAcceleratorControlPanel))
-			z -= 1;
-		else if(world.getBlock(x+1, y, z).equals(LabStuffMain.blockAcceleratorControlPanel))
-			x += 1;
-		else if(world.getBlock(x, y-1, z-1).equals(LabStuffMain.blockAcceleratorControlPanel))
+		BlockPos coreCoords = pos;
+		
+		if(world.getBlockState(pos.subtract(new Vec3i(0,1,0))).getBlock().equals(LabStuffMain.blockAcceleratorControlPanel))
+			coreCoords = coreCoords.subtract(new Vec3i(0,1,0));
+		else if(world.getBlockState(pos.subtract(new Vec3i(0,0,1))).getBlock().equals(LabStuffMain.blockAcceleratorControlPanel))
+			coreCoords = coreCoords.subtract(new Vec3i(0,0,1));
+		else if(world.getBlockState(pos.add(1, 0, 1)).getBlock().equals(LabStuffMain.blockAcceleratorControlPanel))
+			coreCoords = coreCoords.add(1,0,1);
+		else if(world.getBlockState(pos.add(1, 0, 0)).getBlock().equals(LabStuffMain.blockAcceleratorControlPanel))
+			coreCoords = coreCoords.add(1,0,0);
+		else if(world.getBlockState(pos.subtract(new Vec3i(0,1,1))).getBlock().equals(LabStuffMain.blockAcceleratorControlPanel))
+			coreCoords = coreCoords.subtract(new Vec3i(0,1,1));
+		else if(world.getBlockState(pos.subtract(new Vec3i(0,1,0)).add(1,0,0)).getBlock().equals(LabStuffMain.blockAcceleratorControlPanel))
 		{
-			y -= 1;
-			z -= 1;
+			coreCoords = coreCoords.subtract(new Vec3i(0,1,0)).add(1,0,0);
 		}
-		else if(world.getBlock(x+1, y-1, z).equals(LabStuffMain.blockAcceleratorControlPanel))
+		else if(world.getBlockState(pos.subtract(new Vec3i(0,0,2))).getBlock().equals(LabStuffMain.blockAcceleratorControlPanel))
+			coreCoords = coreCoords.subtract(new Vec3i(0,0,2));
+		else if(world.getBlockState(pos.subtract(new Vec3i(0,1,2))).getBlock().equals(LabStuffMain.blockAcceleratorControlPanel))
 		{
-			y -= 1;
-			x += 1;
+			coreCoords = coreCoords.subtract(new Vec3i(0,1,2));
 		}
-		else if(world.getBlock(x, y, z-2).equals(LabStuffMain.blockAcceleratorControlPanel))
-			z -= 2;
-		else if(world.getBlock(x, y-1, z-2).equals(LabStuffMain.blockAcceleratorControlPanel))
+		else if(world.getBlockState(pos.add(1,0,0)).getBlock().equals(LabStuffMain.blockACPGag))
 		{
-			y -= 1;
-			z -= 2;
-		}
-		else if(world.getBlock(x+1, y, z).equals(LabStuffMain.blockACPGag))
-		{
-			if(world.getBlock(x, y-1, z).equals(LabStuffMain.blockACPGag))
+			if(world.getBlockState(pos.subtract(new Vec3i(0,1,0))).getBlock().equals(LabStuffMain.blockACPGag))
 			{
-				y -= 1;
-				if(world.getBlock(x+2, y, z).equals(LabStuffMain.blockAcceleratorControlPanel))
-					x += 2;
-				else if(world.getBlock(x+3, y, z).equals(LabStuffMain.blockAcceleratorControlPanel))
-					x += 3;
+				coreCoords = coreCoords.subtract(new Vec3i(0,1,0));
+				if(world.getBlockState(pos.add(2,0,0).subtract(new Vec3i(0,1,0))).getBlock().equals(LabStuffMain.blockAcceleratorControlPanel))
+					coreCoords = coreCoords.add(2,0,0);
+				else if(world.getBlockState(pos.add(3,0,0).subtract(new Vec3i(0,1,0))).getBlock().equals(LabStuffMain.blockAcceleratorControlPanel))
+					coreCoords = coreCoords.add(3,0,0);
+				else if(world.getBlockState(pos.add(1,0,0).subtract(new Vec3i(0,1,0))).getBlock().equals(LabStuffMain.blockAcceleratorControlPanel))
+					coreCoords = coreCoords.add(1,0,0);
+				
 			}
 			else
 			{
-				if(world.getBlock(x+2, y, z).equals(LabStuffMain.blockAcceleratorControlPanel))
-					x += 2;
-				else if(world.getBlock(x+3, y, z).equals(LabStuffMain.blockAcceleratorControlPanel))
-					x += 3;
+				if(world.getBlockState(pos.add(2,0,0)).getBlock().equals(LabStuffMain.blockAcceleratorControlPanel))
+					coreCoords = coreCoords.add(2,0,0);
+				else if(world.getBlockState(pos.add(3,0,0)).getBlock().equals(LabStuffMain.blockAcceleratorControlPanel))
+					coreCoords = coreCoords.add(3,0,0);
 			}
 		}
-		coreCoords[0] = x;
-		coreCoords[1] = y;
-		coreCoords[2] = z;
+		
+		return coreCoords;
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9)
-	{
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack held, EnumFacing facing, float fx, float par8, float par9) {
+		
 		if (!world.isRemote)
 		{
-			setCore(x, y, z, world);
+			BlockPos coreCoords = setCore(pos, world);
 			// System.out.println("Server");
 			if (!player.isSneaking())
 			{
-				player.openGui(LabStuffMain.instance, 3, world, coreCoords[0], coreCoords[1], coreCoords[2]);
+				player.openGui(LabStuffMain.instance, 3, world, coreCoords.getX(), coreCoords.getY(), coreCoords.getZ());
 				return true;
 			}
 		}
 		return false;
 	}
 	
-	public boolean isOpaqueCube()
+	@Override
+	public EnumBlockRenderType getRenderType(IBlockState state)
+	{
+		return EnumBlockRenderType.INVISIBLE;
+	}
+	
+	public boolean isOpaqueCube(IBlockState state)
 	{
 		return false;
 	}
@@ -92,8 +102,7 @@ public class BlockACPGag extends Block
 	}
 
 	@Override
-	public boolean renderAsNormalBlock()
-	{
+	public boolean isNormalCube(IBlockState state, IBlockAccess access, BlockPos pos) {
 		return false;
 	}
 

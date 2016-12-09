@@ -1,0 +1,13 @@
+{
+    "__comment": "Model for when two adgacent sides are connected.",
+	"parent": "block/cube",
+    "textures": {
+		"particle": "labstuff:blocks/blockturbinecasing/blockturbinecasing0C",
+        "down": "labstuff:blocks/blockturbinecasing/blockturbinecasing1C_e",
+		"up": "labstuff:blocks/blockturbinecasing/blockturbinecasing4C",
+		"north": "labstuff:blocks/blockturbinecasing/blockturbinecasing2C_uw",
+		"south": "labstuff:blocks/blockturbinecasing/blockturbinecasing2C_ue",
+		"west": "labstuff:blocks/blockturbinecasing/blockturbinecasing1C_u",
+		"east": "labstuff:blocks/blockturbinecasing/blockturbinecasing4C"
+    }
+}

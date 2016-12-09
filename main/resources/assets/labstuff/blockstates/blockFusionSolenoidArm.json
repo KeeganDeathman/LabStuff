@@ -1,0 +1,7 @@
+{
+	"variants": {
+		"complete=false":{ "model": "labstuff:blocksolenoidarm" },
+		"complete=true":{ "model": "labstuff:blocksolenoidarm" },
+		"normal": { "model": "labstuff:blocksolenoid" }
+	}
+}

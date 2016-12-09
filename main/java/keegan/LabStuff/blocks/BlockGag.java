@@ -2,8 +2,10 @@ package keegan.labstuff.blocks;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.world.*;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.*;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 
 public class BlockGag extends Block
 {
@@ -14,20 +16,20 @@ public class BlockGag extends Block
 	}
 		
 	@Override
-    public boolean isOpaqueCube() 
+    public boolean isOpaqueCube(IBlockState state) 
     {
             return false;
     }
     
-    public boolean shouldSideBeRendered(IBlockAccess access, int i, int j, int k, int l)
-	{
-    	return false;
+	@Override
+	public boolean shouldSideBeRendered(IBlockState state, IBlockAccess access, BlockPos pos, EnumFacing side) {
+		return false;
 	}
-    
-    @Override
-    public boolean renderAsNormalBlock()
-    {
-    	return false;
-    }
+	
+	@Override
+	public EnumBlockRenderType getRenderType(IBlockState state)
+	{
+		return EnumBlockRenderType.INVISIBLE;
+	}
 
 }

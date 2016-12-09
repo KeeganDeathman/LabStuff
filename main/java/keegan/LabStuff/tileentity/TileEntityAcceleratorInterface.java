@@ -6,8 +6,9 @@ import keegan.labstuff.recipes.Recipes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.*;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.*;
 
 public class TileEntityAcceleratorInterface extends DataConnectedDevice implements IInventory
 {
@@ -44,9 +45,9 @@ public class TileEntityAcceleratorInterface extends DataConnectedDevice implemen
 	}
 	
 	@Override
-	public void updateEntity()
+	public void update()
 	{
-		super.updateEntity();
+		super.update();
 		tickCount++;
 		if(tickCount>=400)
 		{
@@ -81,7 +82,7 @@ public class TileEntityAcceleratorInterface extends DataConnectedDevice implemen
 						DataPackage hasMatter = new DataPackage(control, "particlesNotLoaded");
 						getNetwork().sendMessage(hasMatter);
 					}
-					TileEntity core = worldObj.getTileEntity(xCoord - 6, yCoord, zCoord);
+					TileEntity core = worldObj.getTileEntity(pos.subtract(new Vec3i(6,0,0)));
 					if(core instanceof TileEntityAcceleratorDetectorCore)
 					{
 						if(((TileEntityAcceleratorDetectorCore) core).isGoodForLaunch())
@@ -158,18 +159,7 @@ public class TileEntityAcceleratorInterface extends DataConnectedDevice implemen
 		}
 		return stack;
 	}
-
-	@Override
-	public ItemStack getStackInSlotOnClosing(int slot) 
-	{
-		// TODO Auto-generated method stub
-		ItemStack stack = getStackInSlot(slot);
-		if (stack != null) {
-			setInventorySlotContents(slot, null);
-		}
-		return stack;
-	}
-
+	
 	@Override
 	public void setInventorySlotContents(int slot, ItemStack itemstack) 
 	{
@@ -207,57 +197,109 @@ public class TileEntityAcceleratorInterface extends DataConnectedDevice implemen
 		return false;
 	}
 
-	@Override
-	public String getInventoryName() {
-		// TODO Auto-generated method stub
-		return "AceleratorInterface";
-	}
-
-
-
-	@Override
-	public void closeInventory() {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-
-
-	@Override
-	public boolean hasCustomInventoryName() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-
-	@Override
-	public void openInventory() {
-		// TODO Auto-generated method stub
-
-	}
 	
 	@Override
-	public void writeToNBT(NBTTagCompound tag)
+	public NBTTagCompound writeToNBT(NBTTagCompound tag)
 	{
+		super.writeToNBT(tag);
+		NBTTagList itemList = new NBTTagList();
+		for (int i = 0; i < chestContents.length; i++) 
+		{
+			ItemStack stack = chestContents[i];
+			if (stack != null) 
+			{
+				NBTTagCompound tagCompound = new NBTTagCompound();
+				tagCompound.setByte("Slot", (byte) i);
+				stack.writeToNBT(tagCompound);
+				itemList.appendTag(tagCompound);
+			}
+		}
+		tag.setTag("Inventory", itemList);
 		if(getNetwork()!=null)
 		{
-			int netX = getNetwork().xCoord;
-			int netY = getNetwork().yCoord;
-			int netZ = getNetwork().zCoord;
+			int netX = getNetwork().getPos().getX();
+			int netY = getNetwork().getPos().getY();
+			int netZ = getNetwork().getPos().getZ();
 			int[] networkLoc = {netX,netY,netZ};
 
 			tag.setIntArray("network", networkLoc);
 			
 			tag.setBoolean("upgraded", upgraded);
 		}
+		return tag;
 	}
 	
 	@Override
 	public void readFromNBT(NBTTagCompound tag)
 	{
+		super.readFromNBT(tag);
+		NBTTagList tagList = tag.getTagList("Inventory", 10);
+		for (int i = 0; i < tagList.tagCount(); i++) 
+		{
+			NBTTagCompound tagCompound = (NBTTagCompound) tagList.getCompoundTagAt(i);
+			byte slot = tagCompound.getByte("Slot");
+			if (slot >= 0 && slot < chestContents.length) 
+			{
+				chestContents[slot] = ItemStack.loadItemStackFromNBT(tagCompound);
+			}
+		}
 		int[] net = tag.getIntArray("network");
-		this.register(net[0], net[1], net[2]);
+		this.register(new BlockPos(net[0], net[1], net[2]));
 		upgraded = tag.getBoolean("upgraded");
+	}
+
+	@Override
+	public String getName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean hasCustomName() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public ItemStack removeStackFromSlot(int index) {
+		ItemStack stack = chestContents[index];
+		chestContents[index] = null;
+		return stack;
+	}
+
+	@Override
+	public void openInventory(EntityPlayer player) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void closeInventory(EntityPlayer player) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public int getField(int id) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void setField(int id, int value) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public int getFieldCount() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void clear() {
+		// TODO Auto-generated method stub
+		
 	}
 }

@@ -1,0 +1,13 @@
+{
+    "__comment": "Model file for four connected sides in a cross shape.",
+	"parent": "block/cube",
+    "textures": {
+		"particle": "labstuff:blocks/blockturbinecasing/blockturbinecasing0C",
+        "down": "labstuff:blocks/blockturbinecasing/blockturbinecasing4C",
+		"up": "labstuff:blocks/blockturbinecasing/blockturbinecasing4C",
+		"north": "labstuff:blocks/blockturbinecasing/blockturbinecasing4C",
+		"south": "labstuff:blocks/blockturbinecasing/blockturbinecasing4C",
+		"west": "labstuff:blocks/blockturbinecasing/blockturbinecasing4C",
+		"east": "labstuff:blocks/blockturbinecasing/blockturbinecasing4C"
+    }
+}

@@ -1,5 +1,11 @@
 {
 	"variants": {
-		"normal": { "model": "labstuff:blockcircuitdesigntable" }
+		"facing=south": { "model": "labstuff:blockcircuittable", "y":180},
+		"facing=west": { "model": "labstuff:blockcircuittable", "y":270},
+		"facing=east": { "model": "labstuff:blockcircuittable", "y":90},
+		"facing=north": { "model": "labstuff:blockcircuittable" },
+		"facing=down": { "model": "labstuff:blockcircuittable" },
+		"facing=up": { "model": "labstuff:blockcircuittable" },
+		"default": { "model": "labstuff:blockcircuittable" }
 	}
 }

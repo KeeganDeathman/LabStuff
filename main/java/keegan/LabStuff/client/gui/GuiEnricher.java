@@ -1,5 +1,7 @@
 package keegan.labstuff.client.gui;
 
+import java.io.IOException;
+
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
@@ -34,7 +36,7 @@ public class GuiEnricher extends GuiContainer
 	}
 
 	@Override
-	public void mouseClicked(int mouseX, int mouseY, int par3)
+	public void mouseClicked(int mouseX, int mouseY, int par3) throws IOException
 	{
 		super.mouseClicked(mouseX, mouseY, par3);
 	}
@@ -51,6 +53,13 @@ public class GuiEnricher extends GuiContainer
 	public void drawScreen(int par1, int par2, float par3)
 	{
 		super.drawScreen(par1, par2, par3);
+	}
+	
+	@Override
+	protected void drawGuiContainerForegroundLayer(int arg0, int arg1)
+	{
+		this.fontRendererObj.drawString("Stats:", 10, 100, 4210752);
+		this.fontRendererObj.drawString("Enriching: " + tile.isEnriching(), 10, 130, 4210752);
 	}
 
 	@Override

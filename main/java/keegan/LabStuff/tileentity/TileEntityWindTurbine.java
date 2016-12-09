@@ -7,19 +7,7 @@ public class TileEntityWindTurbine extends TileEntityPowerConnection
 {
 	
 	
-	@Override
-	public void writeToNBT(NBTTagCompound tagCompound)
-	{
-		tagCompound.setInteger("blockMeta", blockMetadata);
-	}
-	
-	@Override
-	public void readFromNBT(NBTTagCompound tag)
-	{
-		worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, tag.getInteger("blockMeta"), 2);
-	}
-	
-	public void updateEntity()
+	public void update()
 	{
 		TileEntityPower powerTap = getPowerSource();
 		if(powerTap != null)
@@ -27,7 +15,7 @@ public class TileEntityWindTurbine extends TileEntityPowerConnection
 			if(isProperPosition())
 			{
 				int powerOutput;
-				if(yCoord > 150)
+				if(pos.getY() > 150)
 				{
 					powerOutput = 200;
 				}
@@ -51,7 +39,7 @@ public class TileEntityWindTurbine extends TileEntityPowerConnection
 	
 	public boolean isProperPosition()
 	{
-		if (yCoord > 64 && worldObj.canBlockSeeTheSky(xCoord, yCoord, zCoord))
+		if (pos.getY() > 64 && worldObj.canBlockSeeSky(pos))
 			return true;
 		return false;
 	}

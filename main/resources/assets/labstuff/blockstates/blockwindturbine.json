@@ -1,5 +1,11 @@
 {
 	"variants": {
-		"normal": { "model": "labstuff:blockwindturbine" }
+		"facing=south": {},
+		"facing=west": {},
+		"facing=east": {},
+		"facing=north": {},
+		"facing=down": {},
+		"facing=up": {},
+		"default": {}
 	}
 }

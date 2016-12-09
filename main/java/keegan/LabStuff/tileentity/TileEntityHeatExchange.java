@@ -4,9 +4,10 @@ import keegan.labstuff.LabStuffMain;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.*;
 
+@SuppressWarnings("deprecation")
 public class TileEntityHeatExchange extends TileEntity implements IFluidHandler
 {
 	
@@ -20,8 +21,8 @@ public class TileEntityHeatExchange extends TileEntity implements IFluidHandler
 	}
 	
 	@Override
-	public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
-		if(from.equals(ForgeDirection.DOWN) && resource.isFluidEqual(new ItemStack(Items.water_bucket)))
+	public int fill(EnumFacing from, FluidStack resource, boolean doFill) {
+		if(resource != null && resource.isFluidEqual(new ItemStack(Items.WATER_BUCKET)))
 		{
 			return waterTank.fill(resource, doFill);
 		}
@@ -29,8 +30,8 @@ public class TileEntityHeatExchange extends TileEntity implements IFluidHandler
 	}
 
 	@Override
-	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain) {
-		if(!(from.equals(ForgeDirection.DOWN)) && resource.isFluidEqual(new FluidStack(LabStuffMain.steam, 1)))
+	public FluidStack drain(EnumFacing from, FluidStack resource, boolean doDrain) {
+		if(steamTank.getFluid() != null && resource.isFluidEqual(steamTank.getFluid()))
 		{
 			return steamTank.drain(resource.amount, doDrain);
 		}
@@ -38,45 +39,43 @@ public class TileEntityHeatExchange extends TileEntity implements IFluidHandler
 	}
 
 	@Override
-	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain) {
-		if(!(from.equals(ForgeDirection.DOWN)))
-		{
+	public FluidStack drain(EnumFacing from, int maxDrain, boolean doDrain) {
 			return steamTank.drain(maxDrain, doDrain);
-		}
-		return null;
 	}
 
 	@Override
-	public boolean canFill(ForgeDirection from, Fluid fluid) {
+	public FluidTankInfo[] getTankInfo(EnumFacing from)
+	{
 		// TODO Auto-generated method stub
-		return true;
-	}
-
-	@Override
-	public boolean canDrain(ForgeDirection from, Fluid fluid) {
-		// TODO Auto-generated method stub
-		return true;
-	}
-
-	@Override
-	public FluidTankInfo[] getTankInfo(ForgeDirection from) {
-		// TODO Auto-generated method stub
-		return new FluidTankInfo[]{steamTank.getInfo(),waterTank.getInfo()};
+		return new FluidTankInfo[]{waterTank.getInfo(),steamTank.getInfo()};
 	}
 
 	public void addPower() 
 	{
+//		System.out.println("Burn");
 		waterTank.drain(4000, true);
 		steamTank.fill(new FluidStack(LabStuffMain.steam, 4000), true);
-		for(ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
+		for(EnumFacing dir : EnumFacing.VALUES)
 		{
-			if(!(dir.equals(ForgeDirection.DOWN)))
+			if(!(dir.equals(EnumFacing.DOWN)))
 			{
-				TileEntity remote = worldObj.getTileEntity(xCoord+dir.offsetX, yCoord+dir.offsetY, zCoord+dir.offsetZ);
-				if(remote != null && remote instanceof IFluidHandler && ((IFluidHandler)remote).canFill(dir.getOpposite(), steamTank.getFluid().getFluid()))
+				TileEntity remote = worldObj.getTileEntity(pos.offset(dir));
+				if(remote != null && remote instanceof IFluidHandler)
 					steamTank.fill(new FluidStack(LabStuffMain.steam, ((IFluidHandler)remote).fill(dir.getOpposite(), steamTank.drain(steamTank.getFluidAmount(), true), true)), true);
 			}
 		}
+	}
+
+	@Override
+	public boolean canFill(EnumFacing from, Fluid fluid) {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public boolean canDrain(EnumFacing from, Fluid fluid) {
+		// TODO Auto-generated method stub
+		return true;
 	}
 	
 }

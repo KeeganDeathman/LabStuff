@@ -8,7 +8,7 @@ public class TileEntityIndustrialMotorContact extends TileEntityPowerConnection
 	public boolean isPowered;
 	
 	@Override
-	public void updateEntity()
+	public void update()
 	{
 		if(getPowerSource()!=null)
 		{

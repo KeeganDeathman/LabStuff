@@ -1,80 +1,89 @@
 package keegan.labstuff.render;
 
-
 import org.lwjgl.opengl.GL11;
 
-import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
-import keegan.labstuff.tileentity.TileEntityAcceleratorDetectorCore;
-import net.minecraft.block.Block;
+import keegan.labstuff.tileentity.*;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.block.model.*;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
 import net.minecraftforge.client.model.*;
+import net.minecraftforge.client.model.obj.OBJLoader;
+import net.minecraftforge.common.model.TRSRTransformation;
+import net.minecraftforge.fml.relauncher.*;
 
-public class RenderAcceleratorDetector extends TileEntitySpecialRenderer implements ISimpleBlockRenderingHandler
-{
-	//This method is called when minecraft renders a tile entity
+@SideOnly(Side.CLIENT)
+public class RenderAcceleratorDetector extends TileEntitySpecialRenderer<TileEntityAcceleratorDetectorCore> {
 
-	public static Minecraft mc = Minecraft.getMinecraft();
-	public IModelCustom model = AdvancedModelLoader.loadModel(new ResourceLocation("labstuff:models/accelleratordetector.obj"));
-	
-	public RenderAcceleratorDetector()
-	{
-		
-	}
-	
-	public void renderComputer(TileEntityAcceleratorDetectorCore entity, double x, double y, double z, float tick)
-	{
+    private IModel model;
+    private IBakedModel bakedModel;
 
-	        if(entity.isMultiblockComplete())
-	        {
-	        	// Binds the texture
-			 	mc.renderEngine.bindTexture(new ResourceLocation("labstuff:textures/models/acceleratorDetector.png"));
-			 	GL11.glPushMatrix();
-			 	GL11.glTranslatef((float) x + 1 , (float) y, (float) z);
-		        //GL11.glTranslatef(0.5F, 1.5F, 0.5F);
-		        
-		        //GL11.glRotatef(rotate, 0F, 1F, 0F);
-		        //GL11.glTranslatef(-2f, 2f, 0f);
-		        //GL11.glScalef(20f, 20f, 20f);
-		        //GL11.glScalef(45f, 45f, 45f);
-		        //GL11.glScalef(0f, 0f, 1/3f);
-		        this.model.renderAll();
-		        
-		        GL11.glPopMatrix();
-	        }
-	}
-	
-	public void renderTileEntityAt(TileEntity tileEntity, double d, double d1, double d2, float f) 
-	{
-		this.renderComputer((TileEntityAcceleratorDetectorCore) tileEntity, d, d1, d2, f);
-	}
-	
-	@Override
-	public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelId, RenderBlocks renderer) 
-	{
-		return true;
-	}
-	@Override
-	public int getRenderId() {
-		// TODO Auto-generated method stub
-		return getRenderId();
-	}
+    private IBakedModel getBakedModel() {
+        // Since we cannot bake in preInit() we do lazy baking of the model as soon as we need it
+        // for rendering
+        if (bakedModel == null) {
+            try {
+                model = OBJLoader.INSTANCE.loadModel(new ResourceLocation("labstuff", "models/block/accelleratordetector.obj"));
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            bakedModel = model.bake(TRSRTransformation.identity(), DefaultVertexFormats.BLOCK,
+                    location -> Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(location.toString()));
+        }
+        return bakedModel;
+    }
 
-	@Override
-	public boolean shouldRender3DInInventory(int modelId) {
-		// TODO Auto-generated method stub
-		return true;
-	}
+    @Override
+    public void renderTileEntityAt(TileEntityAcceleratorDetectorCore te, double x, double y, double z, float partialTicks, int destroyStage) {
+        GlStateManager.pushAttrib();
+        GlStateManager.pushMatrix();
 
-	@Override
-	public void renderInventoryBlock(Block arg0, int arg1, int arg2,
-			RenderBlocks arg3) {
-		// TODO Auto-generated method stub
-		
-	}
+        // Translate to the location of our tile entity
+        GlStateManager.translate(x, y, z);
+        GlStateManager.disableRescaleNormal();
+
+        // Render the rotating handles
+        if(te.isAcceleratorComplete())
+        	renderHandles(te);
+
+
+        GlStateManager.popMatrix();
+        GlStateManager.popAttrib();
+
+    }
+
+    private void renderHandles(TileEntityAcceleratorDetectorCore te) {
+    	GlStateManager.enableLighting();
+        GlStateManager.pushMatrix();
+
+        GlStateManager.translate(0, 0, 1);
+
+        //RenderHelper.disableStandardItemLighting();
+        int bright = 0xF0;
+        int brightX = bright % 65536;
+        int brightY = bright / 65536;
+        GL11.glRotatef(90f, 0f, 1f, 0f);
+        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, brightX, brightY);
+        if (Minecraft.isAmbientOcclusionEnabled()) {
+            GlStateManager.shadeModel(GL11.GL_SMOOTH);
+        } else {
+            GlStateManager.shadeModel(GL11.GL_FLAT);
+        }
+
+        World world = te.getWorld();
+        // Translate back to local view coordinates so that we can do the acual rendering here
+//        GlStateManager.translate(-te.getPos().getX(), -te.getPos().getY(), -te.getPos().getZ());
+        this.bindTexture(new ResourceLocation("labstuff:textures/models/acceleratorDetector.png"));
+        Minecraft.getMinecraft().getBlockRendererDispatcher().getBlockModelRenderer().renderModelBrightness(getBakedModel(), world.getBlockState(te.getPos()), bright, true);
+
+        //RenderHelper.enableStandardItemLighting();
+        GlStateManager.popMatrix();
+    }
+
 
 }

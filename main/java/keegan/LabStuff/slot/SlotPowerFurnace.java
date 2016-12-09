@@ -1,7 +1,6 @@
 package keegan.labstuff.slot;
 
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
+import net.minecraft.inventory.*;
 
 public class SlotPowerFurnace extends Slot 
 {

@@ -1,5 +1,11 @@
 {
 	"variants": {
-		"normal": { "model": "labstuff:blockcircuitmaker" }
+		"facing=south": { "model": "labstuff:blockcircuitmaker", "y":180},
+		"facing=west": { "model": "labstuff:blockcircuitmaker", "y":270},
+		"facing=east": { "model": "labstuff:blockcircuitmaker", "y":90},
+		"facing=north": { "model": "labstuff:blockcircuitmaker" },
+		"facing=down": { "model": "labstuff:blockcircuitmaker" },
+		"facing=up": { "model": "labstuff:blockcircuitmaker" },
+		"default": { "model": "labstuff:blockcircuitmaker" }
 	}
 }
