@@ -1,20 +1,26 @@
 package keegan.labstuff.tileentity;
 
+import java.util.EnumSet;
+
 import keegan.labstuff.LabStuffMain;
-import keegan.labstuff.items.ItemSiliconBoule;
-import keegan.labstuff.items.ItemSiliconBoulePart;
+import keegan.labstuff.common.capabilities.Capabilities;
+import keegan.labstuff.items.*;
+import keegan.labstuff.network.*;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.*;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.*;
+import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.common.capabilities.Capability;
 
-public class TileEntityCzo extends TileEntityPowerConnection implements IInventory
+public class TileEntityCzo extends TileEntity implements IEnergyWrapper, ITickable
 {
 	
 	public ItemStack[] chestContents = new ItemStack[3];
 	private String spinning = "Still";
+	private int buffer = 0;
 	
 	@Override
 	public int getSizeInventory() 
@@ -126,12 +132,12 @@ public class TileEntityCzo extends TileEntityPowerConnection implements IInvento
         spinning = tagCompound.getString("Spinning");
 	}
 	
-	private void grow(TileEntityPower powerSource)
+	private void grow()
 	{
 		if (spinning.equals("Still")) {
 			if (getStackInSlot(0) != null && getStackInSlot(0).isItemEqual(new ItemStack(LabStuffMain.itemRodMountedSiliconSeed)) && getStackInSlot(1) != null && getStackInSlot(1).isItemEqual(new ItemStack(LabStuffMain.itemSiliconIngot))) 
 			{
-				powerSource.subtractPower(500, this);
+				buffer -= 500;
 				spinning = "spinning";
 				System.out.println("Beginning spin " + spinning);
 				worldObj.scheduleUpdate(pos, getBlockType(), 6000);
@@ -160,14 +166,13 @@ public class TileEntityCzo extends TileEntityPowerConnection implements IInvento
 	@Override
 	public void update()
 	{
-		super.update();
-		TileEntityPower powerSource = getPowerSource();
-		if(getStackInSlot(0) != null && !spinning.equals("spinning") && powerSource.getPower() > 600)
+		if(getStackInSlot(0) != null && !spinning.equals("spinning") && buffer > 600)
 		{
 				System.out.println("Attempting Spin");
-				grow(powerSource);
+				grow();
 		}
 	}
+	
 	
 	
 	@Override
@@ -225,5 +230,87 @@ public class TileEntityCzo extends TileEntityPowerConnection implements IInvento
 	public void closeInventory(EntityPlayer player) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public double getEnergy() {
+		// TODO Auto-generated method stub
+		return buffer;
+	}
+
+	@Override
+	public void setEnergy(double energy) {
+		// TODO Auto-generated method stub
+		buffer = (int) energy;
+	}
+
+	@Override
+	public double getMaxEnergy() {
+		// TODO Auto-generated method stub
+		return 10000;
+	}
+
+	@Override
+	public double transferEnergyToAcceptor(EnumFacing side, double amount) {
+		// TODO Auto-generated method stub
+		return buffer += amount;
+	}
+
+	@Override
+	public boolean canReceiveEnergy(EnumFacing side) {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public boolean canOutputTo(EnumFacing side) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public EnumSet<EnumFacing> getOutputtingSides() {
+		// TODO Auto-generated method stub
+		return EnumSet.noneOf(EnumFacing.class);
+	}
+
+	@Override
+	public EnumSet<EnumFacing> getConsumingSides() {
+		// TODO Auto-generated method stub
+		return EnumSet.allOf(EnumFacing.class);
+	}
+	
+	@Override
+	public boolean hasCapability(Capability<?> capability, EnumFacing facing)
+	{
+		return capability == Capabilities.ENERGY_STORAGE_CAPABILITY
+				|| capability == Capabilities.ENERGY_ACCEPTOR_CAPABILITY
+				|| capability == Capabilities.CABLE_OUTPUTTER_CAPABILITY
+				|| super.hasCapability(capability, facing);
+	}
+
+	@Override
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing)
+	{
+		if(capability == Capabilities.ENERGY_STORAGE_CAPABILITY || capability == Capabilities.ENERGY_ACCEPTOR_CAPABILITY
+				|| capability == Capabilities.CABLE_OUTPUTTER_CAPABILITY)
+		{
+			return (T)this;
+		}
+		
+		return super.getCapability(capability, facing);
+	}
+
+
+	@Override
+	public double getMaxOutput() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public double removeEnergyFromProvider(EnumFacing side, double amount) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }

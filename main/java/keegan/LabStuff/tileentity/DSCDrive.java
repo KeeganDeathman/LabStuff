@@ -3,7 +3,7 @@ package keegan.labstuff.tileentity;
 import keegan.labstuff.items.ItemDiscoveryDrive;
 import keegan.labstuff.recipes.*;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ITickable;
 
@@ -22,12 +22,30 @@ public class DSCDrive extends DSCPart implements IInventory, ITickable
 	public void update()
 	{
 		super.update();
-	}
-	
-	public void install(AcceleratorDiscovery discov)
-	{
-			if(core != null)
-			this.getNetwork().sendMessage(new DSCPackage(core, this, "install-"+Recipes.accelDiscoveries.indexOf(discov)));
+
+		if(core != null)
+		{
+			if(getStackInSlot(0) != null)
+			{
+				if(getStackInSlot(0).getItem() instanceof ItemDiscoveryDrive)
+				{
+					for(AcceleratorDiscovery d : Recipes.accelDiscoveries)
+					{
+						//This keeps crashing so I'll just keep adding null checks
+						if(d != null && d.getDiscoveryFlashDrive() != null && d.getDiscoveryFlashDrive().getItem() != null)
+						{
+							if(d.getDiscoveryFlashDrive().isItemEqual(getStackInSlot(0)))
+							{
+								this.getNetwork().sendMessage(new DSCPackage(core, this, "install-"+Recipes.accelDiscoveries.indexOf(d)));
+								System.out.println("Sending off!");
+							}
+						}
+					}
+				}
+
+			}
+
+		}
 	}
 	
 	@Override
@@ -38,7 +56,9 @@ public class DSCDrive extends DSCPart implements IInventory, ITickable
 			decrStackSize(0, 1);
 		}
 		if(msg.equals("registered"))
+		{
 			this.core = (TileEntityDSCCore)sender;
+		}
 	}
 
 	@Override
@@ -122,7 +142,7 @@ public class DSCDrive extends DSCPart implements IInventory, ITickable
 	@Override
 	public ItemStack removeStackFromSlot(int index) {
 		// TODO Auto-generated method stub
-		return null;
+        return ItemStackHelper.getAndRemove(this.chestContents, index);
 	}
 
 	@Override

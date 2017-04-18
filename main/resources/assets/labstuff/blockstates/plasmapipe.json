@@ -1,5 +1,19 @@
 {
-	"variants": {
-		"default": {}
-	}
+  "forge_marker": 1,
+  "defaults": {
+    "model": "labstuff:transmitter_large.obj.ls",
+    "textures": {
+      "#side": "labstuff:models/multipart/PlasmaPipeVertical",
+      "#center": "labstuff:models/multipart/PlasmaPipe",
+      "#side_opaque": "labstuff:models/multipart/opaque/PlasmaPipeVertical",
+      "#center_opaque": "labstuff:models/multipart/opaque/PlasmaPipe"
+    },
+    "custom": {
+      "flip-v": true
+    }
+  },
+  "variants": {
+    "multipart": [{}],
+    "inventory": [{}]
+  }
 }

@@ -1,6 +1,7 @@
 package keegan.labstuff.blocks;
 
 import keegan.labstuff.LabStuffMain;
+import keegan.labstuff.network.PipeUtils;
 import keegan.labstuff.tileentity.*;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
@@ -11,7 +12,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.*;
+import net.minecraftforge.fluids.FluidStack;
 
 public class BlockTurbine extends Block implements ITileEntityProvider
 {
@@ -98,11 +101,18 @@ public class BlockTurbine extends Block implements ITileEntityProvider
 		System.out.println("Hello!");
 		if(!world.isRemote)
 		{
-			if(held.getItem().equals(LabStuffMain.itemTurbineBlades) && this.equals(LabStuffMain.blockTurbineRotor))
+			if(held.getItem() != null && held.getItem().equals(LabStuffMain.itemTurbineBlades) && this.equals(LabStuffMain.blockTurbineRotor))
 			{
 				held.stackSize -=1;
 				world.setBlockState(pos, world.getBlockState(pos).withProperty(TURBINES, world.getBlockState(pos).getValue(TURBINES)+1));
 				return true;
+			}
+			else if(this.equals(LabStuffMain.blockTurbineValve))
+			{
+				TileEntityTurbineValve tile = (TileEntityTurbineValve)world.getTileEntity(pos);
+				FluidStack buffer = tile.getTankInfo(null)[0].fluid;
+				String fluid = 	buffer != null ? PipeUtils.localizeFluidStack(buffer) + " (" + buffer.amount + " mB)" : "None";
+				player.addChatComponentMessage(new TextComponentString("Holding " + tile.getEnergy() + "RF and " + fluid));
 			}
 		}
 		return false;

@@ -28,7 +28,7 @@ public class BlockBattery extends Block implements ITileEntityProvider
     		TileEntity tile = world.getTileEntity(pos);
     		if(tile instanceof TileEntityBattery)
     		{
-    			player.addChatMessage(new TextComponentString("Network is holding " + ((TileEntityBattery)tile).getPower()));
+    			player.addChatMessage(new TextComponentString("Network is holding " + ((TileEntityBattery)tile).getEnergy()));
     			return true;
     		}
     		return false;

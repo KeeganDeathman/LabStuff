@@ -2,11 +2,12 @@ package keegan.labstuff.render;
 
 import org.lwjgl.opengl.GL11;
 
+import keegan.labstuff.render.transmitter.RenderTransmitterBase;
 import keegan.labstuff.tileentity.TileEntitySolenoidAxel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.block.model.*;
-import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.renderer.texture.*;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
@@ -32,8 +33,7 @@ public class RenderSolenoid extends TileEntitySpecialRenderer<TileEntitySolenoid
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
-            bakedModel = model.bake(TRSRTransformation.identity(), DefaultVertexFormats.BLOCK,
-                    location -> Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(location.toString()));
+            bakedModel = model.bake(TRSRTransformation.identity(), Attributes.DEFAULT_BAKED_FORMAT, RenderTransmitterBase.textureGetterFlipV);
         }
         return bakedModel;
     }
@@ -55,6 +55,12 @@ public class RenderSolenoid extends TileEntitySpecialRenderer<TileEntitySolenoid
         GlStateManager.popMatrix();
         GlStateManager.popAttrib();
 
+    }
+    
+    protected void bindTexture(ResourceLocation location) {
+
+        TextureManager texturemanager = this.rendererDispatcher.renderEngine;
+        if (texturemanager != null) texturemanager.bindTexture(location);
     }
 
     private void renderHandles(TileEntitySolenoidAxel te) {
@@ -79,7 +85,7 @@ public class RenderSolenoid extends TileEntitySpecialRenderer<TileEntitySolenoid
         World world = te.getWorld();
         // Translate back to local view coordinates so that we can do the acual rendering here
 //        GlStateManager.translate(-te.getPos().getX(), -te.getPos().getY(), -te.getPos().getZ());
-        this.bindTexture(new ResourceLocation("labstuff:textures/models/solenoid.png"));
+        bindTexture(new ResourceLocation("labstuff:textures/models/solenoid.png"));
         Minecraft.getMinecraft().getBlockRendererDispatcher().getBlockModelRenderer().renderModelBrightness(getBakedModel(), world.getBlockState(te.getPos()), bright, true);
 
         //RenderHelper.enableStandardItemLighting();

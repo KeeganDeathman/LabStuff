@@ -1,14 +1,17 @@
 package keegan.labstuff.tileentity;
 
 import keegan.labstuff.LabStuffMain;
+import keegan.labstuff.common.capabilities.CapabilityWrapperManager;
+import keegan.labstuff.network.*;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.*;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
-@SuppressWarnings("deprecation")
-public class TileEntityHeatExchange extends TileEntity implements IFluidHandler
+public class TileEntityHeatExchange extends TileEntity implements IFluidHandlerWrapper
 {
 	
 	private FluidTank waterTank;
@@ -42,6 +45,25 @@ public class TileEntityHeatExchange extends TileEntity implements IFluidHandler
 	public FluidStack drain(EnumFacing from, int maxDrain, boolean doDrain) {
 			return steamTank.drain(maxDrain, doDrain);
 	}
+	
+	@Override
+	public boolean hasCapability(Capability<?> capability, EnumFacing side)
+	{
+		return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY || super.hasCapability(capability, side);
+	}
+	
+	public CapabilityWrapperManager manager = new CapabilityWrapperManager(IFluidHandlerWrapper.class, FluidHandlerWrapper.class);
+
+	@Override
+	public <T> T getCapability(Capability<T> capability, EnumFacing side)
+	{
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+		{
+			return (T)manager.getWrapper(this, side);
+		}
+		
+		return super.getCapability(capability, side);
+	}
 
 	@Override
 	public FluidTankInfo[] getTankInfo(EnumFacing from)
@@ -60,8 +82,8 @@ public class TileEntityHeatExchange extends TileEntity implements IFluidHandler
 			if(!(dir.equals(EnumFacing.DOWN)))
 			{
 				TileEntity remote = worldObj.getTileEntity(pos.offset(dir));
-				if(remote != null && remote instanceof IFluidHandler)
-					steamTank.fill(new FluidStack(LabStuffMain.steam, ((IFluidHandler)remote).fill(dir.getOpposite(), steamTank.drain(steamTank.getFluidAmount(), true), true)), true);
+				if(remote != null && remote.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, EnumFacing.UP))
+					steamTank.fill(new FluidStack(LabStuffMain.steam, remote.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, dir.getOpposite()).fill(steamTank.drain(steamTank.getFluidAmount(), true), true)), true);
 			}
 		}
 	}

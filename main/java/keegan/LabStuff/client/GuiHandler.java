@@ -25,10 +25,6 @@ public class GuiHandler implements IGuiHandler
 		{
 			return new ContainerCircuitMaker(player.inventory, (TileEntityCircuitMaker) tileEntity);
 		}
-		if(tileEntity instanceof TileEntityComputer)
-		{
-			return new ContainerComputer(player.inventory, (TileEntityComputer) tileEntity);
-		}
 		if(tileEntity instanceof TileEntityElectrifier)
 		{
 			return new ContainerElectrifier(player.inventory, (TileEntityElectrifier) tileEntity);
@@ -85,6 +81,40 @@ public class GuiHandler implements IGuiHandler
 		{
 			return new ContainerMatterCollector(player.inventory, (TileEntityMatterCollector) tileEntity);
 		}
+		if(tileEntity instanceof TileEntityWorkbench)
+		{
+			return new ContainerWorkbench(player.inventory, (TileEntityWorkbench) tileEntity);
+		}
+		if(tileEntity instanceof Chloralakizer)
+		{
+			return new ContainerChloralakizer(player.inventory, (Chloralakizer) tileEntity);
+		}
+		if(tileEntity instanceof ReactionChamber)
+		{
+			return new ContainerReactionChamber(player.inventory, (ReactionChamber) tileEntity);
+		}
+		if(tileEntity instanceof AlloySmelter)
+		{
+			return new ContainerAlloySmelter(player.inventory, (AlloySmelter) tileEntity);
+		}
+		if(tileEntity instanceof Squeezer)
+		{
+			return new ContainerSqueezer(player.inventory, (Squeezer) tileEntity);
+		}
+		if(tileEntity instanceof Fermenter)
+		{
+			return new ContainerFermenter(player.inventory, (Fermenter) tileEntity);
+		}
+		if(tileEntity instanceof IBM650Punch)
+		{
+			return new ContainerIBM650Punch(player.inventory, (IBM650Punch) tileEntity);
+		}
+		if(tileEntity instanceof IBM650Console)
+		{
+			return new ContainerIBM650Console(player.inventory, (IBM650Console) tileEntity);
+		}
+		if(tileEntity instanceof KeyPunch)
+			return new ContainerKeyPunch(player.inventory, (KeyPunch) tileEntity);
 		return null;
 	}
 
@@ -96,7 +126,6 @@ public class GuiHandler implements IGuiHandler
 	public static Object getGui(int ID, EntityPlayer player, World world, int x, int y, int z)
 	{
 		TileEntity tileEntity = world.getTileEntity(new BlockPos(x, y, z));
-		
 		if(tileEntity instanceof TileEntityCircuitDesignTable)
 		{
 			return new GuiCircuitDesignTable(player.inventory, (TileEntityCircuitDesignTable) tileEntity);
@@ -104,10 +133,6 @@ public class GuiHandler implements IGuiHandler
 		if(tileEntity instanceof TileEntityCircuitMaker)
 		{
 			return new GuiCircuitMaker(player.inventory, (TileEntityCircuitMaker) tileEntity);
-		}
-		if(tileEntity instanceof TileEntityComputer)
-		{
-			return new GuiComputer(player.inventory, (TileEntityComputer) tileEntity, player);
 		}
 		if(tileEntity instanceof TileEntityElectrifier)
 		{
@@ -169,6 +194,48 @@ public class GuiHandler implements IGuiHandler
 		{
 			return new GuiMatterCollector((TileEntityMatterCollector) tileEntity, player.inventory);
 		}
+		if(tileEntity instanceof TileEntityWorkbench)
+		{
+			return new GuiWorkbench(player.inventory, (TileEntityWorkbench) tileEntity);
+		}
+		if(tileEntity instanceof Chloralakizer)
+		{
+			return new GuiChloralakizer(player.inventory, (Chloralakizer) tileEntity);
+		}
+		if(tileEntity instanceof ReactionChamber)
+		{
+			return new GuiReactionChamber(player.inventory, (ReactionChamber) tileEntity);
+		}
+		if(tileEntity instanceof AlloySmelter)
+		{
+			return new GuiAlloySmelter(player.inventory, (AlloySmelter) tileEntity);
+		}
+		if(tileEntity instanceof Squeezer)
+		{
+			return new GuiSqueezer(player.inventory, (Squeezer) tileEntity);
+		}
+		if(tileEntity instanceof Fermenter)
+		{
+			return new GuiFermenter(player.inventory, (Fermenter) tileEntity);
+		}
+		if(tileEntity instanceof IBM650Punch)
+		{
+			return new GuiIBM650Punch(player.inventory, (IBM650Punch) tileEntity);
+		}
+		if(tileEntity instanceof KeyPunch && ID == 24)
+			return new GuiKeyPunch(player.inventory, (KeyPunch)tileEntity);
+		if(tileEntity instanceof KeyPunch && ID == 29)
+			return new GuiKeyPunchManual(player.inventory, (KeyPunch)tileEntity);
+		if(tileEntity instanceof KeyPunch && ID == 30)
+			return new GuiKeyPunchRead(player.inventory, (KeyPunch)tileEntity);
+		if(tileEntity instanceof IBM650Console)
+		{
+			return new GuiIBM650Console(player.inventory, (IBM650Console) tileEntity);
+		}
+		if(ID == 27)
+			return new GuiPunchCard(player);
+		if(ID == 28)
+			return new GuiPunchDeck(player);
 		return null;
 	}
 

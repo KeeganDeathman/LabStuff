@@ -1,0 +1,11 @@
+{
+	"parent": "block/cube",
+	"textures": {
+		"up": "labstuff:blocks/ibm650",
+		"down": "labstuff:blocks/ibm650",
+		"south": "labstuff:blocks/ibm650Horiz",
+		"west": "labstuff:blocks/ibm650Horiz",
+		"east": "labstuff:blocks/ibm650Horiz",
+		"north": "labstuff:blocks/ibm650Horiz"
+	}
+}

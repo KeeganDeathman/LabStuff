@@ -2,7 +2,6 @@
 	"variants": {
 		"render=block":{ "model": "labstuff:blocksolenoidaxel" },
 		"render=air":{ "model": "labstuff:blocksolenoidaxel" },
-		"render=solenoid":{ "model": ""},
 		"normal": { "model": "labstuff:blocksolenoidaxel" }
 	}
 }

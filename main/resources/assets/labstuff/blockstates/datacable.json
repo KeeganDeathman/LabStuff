@@ -1,0 +1,19 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "labstuff:transmitter_large.obj.ls",
+    "textures": {
+      "#side": "labstuff:models/multipart/DataCableVertical",
+      "#center": "labstuff:models/multipart/DataCable",
+      "#side_opaque": "labstuff:models/multipart/opaque/DataCableVertical",
+      "#center_opaque": "labstuff:models/multipart/opaque/DataCable"
+    },
+    "custom": {
+      "flip-v": true
+    }
+  },
+  "variants": {
+    "multipart": [{}],
+    "inventory": [{}]
+  }
+}

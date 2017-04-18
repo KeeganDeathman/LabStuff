@@ -1,0 +1,57 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"model": "forge:fluid"
+	},
+	"variants": {
+		"steam": [
+			{
+				"custom": {
+					"fluid": "steam"
+				}
+			}
+		],
+		"ethanol": [
+			{
+				"custom": {
+					"fluid": "ethanol"
+				}
+			}
+		],
+		"kerosene": [
+			{
+				"custom": {
+					"fluid": "kerosene"
+				}
+			}
+		],
+		"sulfolane": [
+			{
+				"custom": {
+					"fluid": "sulfolane"
+				}
+			}
+		],
+		"biodiesel": [
+			{
+				"custom": {
+					"fluid": "biodiesel"
+				}
+			}
+		],
+		"oxygen": [
+			{
+				"custom": {
+					"fluid": "oxygen"
+				}
+			}
+		],
+		"plantoil": [
+			{
+				"custom": {
+					"fluid": "plantoil"
+				}
+			}
+		]
+	}
+}

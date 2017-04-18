@@ -46,12 +46,7 @@ public class BlockElectrifier extends Block implements ITileEntityProvider
 		return new TileEntityElectrifier();
 	}
 	
-	//It's not an opaque cube, so you need this.
-    @Override
-    public boolean isOpaqueCube(IBlockState state) 
-    {
-            return false;
-    }
+	
     
 	public static final PropertyDirection FACING = PropertyDirection.create("facing");
 	public static final PropertyBool WATERED = PropertyBool.create("watered");
@@ -62,11 +57,7 @@ public class BlockElectrifier extends Block implements ITileEntityProvider
 		return new BlockStateContainer(this, new IProperty[]{FACING, WATERED});
 	}
 	
-	@SideOnly(Side.CLIENT)
-    public BlockRenderLayer getBlockLayer()
-    {
-        return BlockRenderLayer.TRANSLUCENT;
-    }
+	
 	
     @Override
     public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase player, ItemStack stack)
@@ -75,10 +66,23 @@ public class BlockElectrifier extends Block implements ITileEntityProvider
     	world.setBlockState(pos, getDefaultState().withProperty(FACING, EnumFacing.fromAngle(90*l)).withProperty(WATERED, false));    
     }
     
+    @SideOnly(Side.CLIENT)
+    public BlockRenderLayer getBlockLayer()
+    {
+        return BlockRenderLayer.TRANSLUCENT;
+    }
+    
     public boolean shouldSideBeRendered(IBlockAccess access, int i, int j, int k, int l)
 	{
 		return false;
 	}
+    
+  //It's not an opaque cube, so you need this.
+    @Override
+    public boolean isOpaqueCube(IBlockState state) 
+    {
+            return false;
+    }
     
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack held, EnumFacing facing, float fx, float par8, float par9) 

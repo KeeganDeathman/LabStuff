@@ -1,20 +1,27 @@
 package keegan.labstuff.tileentity;
 
-import java.util.List;
+import java.util.EnumSet;
 
 import keegan.labstuff.LabStuffMain;
+import keegan.labstuff.common.capabilities.Capabilities;
+import keegan.labstuff.network.IEnergyWrapper;
 import keegan.labstuff.recipes.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.*;
-import net.minecraftforge.oredict.OreDictionary;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.*;
+import net.minecraftforge.common.capabilities.Capability;
 
-public class TileEntityEnricher extends TileEntityPowerConnection implements IInventory
+public class TileEntityEnricher extends TileEntity implements IEnergyWrapper, ITickable
 {
 	
 	public ItemStack[] chestContents = new ItemStack[2];
 	private boolean enriching = false;
+	private int buffer = 0;
 	
 	@Override
 	public int getSizeInventory() 
@@ -22,6 +29,43 @@ public class TileEntityEnricher extends TileEntityPowerConnection implements IIn
 		// TODO Auto-generated method stub
 		return chestContents.length;
 	}
+	
+	//Sync
+	@Override
+	public SPacketUpdateTileEntity getUpdatePacket()
+	{
+		NBTTagCompound syncData = new NBTTagCompound();
+		syncData.setInteger("energy", buffer);
+		return new SPacketUpdateTileEntity(pos, 1, syncData);
+	}
+			
+	@Override
+	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt)
+	{
+		buffer = pkt.getNbtCompound().getInteger("energy");
+	}
+	
+	@Override
+	public boolean hasCapability(Capability<?> capability, EnumFacing facing)
+	{
+		return capability == Capabilities.ENERGY_STORAGE_CAPABILITY
+				|| capability == Capabilities.ENERGY_ACCEPTOR_CAPABILITY
+				|| capability == Capabilities.CABLE_OUTPUTTER_CAPABILITY
+				|| super.hasCapability(capability, facing);
+	}
+
+	@Override
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing)
+	{
+		if(capability == Capabilities.ENERGY_STORAGE_CAPABILITY || capability == Capabilities.ENERGY_ACCEPTOR_CAPABILITY
+				|| capability == Capabilities.CABLE_OUTPUTTER_CAPABILITY)
+		{
+			return (T)this;
+		}
+		
+		return super.getCapability(capability, facing);
+	}
+
 
 	@Override
 	public ItemStack getStackInSlot(int slot) 
@@ -192,8 +236,7 @@ public class TileEntityEnricher extends TileEntityPowerConnection implements IIn
 	@Override
 	public void update()
 	{
-		super.update();
-		if(getStackInSlot(0) != null && getPowerSource().powerInt >= 50)
+		if(getStackInSlot(0) != null && buffer >= 50)
 		{
 			ItemStack input = getStackInSlot(0);
 			if(input != null)
@@ -206,13 +249,14 @@ public class TileEntityEnricher extends TileEntityPowerConnection implements IIn
 						dust = new ItemStack(enrich.getOutput());
 						worldObj.scheduleUpdate(pos, LabStuffMain.blockEnricher, 1200);
 						enriching = true;
-						getPowerSource().subtractPower(50, this);
+						buffer-=50;
 					}
 				}
 			}
 
 		}
 	}
+	
 	
 	public boolean isEnriching()
 	{
@@ -232,6 +276,66 @@ public class TileEntityEnricher extends TileEntityPowerConnection implements IIn
 			decrStackSize(0, 1);
 			setInventorySlotContents(1, new ItemStack(dust.getItem(), 2));
 		}
+	}
+
+	@Override
+	public double getEnergy() {
+		// TODO Auto-generated method stub
+		return buffer;
+	}
+
+	@Override
+	public void setEnergy(double energy) {
+		// TODO Auto-generated method stub
+		buffer = (int) energy;
+	}
+
+	@Override
+	public double getMaxEnergy() {
+		// TODO Auto-generated method stub
+		return 10000;
+	}
+
+	@Override
+	public double transferEnergyToAcceptor(EnumFacing side, double amount) {
+		// TODO Auto-generated method stub
+		return buffer += amount;
+	}
+
+	@Override
+	public boolean canReceiveEnergy(EnumFacing side) {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public boolean canOutputTo(EnumFacing side) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public EnumSet<EnumFacing> getOutputtingSides() {
+		// TODO Auto-generated method stub
+		return EnumSet.noneOf(EnumFacing.class);
+	}
+
+	@Override
+	public EnumSet<EnumFacing> getConsumingSides() {
+		// TODO Auto-generated method stub
+		return EnumSet.allOf(EnumFacing.class);
+	}
+
+	@Override
+	public double getMaxOutput() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public double removeEnergyFromProvider(EnumFacing side, double amount) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 }

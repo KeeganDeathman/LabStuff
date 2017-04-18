@@ -1,0 +1,11 @@
+{
+	"variants": {
+		"facing=south": { "model": "labstuff:blockWorkbench", "y":180},
+		"facing=west": { "model": "labstuff:blockWorkbench", "y":270},
+		"facing=east": { "model": "labstuff:blockWorkbench", "y":90},
+		"facing=north": { "model": "labstuff:blockWorkbench" },
+		"facing=down": { "model": "labstuff:blockWorkbench" },
+		"facing=up": { "model": "labstuff:blockWorkbench" },
+		"default": { "model": "labstuff:blockWorkbench" }
+	}
+}

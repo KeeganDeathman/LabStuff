@@ -1,23 +1,27 @@
 package keegan.labstuff.tileentity;
 
+import java.util.EnumSet;
+
 import keegan.labstuff.blocks.BlockPowerFurnace;
+import keegan.labstuff.common.capabilities.Capabilities;
+import keegan.labstuff.network.*;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.*;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.*;
-import net.minecraft.util.ITickable;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.Capability;
 
-public class TileEntityPowerFurnace extends TileEntity implements IInventory, ITickable
+public class TileEntityPowerFurnace extends TileEntity implements ITickable, IEnergyWrapper
 {
 	private ItemStack[] chestContents;
 	
 	public int burnTime;
+	private int power = 0;
 	
 	public TileEntityPowerFurnace()
 	{
@@ -105,6 +109,27 @@ public class TileEntityPowerFurnace extends TileEntity implements IInventory, IT
 			itemstack.stackSize = getInventoryStackLimit();
 		}
 		
+	}
+	
+	@Override
+	public boolean hasCapability(Capability<?> capability, EnumFacing facing)
+	{
+		return capability == Capabilities.ENERGY_STORAGE_CAPABILITY
+				|| capability == Capabilities.ENERGY_ACCEPTOR_CAPABILITY
+				|| capability == Capabilities.CABLE_OUTPUTTER_CAPABILITY
+				|| super.hasCapability(capability, facing);
+	}
+
+	@Override
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing)
+	{
+		if(capability == Capabilities.ENERGY_STORAGE_CAPABILITY || capability == Capabilities.ENERGY_ACCEPTOR_CAPABILITY
+				|| capability == Capabilities.CABLE_OUTPUTTER_CAPABILITY)
+		{
+			return (T)this;
+		}
+		
+		return super.getCapability(capability, facing);
 	}
 
 	@Override
@@ -205,8 +230,8 @@ public class TileEntityPowerFurnace extends TileEntity implements IInventory, IT
 			else
 			{
 				setBurnTime(getBurnTime()-1);
-				if(worldObj.getTileEntity(pos.up()) instanceof TileEntityPower)
-					((TileEntityPower)worldObj.getTileEntity(pos.up())).addPower(10, this);
+				power += 10;
+				CableUtils.emit(this);
 			}
 		}
 		
@@ -225,6 +250,66 @@ public class TileEntityPowerFurnace extends TileEntity implements IInventory, IT
 
 	public void setBurnTime(int burnTime) {
 		this.burnTime = burnTime;
+	}
+
+	@Override
+	public double getEnergy() {
+		// TODO Auto-generated method stub
+		return power;
+	}
+
+	@Override
+	public void setEnergy(double energy) {
+		// TODO Auto-generated method stub
+		power = (int) energy;
+	}
+
+	@Override
+	public double getMaxEnergy() {
+		// TODO Auto-generated method stub
+		return 1000000;
+	}
+
+	@Override
+	public double transferEnergyToAcceptor(EnumFacing side, double amount) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public boolean canReceiveEnergy(EnumFacing side) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean canOutputTo(EnumFacing side) {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public EnumSet<EnumFacing> getOutputtingSides() {
+		// TODO Auto-generated method stub
+		return EnumSet.of(EnumFacing.UP);
+	}
+
+	@Override
+	public EnumSet<EnumFacing> getConsumingSides() {
+		// TODO Auto-generated method stub
+		return EnumSet.noneOf(EnumFacing.class);
+	}
+
+	@Override
+	public double getMaxOutput() {
+		// TODO Auto-generated method stub
+		return 10;
+	}
+
+	@Override
+	public double removeEnergyFromProvider(EnumFacing side, double amount) {
+		// TODO Auto-generated method stub
+		return power -= amount;
 	}
 	
 }

@@ -70,30 +70,30 @@ public class TileEntityDSCCore extends DSCPart
 		int foundWorkbenches = 0;
 		if(getNetwork() != null)
 		{
-			for(int i = 0; i < getNetwork().getDeviceCount(); i++)
+			for(DSCPart part : getNetwork().devices)
 			{
-				if(getNetwork().getDeviceByIndex(i) instanceof DSCOS)
+				if(part instanceof DSCOS)
 				{	
 					foundOS = true;
 					foundNeed += 8;
-					getNetwork().sendMessage(new DSCPackage(getNetwork().getDeviceByIndex(i), this, "registered"));
+					getNetwork().sendMessage(new DSCPackage(part, this, "registered"));
 				}
-				if(getNetwork().getDeviceByIndex(i) instanceof DSCRam)
+				if(part instanceof DSCRam)
 				{	
 					foundRam += 5;
-					getNetwork().sendMessage(new DSCPackage(getNetwork().getDeviceByIndex(i), this, "registered"));
+					getNetwork().sendMessage(new DSCPackage(part, this, "registered"));
 				}
-				if(getNetwork().getDeviceByIndex(i) instanceof DSCDrive)
+				if(part instanceof DSCDrive)
 				{	
 					foundNeed += 3;
 					foundDrives += 1;
-					getNetwork().sendMessage(new DSCPackage(getNetwork().getDeviceByIndex(i), this, "registered"));
+					getNetwork().sendMessage(new DSCPackage(part, this, "registered"));
 				}
-				if(getNetwork().getDeviceByIndex(i) instanceof DSCBench)
+				if(part instanceof DSCBench)
 				{	
 					foundNeed += 10;
 					foundWorkbenches += 1;
-					getNetwork().sendMessage(new DSCPackage(getNetwork().getDeviceByIndex(i), this, "registered"));
+					getNetwork().sendMessage(new DSCPackage(part, this, "registered"));
 				}
 			}
 		}
@@ -108,16 +108,18 @@ public class TileEntityDSCCore extends DSCPart
 	@Override
 	public void performAction(String msg, DSCPart sender)
 	{
-		if(msg.startsWith("install-") && (ram-ramNeeded) > -1)
+		int freeRam = ram-ramNeeded;
+		System.out.println("Free Ram: " + freeRam);
+		if(msg.startsWith("install-") && (ram-ramNeeded) > -1 && hasOS)
 		{
+			System.out.println("Received");
 			AcceleratorDiscovery dis = Recipes.accelDiscoveries.get(Integer.parseInt(msg.replace("install-", "")));
 			if(!discovered.contains(dis))
 			{
 				if(discovered.contains(dis.getDependency()) || dis.getDependency() == null)
 				{
 					discovered.add(dis);
-					getNetwork().sendMessage(new DSCPackage(sender, this, "installed"));
-		
+					getNetwork().sendMessage(new DSCPackage(sender, this, "installed"));		
 				}
 			}
 		}
@@ -125,7 +127,9 @@ public class TileEntityDSCCore extends DSCPart
 
 	public ArrayList<AcceleratorDiscovery> getDiscovered()
 	{
-		return discovered;
+		if((ram-ramNeeded) > -1 && hasOS)
+			return discovered;
+		return null;
 	}
 	
 }

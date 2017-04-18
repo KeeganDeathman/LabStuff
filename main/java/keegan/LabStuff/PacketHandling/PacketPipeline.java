@@ -5,10 +5,21 @@ import java.util.*;
 import io.netty.buffer.*;
 import io.netty.channel.*;
 import io.netty.handler.codec.MessageToMessageCodec;
+import keegan.labstuff.LabStuffMain;
+import keegan.labstuff.PacketHandling.PacketDataRequest.DataRequestMessage;
+import keegan.labstuff.PacketHandling.PacketTileEntity.TileEntityMessage;
+import keegan.labstuff.PacketHandling.PacketTransmitterUpdate.TransmitterUpdateMessage;
+import keegan.labstuff.network.Range4D;
 import net.minecraft.entity.player.*;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.*;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.*;
 import net.minecraftforge.fml.common.network.internal.FMLProxyPacket;
+import net.minecraftforge.fml.common.network.simpleimpl.*;
 import net.minecraftforge.fml.relauncher.Side;
 
 /**
@@ -22,7 +33,11 @@ public class PacketPipeline extends MessageToMessageCodec<FMLProxyPacket, Abstra
     private EnumMap<Side, FMLEmbeddedChannel>           channels;
     private LinkedList<Class<? extends AbstractPacket>> packets           = new LinkedList<Class<? extends AbstractPacket>>();
     private boolean                                     isPostInitialised = false;
+    
+	public SimpleNetworkWrapper netHandler = NetworkRegistry.INSTANCE.newSimpleChannel("LAB");
 
+	
+	
     /**
      * Register your packet with the pipeline. Discriminators are automatically set.
      *
@@ -100,6 +115,10 @@ public class PacketPipeline extends MessageToMessageCodec<FMLProxyPacket, Abstra
     // Method to call from FMLInitializationEvent
     public void initalise() {
         this.channels = NetworkRegistry.INSTANCE.newChannel("LabStuff", this);
+		netHandler.registerMessage(PacketTransmitterUpdate.class, TransmitterUpdateMessage.class, 1, Side.CLIENT);
+		netHandler.registerMessage(PacketTileEntity.class, TileEntityMessage.class, 5, Side.CLIENT);
+		netHandler.registerMessage(PacketTileEntity.class, TileEntityMessage.class, 5, Side.SERVER);
+		netHandler.registerMessage(PacketDataRequest.class, DataRequestMessage.class, 7, Side.SERVER);
     }
 
     // Method to call from FMLPostInitializationEvent
@@ -177,6 +196,8 @@ public class PacketPipeline extends MessageToMessageCodec<FMLProxyPacket, Abstra
         this.channels.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(dimensionId);
         this.channels.get(Side.SERVER).writeAndFlush(message);
     }
+    
+    
 
     /**
      * Send this message to the server.
@@ -189,4 +210,146 @@ public class PacketPipeline extends MessageToMessageCodec<FMLProxyPacket, Abstra
         this.channels.get(Side.CLIENT).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.TOSERVER);
         this.channels.get(Side.CLIENT).writeAndFlush(message);
     }
+
+    public void sendToReceivers(IMessage message, Range4D range)
+	{
+		MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
+
+		if(server != null)
+		{
+			for(EntityPlayerMP player : (List<EntityPlayerMP>)server.getPlayerList().getPlayerList())
+			{
+				if(player.dimension == range.dimensionId && Range4D.getChunkRange(player).intersects(range))
+				{
+					netHandler.sendTo(message, player);
+				}
+			}
+		}
+	}
+
+	public static String readString(ByteBuf dataStream) {
+		// TODO Auto-generated method stub
+		return ByteBufUtils.readUTF8String(dataStream);
+	}
+
+	public void sendTo(IMessage message, EntityPlayerMP player)
+	{
+		netHandler.sendTo(message, player);
+	}
+	
+	public void sendToServer(IMessage message)
+	{
+		netHandler.sendToServer(message);
+	}
+	
+	public static void writeString(ByteBuf dataStream, String text) {
+		// TODO Auto-generated method stub
+		ByteBufUtils.writeUTF8String(dataStream, text);
+	}
+
+	public void handlePacket(Runnable runnable, EntityPlayer player) {
+		// TODO Auto-generated method stub
+		LabStuffMain.proxy.handlePacket(runnable, player);
+	}
+
+	public EntityPlayer getPlayer(MessageContext context) {
+		// TODO Auto-generated method stub
+		return LabStuffMain.proxy.getPlayer(context);
+	}
+
+	public static void encode(Object[] dataValues, ByteBuf output)
+	{
+		try {
+			for(Object data : dataValues)
+			{
+				if(data instanceof Integer)
+				{
+					output.writeInt((Integer)data);
+				}
+				else if(data instanceof Short)
+				{
+					output.writeShort((Short)data);
+				}
+				else if(data instanceof Long)
+				{
+					output.writeLong((Long)data);
+				}
+				else if(data instanceof Boolean)
+				{
+					output.writeBoolean((Boolean)data);
+				}
+				else if(data instanceof Double)
+				{
+					output.writeDouble((Double)data);
+				}
+				else if(data instanceof Float)
+				{
+					output.writeFloat((Float)data);
+				}
+				else if(data instanceof String)
+				{
+					writeString(output, (String)data);
+				}
+				else if(data instanceof Byte)
+				{
+					output.writeByte((Byte)data);
+				}
+				else if(data instanceof EnumFacing)
+				{
+					output.writeInt(((EnumFacing)data).ordinal());
+				}
+				else if(data instanceof ItemStack)
+				{
+					writeStack(output, (ItemStack)data);
+				}
+				else if(data instanceof NBTTagCompound)
+				{
+					writeNBT(output, (NBTTagCompound)data);
+				}
+				else if(data instanceof int[])
+				{
+					for(int i : (int[])data)
+					{
+						output.writeInt(i);
+					}
+				}
+				else if(data instanceof byte[])
+				{
+					for(byte b : (byte[])data)
+					{
+						output.writeByte(b);
+					}
+				}
+				else if(data instanceof ArrayList)
+				{
+					encode(((ArrayList)data).toArray(), output);
+				}
+				else {
+					throw new RuntimeException("Un-encodable data passed to encode(): " + data + ", full data: " + Arrays.toString(dataValues));
+				}
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void writeStack(ByteBuf output, ItemStack stack)
+	{
+		ByteBufUtils.writeItemStack(output, stack);
+	}
+	
+	public static ItemStack readStack(ByteBuf input)
+	{
+		return ByteBufUtils.readItemStack(input);
+	}
+	
+	public static void writeNBT(ByteBuf output, NBTTagCompound nbtTags)
+	{
+		ByteBufUtils.writeTag(output, nbtTags);
+	}
+	
+	public static NBTTagCompound readNBT(ByteBuf input)
+	{
+		return ByteBufUtils.readTag(input);
+	}
 }

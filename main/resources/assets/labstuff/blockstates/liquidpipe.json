@@ -1,0 +1,19 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "labstuff:transmitter_large.obj.ls",
+    "textures": {
+      "#side": "labstuff:models/multipart/LiquidPipeVertical",
+      "#center": "labstuff:models/multipart/LiquidPipe",
+      "#side_opaque": "labstuff:models/multipart/opaque/LiquidPipeVertical",
+      "#center_opaque": "labstuff:models/multipart/opaque/LiquidPipe"
+    },
+    "custom": {
+      "flip-v": true
+    }
+  },
+  "variants": {
+    "multipart": [{}],
+    "inventory": [{}]
+  }
+}

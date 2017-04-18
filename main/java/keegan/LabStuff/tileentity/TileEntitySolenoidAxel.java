@@ -33,12 +33,19 @@ public class TileEntitySolenoidAxel extends TileEntityRotary
 	}
 	
 	//Sync
+	
+	@Override
+	public NBTTagCompound getUpdateTag()
+	{
+		NBTTagCompound syncData = super.getUpdateTag();
+		syncData.setFloat("angle", angle);
+		return syncData;
+	}
+	
 	@Override
 	public SPacketUpdateTileEntity getUpdatePacket()
 	{
-		NBTTagCompound syncData = new NBTTagCompound();
-		syncData.setFloat("angle", angle);
-		return new SPacketUpdateTileEntity(pos, 1, syncData);
+		return new SPacketUpdateTileEntity(pos, 1, getUpdateTag());
 	}
 		
 	@Override
@@ -50,20 +57,18 @@ public class TileEntitySolenoidAxel extends TileEntityRotary
 	@Override
 	public void update()
 	{
-		int xCoord = pos.getX();
-		int yCoord = pos.getY();
-		int zCoord = pos.getZ();
 		if(worldObj.getBlockState(pos.down()).getBlock() != null && worldObj.getBlockState(pos.down()).getBlock().equals(LabStuffMain.blockIndustrialMotorShaft))
 //			System.out.println(isMultiBlock() + "," + (getEnergy() >= 250000) + "," + torusComplete());
 		if(isMultiBlock() && this.getEnergy() >= 250000)
 		{
 			subEnergy(250000);
 			angle += 20f;
+			worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos), worldObj.getBlockState(pos), 0);
 			if(getBlock(pos.add(10,1,0)) != null && getBlock(pos.add(10,1,0)).equals(LabStuffMain.blockFusionPlasmaTap) && torusComplete())
 			{
 				((TileEntityPlasmaTap)getTileEntity(pos.add(10,1,0))).setRunning(true);
 			}
-			if(getBlock(xCoord-10, yCoord+1, zCoord) != null && getBlock(xCoord-10, yCoord+1, zCoord).equals(LabStuffMain.blockFusionPlasmaTap) && torusComplete())
+			if(getBlock(pos.subtract(new Vec3i(10,0,0)).add(0,1,0)) != null && getBlock(pos.subtract(new Vec3i(10,0,0)).add(0,1,0)).equals(LabStuffMain.blockFusionPlasmaTap) && torusComplete())
 			{
 				((TileEntityPlasmaTap)getTileEntity(pos.subtract(new Vec3i(10,0,0)).add(0,1,0))).setRunning(true);
 			}
@@ -77,36 +82,36 @@ public class TileEntitySolenoidAxel extends TileEntityRotary
 			}
 			//Get the power
 			
-			if(getBlock(pos.add(10,1,0)) != null && torusComplete() && getBlock(pos.add(10,1,0)).equals(LabStuffMain.blockFusionPlasmaTap) && ((TileEntityPlasmaTap)getTileEntity(pos.add(10,1,0))).getPlasma() > 250)
+			if(getBlock(pos.add(10,1,0)) != null && torusComplete() && getBlock(pos.add(10,1,0)).equals(LabStuffMain.blockFusionPlasmaTap) && ((TileEntityPlasmaTap)getTileEntity(pos.add(10,1,0))).getPlasma(null) > 250)
 			{
 				((TileEntityPlasmaTap)getTileEntity(pos.add(10,1,0))).burnPlasma();
-				if(getBlock(xCoord+10, yCoord, zCoord) != null && getBlock(pos.add(10,0,0)).equals(LabStuffMain.blockFusionHeatExchange))
+				if(getBlock(pos.add(10,0,0)) != null && getBlock(pos.add(10,0,0)).equals(LabStuffMain.blockFusionHeatExchange))
 				{
-					((TileEntityHeatExchange)getTileEntity(xCoord+10, yCoord, zCoord)).addPower();
+					((TileEntityHeatExchange)getTileEntity(pos.add(10,0,0))).addPower();
 				}
 			}
-			if(getBlock(xCoord-10, yCoord+1, zCoord) != null && torusComplete() && getBlock(xCoord-10, yCoord+1, zCoord).equals(LabStuffMain.blockFusionPlasmaTap) && ((TileEntityPlasmaTap)getTileEntity(pos.add(0,1,0).subtract(new Vec3i(0,0,10)))).getPlasma() > 250)
+			if(getBlock(pos.subtract(new Vec3i(10,0,0)).add(0,1,0)) != null && torusComplete() && getBlock(pos.subtract(new Vec3i(10,0,0)).add(0,1,0)).equals(LabStuffMain.blockFusionPlasmaTap) && ((TileEntityPlasmaTap)getTileEntity(pos.add(0,1,0).subtract(new Vec3i(0,0,10)))).getPlasma(null) > 250)
 			{
-				((TileEntityPlasmaTap)getTileEntity(pos.subtract(new Vec3i(0,0,10)).add(0,1,0))).burnPlasma();
-				if(getBlock(xCoord-10, yCoord, zCoord) != null && getBlock(xCoord-10, yCoord, zCoord).equals(LabStuffMain.blockFusionHeatExchange))
+				((TileEntityPlasmaTap)getTileEntity(pos.subtract(new Vec3i(10,0,0)).add(0,1,0))).burnPlasma();
+				if(getBlock(pos.subtract(new Vec3i(10,0,0))) != null && getBlock(pos.subtract(new Vec3i(10,0,0))).equals(LabStuffMain.blockFusionHeatExchange))
 				{
-					((TileEntityHeatExchange)getTileEntity(xCoord-10, yCoord, zCoord)).addPower();
+					((TileEntityHeatExchange)getTileEntity(pos.subtract(new Vec3i(10,0,0)))).addPower();
 				}
 			}
-			if(getBlock(pos.add(0,1,10)) != null && torusComplete() && getBlock(pos.add(0,1,10)).equals(LabStuffMain.blockFusionPlasmaTap) && ((TileEntityPlasmaTap)getTileEntity(pos.add(0,1,10))).getPlasma() > 250)
+			if(getBlock(pos.add(0,1,10)) != null && torusComplete() && getBlock(pos.add(0,1,10)).equals(LabStuffMain.blockFusionPlasmaTap) && ((TileEntityPlasmaTap)getTileEntity(pos.add(0,1,10))).getPlasma(null) > 250)
 			{
 				((TileEntityPlasmaTap)getTileEntity(pos.add(0,1,10))).burnPlasma();
-				if(getBlock(xCoord, yCoord, zCoord+10) != null && getBlock(xCoord, yCoord, zCoord+10).equals(LabStuffMain.blockFusionHeatExchange))
+				if(getBlock(pos.add(0,0,10)) != null && getBlock(pos.add(0,0,10)).equals(LabStuffMain.blockFusionHeatExchange))
 				{
-					((TileEntityHeatExchange)getTileEntity(xCoord, yCoord, zCoord+10)).addPower();
+					((TileEntityHeatExchange)getTileEntity(pos.add(0,0,10))).addPower();
 				}
 			}
-			if(getBlock(pos.subtract(new Vec3i(0,0,10)).add(0,1,0)) != null && torusComplete() && getBlock(pos.subtract(new Vec3i(0,0,10)).add(0,1,0)).equals(LabStuffMain.blockFusionPlasmaTap) && ((TileEntityPlasmaTap)getTileEntity(pos.subtract(new Vec3i(0,0,10)).add(0,1,0))).getPlasma() > 250)
+			if(getBlock(pos.subtract(new Vec3i(0,0,10)).add(0,1,0)) != null && torusComplete() && getBlock(pos.subtract(new Vec3i(0,0,10)).add(0,1,0)).equals(LabStuffMain.blockFusionPlasmaTap) && ((TileEntityPlasmaTap)getTileEntity(pos.subtract(new Vec3i(0,0,10)).add(0,1,0))).getPlasma(null) > 250)
 			{
 				((TileEntityPlasmaTap)getTileEntity(pos.subtract(new Vec3i(0,0,10)).add(0,1,0))).burnPlasma();
-				if(getBlock(xCoord, yCoord, zCoord-10) != null && getBlock(xCoord, yCoord, zCoord-10).equals(LabStuffMain.blockFusionHeatExchange))
+				if(getBlock(pos.subtract(new Vec3i(0,0,10))) != null && getBlock(pos.subtract(new Vec3i(0,0,10))).equals(LabStuffMain.blockFusionHeatExchange))
 				{
-					((TileEntityHeatExchange)getTileEntity(xCoord, yCoord, zCoord-10)).addPower();
+					((TileEntityHeatExchange)getTileEntity(pos.subtract(new Vec3i(0,0,10)))).addPower();
 				}
 			}
 		}
@@ -118,11 +123,6 @@ public class TileEntitySolenoidAxel extends TileEntityRotary
 		return worldObj.getTileEntity(p);
 	}
 	
-	private TileEntity getTileEntity(int x, int y, int z) {
-		// TODO Auto-generated method stub
-		return worldObj.getTileEntity(new BlockPos(x,y,z));
-	}
-
 
 	private Block getBlock(BlockPos p) {
 		// TODO Auto-generated method stub

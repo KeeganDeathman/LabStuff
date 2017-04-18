@@ -1,0 +1,11 @@
+{
+	"variants": {
+		"facing=south": { "model": "labstuff:chloralakizer", "y":180},
+		"facing=west": { "model": "labstuff:chloralakizer", "y":270},
+		"facing=east": { "model": "labstuff:chloralakizer", "y":90},
+		"facing=north": { "model": "labstuff:chloralakizer" },
+		"facing=down": { "model": "labstuff:chloralakizer" },
+		"facing=up": { "model": "labstuff:chloralakizer" },
+		"default": { "model": "labstuff:chloralakizer" }
+	}
+}

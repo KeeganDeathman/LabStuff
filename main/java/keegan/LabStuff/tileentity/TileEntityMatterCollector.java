@@ -2,22 +2,25 @@ package keegan.labstuff.tileentity;
 
 import java.util.*;
 
+import keegan.labstuff.network.IEnergyWrapper;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.*;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.*;
 import net.minecraftforge.oredict.OreDictionary;
 
-public class TileEntityMatterCollector extends TileEntityPowerConnection implements IInventory 
+public class TileEntityMatterCollector extends TileEntity implements ITickable, IEnergyWrapper
 {
 	public ItemStack[] chestContents = new ItemStack[12];
 	private ArrayList<ItemStack> ores;
 	private EnumFacing chuck;
 	private Random rand = new Random();
 	private Random rando = new Random();
+	private int buffer = 0;
 
 	public TileEntityMatterCollector()
 	{
@@ -189,7 +192,7 @@ public class TileEntityMatterCollector extends TileEntityPowerConnection impleme
 					}
 				}
 			}
-			if(!ores.isEmpty() && getPowerSource() != null && getPowerSource().powerInt >= 1000)
+			if(!ores.isEmpty()  && buffer >= 1000)
 			{
 				int random = rand.nextInt(500);
 				if(random == 1)
@@ -198,17 +201,17 @@ public class TileEntityMatterCollector extends TileEntityPowerConnection impleme
 					for(int i =0; i < chestContents.length; i++)
 					{
 						int ore = rando.nextInt(ores.size());
-						if(getPowerSource().getPower() >= 4000)
+						if(buffer >= 4000)
 						{
 							if(getStackInSlot(i) == null)
 							{
-								getPowerSource().subtractPower(4000, this);
+								buffer -= 4000;
 								setInventorySlotContents(i, new ItemStack(ores.get(ore).getItem(), 1));
 								break;
 							}
 							else if(getStackInSlot(i).isItemEqual(ores.get(ore)))
 							{
-								getPowerSource().subtractPower(4000, this);
+								buffer -= 4000;
 								setInventorySlotContents(i, new ItemStack(ores.get(ore).getItem(), getStackInSlot(i).stackSize+1));
 								break;
 							}
@@ -283,5 +286,65 @@ public class TileEntityMatterCollector extends TileEntityPowerConnection impleme
 	{
 		// TODO Auto-generated method stub
 		return (worldObj.getTileEntity(pos.up()) != null && worldObj.getTileEntity(pos.up()) instanceof TileEntityMatterCollector);
+	}
+
+	@Override
+	public double getEnergy() {
+		// TODO Auto-generated method stub
+		return buffer;
+	}
+
+	@Override
+	public void setEnergy(double energy) {
+		// TODO Auto-generated method stub
+		buffer = (int) energy;
+	}
+
+	@Override
+	public double getMaxEnergy() {
+		// TODO Auto-generated method stub
+		return 1000000;
+	}
+
+	@Override
+	public double transferEnergyToAcceptor(EnumFacing side, double amount) {
+		// TODO Auto-generated method stub
+		return buffer += amount;
+	}
+
+	@Override
+	public boolean canReceiveEnergy(EnumFacing side) {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public boolean canOutputTo(EnumFacing side) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public EnumSet<EnumFacing> getOutputtingSides() {
+		// TODO Auto-generated method stub
+		return EnumSet.noneOf(EnumFacing.class);
+	}
+
+	@Override
+	public EnumSet<EnumFacing> getConsumingSides() {
+		// TODO Auto-generated method stub
+		return EnumSet.allOf(EnumFacing.class);
+	}
+
+	@Override
+	public double getMaxOutput() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public double removeEnergyFromProvider(EnumFacing side, double amount) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }

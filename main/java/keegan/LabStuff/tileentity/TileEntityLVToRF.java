@@ -1,13 +1,22 @@
 package keegan.labstuff.tileentity;
 
+import java.util.EnumSet;
+
 import cofh.api.energy.*;
+import keegan.labstuff.common.capabilities.Capabilities;
+import keegan.labstuff.network.*;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.*;
+import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.common.capabilities.Capability;
 
-public class TileEntityLVToRF extends TileEntityPowerConnection implements IEnergyProvider
+public class TileEntityLVToRF extends TileEntity implements IEnergyProvider, ITickable, IEnergyWrapper
 {
 	public EnergyStorage storage;
+	private int buffer = 0;
 	
 	public TileEntityLVToRF()
 	{
@@ -46,15 +55,17 @@ public class TileEntityLVToRF extends TileEntityPowerConnection implements IEner
 		connectedTEs[5] = worldObj.getTileEntity(pos.south());
 		for(int i = 0; i < connectedTEs.length; i++)
 		{
-			if(connectedTEs[i] != null && connectedTEs[i] instanceof IEnergyReceiver && getPowerSource() != null)
+			if(connectedTEs[i] != null && connectedTEs[i] instanceof IEnergyReceiver)
 			{
-				if(((TileEntityPower)getPowerSource()).subtractPower(storage.receiveEnergy(storage.getMaxReceive(), true)*2, this))
+				if(buffer >= storage.receiveEnergy(storage.getMaxReceive(), true)*2)
 				{
+					buffer -= storage.receiveEnergy(storage.getMaxReceive(), false)*2;
 					((IEnergyReceiver)connectedTEs[i]).receiveEnergy(calcDirection(connectedTEs[i]).getOpposite(), storage.getMaxReceive(), false);
 				}
 			}
 		}
 	}
+	
 	
 	private EnumFacing calcDirection(TileEntity tile)
 	{
@@ -89,6 +100,183 @@ public class TileEntityLVToRF extends TileEntityPowerConnection implements IEner
 	public int getMaxEnergyStored(EnumFacing from) 
 	{
 		return storage.getMaxEnergyStored();
+	}
+
+	@Override
+	public double getEnergy() {
+		// TODO Auto-generated method stub
+		return buffer;
+	}
+
+	@Override
+	public void setEnergy(double energy) {
+		// TODO Auto-generated method stub
+		buffer = (int) energy;
+	}
+
+	@Override
+	public double getMaxEnergy() {
+		// TODO Auto-generated method stub
+		return 10000;
+	}
+
+	@Override
+	public double transferEnergyToAcceptor(EnumFacing side, double amount) {
+		// TODO Auto-generated method stub
+		return buffer += amount;
+	}
+
+	@Override
+	public boolean canReceiveEnergy(EnumFacing side) {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public boolean canOutputTo(EnumFacing side) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public int getSizeInventory() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public ItemStack getStackInSlot(int index) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ItemStack decrStackSize(int index, int count) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ItemStack removeStackFromSlot(int index) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setInventorySlotContents(int index, ItemStack stack) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public int getInventoryStackLimit() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public boolean isUseableByPlayer(EntityPlayer player) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void openInventory(EntityPlayer player) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void closeInventory(EntityPlayer player) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean isItemValidForSlot(int index, ItemStack stack) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public int getField(int id) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void setField(int id, int value) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public int getFieldCount() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void clear() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public String getName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean hasCustomName() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public EnumSet<EnumFacing> getOutputtingSides() {
+		// TODO Auto-generated method stub
+		return EnumSet.noneOf(EnumFacing.class);
+	}
+	
+	@Override
+	public boolean hasCapability(Capability<?> capability, EnumFacing facing)
+	{
+		return capability == Capabilities.ENERGY_STORAGE_CAPABILITY
+				|| capability == Capabilities.ENERGY_ACCEPTOR_CAPABILITY
+				|| capability == Capabilities.CABLE_OUTPUTTER_CAPABILITY
+				|| super.hasCapability(capability, facing);
+	}
+
+	@Override
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing)
+	{
+		if(capability == Capabilities.ENERGY_STORAGE_CAPABILITY || capability == Capabilities.ENERGY_ACCEPTOR_CAPABILITY
+				|| capability == Capabilities.CABLE_OUTPUTTER_CAPABILITY)
+		{
+			return (T)this;
+		}
+		
+		return super.getCapability(capability, facing);
+	}
+
+	@Override
+	public EnumSet<EnumFacing> getConsumingSides() {
+		// TODO Auto-generated method stub
+		return EnumSet.allOf(EnumFacing.class);
+	}
+
+	@Override
+	public double getMaxOutput() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public double removeEnergyFromProvider(EnumFacing side, double amount) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 }

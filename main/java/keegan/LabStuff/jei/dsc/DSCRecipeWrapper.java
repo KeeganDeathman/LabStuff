@@ -57,9 +57,8 @@ public class DSCRecipeWrapper extends BlankRecipeWrapper
 	
 	@Override
 	public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
-		int xPos = (recipeWidth - slotDrawable.getWidth());
+		int xPos = (-(recipeWidth - slotDrawable.getWidth()) / 2)-15;
 		int yPos = 0;
-		xPos = -(recipeWidth - slotDrawable.getWidth()) / 2;
 		yPos += slotDrawable.getHeight() + 4;
 
 		minecraft.fontRendererObj.drawString(getRecipe().getName(), xPos, yPos, Color.black.getRGB());

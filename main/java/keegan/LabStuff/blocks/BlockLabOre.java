@@ -12,6 +12,10 @@ public class BlockLabOre extends Block {
 		super(Material.ROCK);
 		setSoundType(SoundType.STONE);
 	}
+
+	public BlockLabOre(Material mat) {
+		super(mat);
+	}
 	
 
 }

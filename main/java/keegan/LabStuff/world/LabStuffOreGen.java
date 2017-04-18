@@ -39,6 +39,44 @@ public class LabStuffOreGen implements IWorldGenerator
             
             new WorldGenMinable((IBlockState) LabStuffMain.blockCopperOre.getDefaultState(), 4).generate(world, rand, new BlockPos(Xcoord,Ycoord,Zcoord));
         }
+        
+        for (int x = 0; x < 25; x++)
+        {
+            int Xcoord = baseX + rand.nextInt(16);
+            int Zcoord = baseZ + rand.nextInt(16);
+            int Ycoord = rand.nextInt(30);
+            // Max Vein Size
+            
+            new WorldGenMinable((IBlockState) LabStuffMain.bauxiteOre.getDefaultState(), 4).generate(world, rand, new BlockPos(Xcoord,Ycoord,Zcoord));
+        }
+        
+        for (int x = 0; x < 25; x++)
+        {
+            int Xcoord = baseX + rand.nextInt(16);
+            int Zcoord = baseZ + rand.nextInt(16);
+            int Ycoord = rand.nextInt(30);
+            // Max Vein Size
+            
+            new WorldGenMinable((IBlockState) LabStuffMain.titaniumOre.getDefaultState(), 4).generate(world, rand, new BlockPos(Xcoord,Ycoord,Zcoord));
+        }
+        
+        for (int x = 0; x < 35; x++)
+        {
+            int Xcoord = baseX + rand.nextInt(16);
+            int Zcoord = baseZ + rand.nextInt(16);
+            int Ycoord = rand.nextInt(30);
+            // Max Vein Size
+            
+            new WorldGenMinable((IBlockState) LabStuffMain.marble.getDefaultState(), 4).generate(world, rand, new BlockPos(Xcoord,Ycoord,Zcoord));
+        }
+        
+        for(int i = 0; i < 5; i++)
+		{
+			int randPosX = (baseX*16) + rand.nextInt(16);
+			int randPosZ = (baseZ*16) + rand.nextInt(16);
+			BlockPos pos = world.getTopSolidOrLiquidBlock(new BlockPos(randPosX, 60, randPosZ));
+			new WorldGenSalt(6).generate(world, rand, pos);
+		}
 
         // rarity -smaller number = rarer
        

@@ -1,0 +1,11 @@
+{
+	"variants": {
+		"facing=south": { "model": "labstuff:fermenter", "y":180},
+		"facing=west": { "model": "labstuff:fermenter", "y":270},
+		"facing=east": { "model": "labstuff:fermenter", "y":90},
+		"facing=north": { "model": "labstuff:fermenter" },
+		"facing=down": { "model": "labstuff:fermenter" },
+		"facing=up": { "model": "labstuff:fermenter" },
+		"default": { "model": "labstuff:fermenter" }
+	}
+}

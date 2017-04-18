@@ -24,7 +24,7 @@ public class GuiEnricher extends GuiContainer
 	public GuiEnricher(InventoryPlayer inventory, TileEntityEnricher tileEntity)
 	{
 		super(new ContainerEnricher(inventory, tileEntity));
-		this.tile = tile;
+		this.tile = tileEntity;
 		this.xSize = 256;
 		this.ySize = 256;
 	}

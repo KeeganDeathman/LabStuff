@@ -1,0 +1,17 @@
+{
+	"forge_marker":1,
+	"defaults":
+	{
+		"custom":{"flip-v":"true"},
+		"model":"labstuff:ibm650pun"
+	},
+	"variants":
+	{
+		"render=4":{ "model": "labstuff:ibm650Punch.obj","y":270},
+		"render=3":{ "model": "labstuff:ibm650Punch.obj","y":180},
+		"render=2":{ "model": "labstuff:ibm650Punch.obj","y":90},
+		"render=1":{ "model": "labstuff:ibm650Punch.obj"},
+		"render=0":{ "model": "labstuff:ibm650pun"},
+		"normal":{ "model": "labstuff:ibm650pun" }
+	}
+}

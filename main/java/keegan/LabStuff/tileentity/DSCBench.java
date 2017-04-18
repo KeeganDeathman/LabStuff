@@ -86,7 +86,9 @@ public class DSCBench extends DSCPart implements IInventory
 	public void performAction(String msg, DSCPart sender)
 	{
 		if(msg.equals("registered"))
+		{
 			this.core = (TileEntityDSCCore)sender;
+		}
 	}
 
 	public ArrayList<AcceleratorDiscovery> getInstalled()
@@ -96,7 +98,7 @@ public class DSCBench extends DSCPart implements IInventory
 
 	public void make(DiscoveryItem discov)
 	{
-		if(getInstalled().size() > 0 && getInstalled().contains(discov.getDependency()))
+		if(core != null && getInstalled() != null && getInstalled().size() > 0 && getInstalled().contains(discov.getDependency()))
 			{
 				if(getStackInSlot(0) != null && discov.getIngredients1().isItemEqual(getStackInSlot(0)) && discov.getIngredients1().stackSize <= getStackInSlot(0).stackSize)
 				{

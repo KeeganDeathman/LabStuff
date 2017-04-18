@@ -1,16 +1,19 @@
 package keegan.labstuff.tileentity;
 
 import keegan.labstuff.LabStuffMain;
+import keegan.labstuff.common.Coord4D;
 import keegan.labstuff.items.ItemDiscoveryDrive;
+import keegan.labstuff.network.*;
 import keegan.labstuff.recipes.Recipes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.*;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ITickable;
 import net.minecraft.util.math.*;
 
-public class TileEntityAcceleratorInterface extends DataConnectedDevice implements IInventory
+public class TileEntityAcceleratorInterface extends TileEntity implements IInventory, ITickable, IDataDevice
 {
 
 	private ItemStack[] chestContents = new ItemStack[3];
@@ -46,41 +49,35 @@ public class TileEntityAcceleratorInterface extends DataConnectedDevice implemen
 	
 	@Override
 	public void update()
-	{
-		super.update();
+	{		
 		tickCount++;
 		if(tickCount>=400)
 		{
 			tickCount = 0;
 			if(!worldObj.isRemote)
 			{
-				if(this.getId() == null)
-					registerWithNetwork();
-				if(getNetwork() != null)
+				if(DataUtils.getNetwork(pos, worldObj) != null)
 				{
-					while(control == null)
+					if(DataUtils.getDevices(pos, worldObj).size() != 0)
 					{
-						if(getNetwork().getDeviceCount() == 0)
-							break;
-						for(int i = 0; i < getNetwork().getDeviceCount(); i++)
+						for(Coord4D device : DataUtils.getDevices(pos, worldObj).keySet())
 						{
-							detectControl(getNetwork().getDeviceByIndex(i).getId());
+							detectControl((IDataDevice) worldObj.getTileEntity(device.getPos()));
 						}
 					}
 				}
 				else
-					System.out.println("no network");
 				if(control != null)
 				{
 					if(getStackInSlot(0) != null)
 					{
 						DataPackage hasMatter = new DataPackage(control, "particlesLoaded");
-						getNetwork().sendMessage(hasMatter);
+						DataUtils.sendMessage(hasMatter);
 					}
 					else
 					{
 						DataPackage hasMatter = new DataPackage(control, "particlesNotLoaded");
-						getNetwork().sendMessage(hasMatter);
+						DataUtils.sendMessage(hasMatter);
 					}
 					TileEntity core = worldObj.getTileEntity(pos.subtract(new Vec3i(6,0,0)));
 					if(core instanceof TileEntityAcceleratorDetectorCore)
@@ -88,29 +85,24 @@ public class TileEntityAcceleratorInterface extends DataConnectedDevice implemen
 						if(((TileEntityAcceleratorDetectorCore) core).isGoodForLaunch())
 						{
 							DataPackage isPowered = new DataPackage(control, "powered");
-							getNetwork().sendMessage(isPowered);
+							DataUtils.sendMessage(isPowered);
 						}
 						else
 						{
 							DataPackage isPowered = new DataPackage(control, "notPowered");
-							getNetwork().sendMessage(isPowered);
+							DataUtils.sendMessage(isPowered);
 						}
-					}
-					else
-					{
-						System.out.println("Wheres the core?");
 					}
 				}
 			}
 		}
 	}
 	
-	private void detectControl(String i)
+	private void detectControl(IDataDevice i)
 	{
-		if(getNetwork().getDeviceById(i) instanceof TileEntityAcceleratorControlPanel)
+		if(i instanceof TileEntityAcceleratorControlPanel)
 		{
-			System.out.println("Control detected");
-			control = (TileEntityAcceleratorControlPanel) getNetwork().getDeviceById(i);
+			control = (TileEntityAcceleratorControlPanel)i;
 		}
 	}
 	
@@ -132,7 +124,6 @@ public class TileEntityAcceleratorInterface extends DataConnectedDevice implemen
 		}
 		if(command.startsWith("launch"))
 		{
-			System.out.println("Accelerator active");
 			decrStackSize(0, 1);
 		}
 	}
@@ -215,19 +206,11 @@ public class TileEntityAcceleratorInterface extends DataConnectedDevice implemen
 			}
 		}
 		tag.setTag("Inventory", itemList);
-		if(getNetwork()!=null)
-		{
-			int netX = getNetwork().getPos().getX();
-			int netY = getNetwork().getPos().getY();
-			int netZ = getNetwork().getPos().getZ();
-			int[] networkLoc = {netX,netY,netZ};
-
-			tag.setIntArray("network", networkLoc);
 			
-			tag.setBoolean("upgraded", upgraded);
-		}
+		tag.setBoolean("upgraded", upgraded);
 		return tag;
 	}
+	
 	
 	@Override
 	public void readFromNBT(NBTTagCompound tag)
@@ -243,8 +226,6 @@ public class TileEntityAcceleratorInterface extends DataConnectedDevice implemen
 				chestContents[slot] = ItemStack.loadItemStackFromNBT(tagCompound);
 			}
 		}
-		int[] net = tag.getIntArray("network");
-		this.register(new BlockPos(net[0], net[1], net[2]));
 		upgraded = tag.getBoolean("upgraded");
 	}
 
@@ -301,5 +282,11 @@ public class TileEntityAcceleratorInterface extends DataConnectedDevice implemen
 	public void clear() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public String getDeviceType() {
+		// TODO Auto-generated method stub
+		return "accelerator_interface";
 	}
 }

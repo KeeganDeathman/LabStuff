@@ -1,0 +1,11 @@
+{
+	"variants": {
+		"facing=south": { "model": "labstuff:keyPunch", "y":180},
+		"facing=west": { "model": "labstuff:keyPunch", "y":270},
+		"facing=east": { "model": "labstuff:keyPunch", "y":90},
+		"facing=north": { "model": "labstuff:keyPunch" },
+		"facing=down": { "model": "labstuff:keyPunch" },
+		"facing=up": { "model": "labstuff:keyPunch" },
+		"default": { "model": "labstuff:keyPunch" }
+	}
+}

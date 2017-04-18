@@ -3,6 +3,7 @@ package keegan.labstuff.render;
 import org.lwjgl.opengl.GL11;
 
 import keegan.labstuff.blocks.BlockMatterCollector;
+import keegan.labstuff.render.transmitter.RenderTransmitterBase;
 import keegan.labstuff.tileentity.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
@@ -33,8 +34,7 @@ public class RenderMatterCollector extends TileEntitySpecialRenderer<TileEntityM
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
-            bakedModel = model.bake(TRSRTransformation.identity(), DefaultVertexFormats.BLOCK,
-                    location -> Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(location.toString()));
+            bakedModel = model.bake(TRSRTransformation.identity(), Attributes.DEFAULT_BAKED_FORMAT, RenderTransmitterBase.textureGetterFlipV);
         }
         return bakedModel;
     }

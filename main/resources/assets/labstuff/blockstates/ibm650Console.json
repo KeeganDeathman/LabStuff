@@ -1,0 +1,17 @@
+{
+	"forge_marker":1,
+	"defaults":
+	{
+		"custom":{"flip-v":"true"},
+		"model":"labstuff:ibm650con"
+	},
+	"variants":
+	{
+		"render=4":{ "model": "labstuff:ibm650console.obj","y":270},
+		"render=3":{ "model": "labstuff:ibm650console.obj","y":180},
+		"render=2":{ "model": "labstuff:ibm650console.obj","y":90},
+		"render=1":{ "model": "labstuff:ibm650console.obj"},
+		"render=0":{ "model": "labstuff:ibm650con"},
+		"normal":{ "model": "labstuff:ibm650con" }
+	}
+}

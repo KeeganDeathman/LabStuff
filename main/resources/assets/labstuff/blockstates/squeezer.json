@@ -1,0 +1,11 @@
+{
+	"variants": {
+		"facing=south": { "model": "labstuff:squeezer", "y":180},
+		"facing=west": { "model": "labstuff:squeezer", "y":270},
+		"facing=east": { "model": "labstuff:squeezer", "y":90},
+		"facing=north": { "model": "labstuff:squeezer" },
+		"facing=down": { "model": "labstuff:squeezer" },
+		"facing=up": { "model": "labstuff:squeezer" },
+		"default": { "model": "labstuff:squeezer" }
+	}
+}

@@ -1,6 +1,11 @@
 package keegan.labstuff.blocks;
 
+import java.util.List;
+
+import org.apache.http.util.LangUtils;
+
 import keegan.labstuff.LabStuffMain;
+import keegan.labstuff.common.EnumColor;
 import keegan.labstuff.tileentity.DSCBench;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
@@ -43,6 +48,15 @@ public class BlockDSCBench extends Block implements ITileEntityProvider
 		}
 		return false;
 	}
+	
+	@Override
+	public void addInformation(ItemStack itemstack, EntityPlayer entityplayer, List<String> list, boolean flag)
+	{
+		super.addInformation(itemstack, entityplayer, list, flag);
+
+		list.add("Requires 10 RAM");
+	}
+	
 
 
 	

@@ -1,7 +1,11 @@
 package keegan.labstuff.tileentity;
 
+import java.util.*;
+
 import keegan.labstuff.LabStuffMain;
 import keegan.labstuff.blocks.*;
+import keegan.labstuff.common.capabilities.*;
+import keegan.labstuff.network.*;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -9,15 +13,18 @@ import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.*;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ITickable;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
-public class TileEntityGasChamberPort extends TileEntity implements IInventory, ITickable
+public class TileEntityGasChamberPort extends TileEntity implements IInventory, ITickable, IPlasmaHandler, ICableOutputter
 {
 	private ItemStack[] chestContents;
 	
 	public boolean input = false;
 	public int testtubes;
+	public int plasma;
 	
 	public TileEntityGasChamberPort()
 	{
@@ -41,7 +48,26 @@ public class TileEntityGasChamberPort extends TileEntity implements IInventory, 
 	    
 	    return nbt;
 	}
+	
+	
+	@Override
+	public boolean hasCapability(Capability<?> capability, EnumFacing side)
+	{
+		return capability == Capabilities.PLASMA_HANDLER_CAPABILITY || capability == Capabilities.CABLE_OUTPUTTER_CAPABILITY || super.hasCapability(capability, side);
+	}
+	
 
+	@Override
+	public <T> T getCapability(Capability<T> capability, EnumFacing side)
+	{
+		if(capability == Capabilities.PLASMA_HANDLER_CAPABILITY
+				|| capability == Capabilities.CABLE_OUTPUTTER_CAPABILITY)
+		{
+			return (T)this;
+		}
+		
+		return super.getCapability(capability, side);
+	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
@@ -78,32 +104,44 @@ public class TileEntityGasChamberPort extends TileEntity implements IInventory, 
 				}
 			}
 		}
-		if(worldObj.getTileEntity(pos.down()) != null && !input)
+		if(!input && worldObj.getTileEntity(pos.up(2)) instanceof TileEntityGasChamberPort)
 		{
-			if(worldObj.getTileEntity(pos.down()) instanceof TileEntityPlasmaPipe && worldObj.getTileEntity(pos.up(2)) instanceof TileEntityGasChamberPort)
+			remoteTile = (TileEntityGasChamberPort)worldObj.getTileEntity(pos.up(2));
+			
+			if(getLaser() != null)
 			{
-				TileEntityPlasmaPipe pipe = (TileEntityPlasmaPipe)worldObj.getTileEntity(pos.down());
-				remoteTile = (TileEntityGasChamberPort)worldObj.getTileEntity(pos.up(2));
-				
-				if(getLaser() != null)
-				{
-					if(worldObj.getBlockState(pos.west().up()) != null && worldObj.getBlockState(pos.west().up()).getBlock().equals(LabStuffMain.blockGasChamberPort))
-						outputTile = (TileEntityGasChamberPort) worldObj.getTileEntity(pos.west().up());
-					if(worldObj.getBlockState(pos.east().up()) != null && worldObj.getBlockState(pos.east().up()).getBlock().equals(LabStuffMain.blockGasChamberPort))
-						outputTile = (TileEntityGasChamberPort) worldObj.getTileEntity(pos.east().up());
-					if(worldObj.getBlockState(pos.south().up()) != null && worldObj.getBlockState(pos.south().up()).getBlock().equals(LabStuffMain.blockGasChamberPort))
-						outputTile = (TileEntityGasChamberPort) worldObj.getTileEntity(pos.south().up());
-					if(worldObj.getBlockState(pos.north().up()) != null && worldObj.getBlockState(pos.north().up()).getBlock().equals(LabStuffMain.blockGasChamberPort))
-						outputTile = (TileEntityGasChamberPort) worldObj.getTileEntity(pos.north().up());
+				if(worldObj.getBlockState(pos.west().up()) != null && worldObj.getBlockState(pos.west().up()).getBlock().equals(LabStuffMain.blockGasChamberPort))
+					outputTile = (TileEntityGasChamberPort) worldObj.getTileEntity(pos.west().up());
+				if(worldObj.getBlockState(pos.east().up()) != null && worldObj.getBlockState(pos.east().up()).getBlock().equals(LabStuffMain.blockGasChamberPort))
+					outputTile = (TileEntityGasChamberPort) worldObj.getTileEntity(pos.east().up());
+				if(worldObj.getBlockState(pos.south().up()) != null && worldObj.getBlockState(pos.south().up()).getBlock().equals(LabStuffMain.blockGasChamberPort))
+					outputTile = (TileEntityGasChamberPort) worldObj.getTileEntity(pos.south().up());
+				if(worldObj.getBlockState(pos.north().up()) != null && worldObj.getBlockState(pos.north().up()).getBlock().equals(LabStuffMain.blockGasChamberPort))
+					outputTile = (TileEntityGasChamberPort) worldObj.getTileEntity(pos.north().up());
 
 					
-					if(testtubes > 0 && remoteTile.isMultiblock())
+				if(testtubes > 0 && remoteTile.isMultiblock())
+				{
+					plasma += 500;
+					
+					if(worldObj.getTileEntity(pos.down()) != null)
 					{
-						pipe.addPlasma(500, this);
-						remoteTile.decrStackSize(0, 1);
-						outputTile.setInventorySlotContents(0, new ItemStack(LabStuffMain.itemTestTube, outputTile.emptyTubes()+1));
-						testtubes-=1;
+						TileEntity tileEntity = worldObj.getTileEntity(pos.down());
+						if(CapabilityUtils.hasCapability(tileEntity, Capabilities.PLASMA_HANDLER_CAPABILITY, EnumFacing.UP))
+						{
+							
+							IPlasmaHandler acceptor = CapabilityUtils.getCapability(tileEntity, Capabilities.PLASMA_HANDLER_CAPABILITY, EnumFacing.UP);
+							if(acceptor.canConnectPlasma(EnumFacing.UP) && acceptor.canReceivePlasma(EnumFacing.UP))
+							{
+								int sent = acceptor.transferPlasma(500, EnumFacing.UP);
+								plasma -= sent;
+							}
+						}
 					}
+						
+					remoteTile.decrStackSize(0, 1);
+					outputTile.setInventorySlotContents(0, new ItemStack(LabStuffMain.itemTestTube, outputTile.emptyTubes()+1));
+					testtubes-=1;
 				}
 			}
 		}
@@ -113,7 +151,7 @@ public class TileEntityGasChamberPort extends TileEntity implements IInventory, 
 	private boolean multiblock = false;
 	
 	public boolean isMultiblock() {
-		
+		multiblock = false;
 		int coreX = pos.getX();
 		int coreY = pos.getY() - 1;
 		int coreZ = pos.getZ();
@@ -386,6 +424,70 @@ public class TileEntityGasChamberPort extends TileEntity implements IInventory, 
 	        {
 	            this.chestContents[i] = null;
 	        }		
+	}
+
+	@Override
+	public int getPlasma(EnumFacing from) {
+		// TODO Auto-generated method stub
+		return plasma;
+	}
+
+	@Override
+	public int drainPlasma(int amount, EnumFacing from) {
+		// TODO Auto-generated method stub
+		if(amount < plasma)
+		{
+			plasma -= amount;
+			return 0;
+		}
+		else
+		{
+			int oldPlasma = plasma;
+			plasma = 0;
+			return amount - oldPlasma;
+		}
+	}
+
+
+	@Override
+	public boolean canReceivePlasma(EnumFacing side) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean canDrainPlasma(EnumFacing side) {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public int transferPlasma(int amount, EnumFacing from) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public boolean canConnectPlasma(EnumFacing opposite) {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public void setPlasma(int d, EnumFacing from) {
+		plasma = d;
+	}
+
+	@Override
+	public EnumSet<EnumFacing> getOutputtingSides() {
+		// TODO Auto-generated method stub
+		return EnumSet.of(EnumFacing.DOWN);
+	}
+
+	@Override
+	public boolean canOutputTo(EnumFacing side) {
+		// TODO Auto-generated method stub
+		return true;
 	}
 	
 }

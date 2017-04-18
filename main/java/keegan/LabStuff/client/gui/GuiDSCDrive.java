@@ -2,15 +2,10 @@ package keegan.labstuff.client.gui;
 
 import org.lwjgl.opengl.GL11;
 
-import keegan.labstuff.LabStuffMain;
-import keegan.labstuff.PacketHandling.PacketDSCDrive;
 import keegan.labstuff.container.ContainerDSCDrive;
-import keegan.labstuff.items.ItemDiscoveryDrive;
-import keegan.labstuff.recipes.*;
 import keegan.labstuff.tileentity.DSCDrive;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.*;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiDSCDrive extends GuiContainer
@@ -28,27 +23,6 @@ public class GuiDSCDrive extends GuiContainer
 		this.ySize = this.xSize;
 	}
 
-	@Override
-	public void handleMouseClick(Slot slot, int x, int y, ClickType type)
-	{
-		super.handleMouseClick(slot, x, y, type);
-		if(slot != null && slot.getStack() != null)
-		{
-			if(slot.getStack().getItem() instanceof ItemDiscoveryDrive)
-			{
-				AcceleratorDiscovery dis;
-				for(AcceleratorDiscovery d : Recipes.accelDiscoveries)
-				{
-					if(d.getDiscoveryFlashDrive().getItem().equals(slot.getStack().getItem()))
-					{
-						dis = d;
-						LabStuffMain.packetPipeline.sendToServer(new PacketDSCDrive(dis,tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ()));
-					}
-				}
-			}
-
-		}
-	}
 	
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float p_146976_1_, int p_146976_2_, int p_146976_3_)

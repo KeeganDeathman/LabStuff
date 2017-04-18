@@ -1,0 +1,5 @@
+{
+	"variants": {
+		"render=false":{ "model": "labstuff:gimbalIGS" }
+	}
+}

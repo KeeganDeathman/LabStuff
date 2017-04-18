@@ -33,19 +33,27 @@ public class TileEntityTurbine extends TileEntity implements ITickable{
 	}
 
 	
-	@Override
-	public SPacketUpdateTileEntity getUpdatePacket()
-	{
-		NBTTagCompound syncData = new NBTTagCompound();
-		syncData.setFloat("angle", angle);
-		return new SPacketUpdateTileEntity(pos, 1, syncData);
-	}
+	//Sync
+	
+		@Override
+		public NBTTagCompound getUpdateTag()
+		{
+			NBTTagCompound syncData = super.getUpdateTag();
+			syncData.setFloat("angle", angle);
+			return syncData;
+		}
 		
-	@Override
-	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt)
-	{
-		angle = pkt.getNbtCompound().getFloat("angle");
-	}
+		@Override
+		public SPacketUpdateTileEntity getUpdatePacket()
+		{
+			return new SPacketUpdateTileEntity(pos, 1, getUpdateTag());
+		}
+			
+		@Override
+		public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt)
+		{
+			angle = pkt.getNbtCompound().getFloat("angle");
+		}
 	
 	@Override
 	public void update() {
@@ -69,13 +77,16 @@ public class TileEntityTurbine extends TileEntity implements ITickable{
 						}
 					}
 				}
-				int energy = stored*height*4;
+				int energy = stored*(height - 2)*width*length*3;
 				if(energy > 0)
 				{
 					for(int i = 0; i < height; i++)
 					{
 						if(getBlock(xCoord, yCoord-i, zCoord).equals(LabStuffMain.blockTurbineRotor))
+						{
 							((TileEntityTurbine)getTileEntity(xCoord, yCoord-i, zCoord)).angle += 10;
+							worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos), worldObj.getBlockState(pos), 0);
+						}
 					}
 					for(TileEntityTurbineVent vent : vents)
 					{
@@ -150,10 +161,14 @@ public class TileEntityTurbine extends TileEntity implements ITickable{
 		{
 			return false;
 		}
-		if(posLength % 2 != 0)
-		{
+		
+		width = posWidth*2+1;
+		length = posLength*2+1;
+		if(width != length)
 			return false;
-		}
+		if(width % 2 == 0)
+			return false;
+		
 		//Check Roof Frame
 		for(int i = 0; i < posWidth+1; i++)
 		{

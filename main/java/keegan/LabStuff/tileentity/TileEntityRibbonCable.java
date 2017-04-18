@@ -257,7 +257,7 @@ public class TileEntityRibbonCable extends TileEntity implements ITickable
 
 	public void sendMessage(DSCPackage msg)
 	{
-		if (getDeviceById(msg.getTarget().getId()) != null)
+		if (msg.getTarget() != null)
 		{
 			msg.getTarget().performAction(msg.getMessage(), msg.getSender());
 		}

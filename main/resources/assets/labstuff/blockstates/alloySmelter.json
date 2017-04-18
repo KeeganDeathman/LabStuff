@@ -1,0 +1,11 @@
+{
+	"variants": {
+		"facing=south": { "model": "labstuff:alloySmelter", "y":180},
+		"facing=west": { "model": "labstuff:alloySmelter", "y":270},
+		"facing=east": { "model": "labstuff:alloySmelter", "y":90},
+		"facing=north": { "model": "labstuff:alloySmelter" },
+		"facing=down": { "model": "labstuff:alloySmelter" },
+		"facing=up": { "model": "labstuff:alloySmelter" },
+		"default": { "model": "labstuff:alloySmelter" }
+	}
+}

@@ -2,15 +2,17 @@ package keegan.labstuff.render;
 
 import org.lwjgl.opengl.GL11;
 
+import keegan.labstuff.render.transmitter.RenderTransmitterBase;
 import keegan.labstuff.tileentity.TileEntityToroid;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.texture.*;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraftforge.client.model.IModel;
+import net.minecraftforge.client.model.*;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.common.model.TRSRTransformation;
 import net.minecraftforge.fml.relauncher.*;
@@ -30,12 +32,17 @@ public class RenderToroid extends TileEntitySpecialRenderer<TileEntityToroid> {
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
-            bakedModel = model.bake(TRSRTransformation.identity(), DefaultVertexFormats.BLOCK,
-                    location -> Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(location.toString()));
+            bakedModel = model.bake(TRSRTransformation.identity(), Attributes.DEFAULT_BAKED_FORMAT, RenderTransmitterBase.textureGetterFlipV);
         }
         return bakedModel;
     }
 
+    protected void bindTexture(ResourceLocation location) {
+
+        TextureManager texturemanager = this.rendererDispatcher.renderEngine;
+        if (texturemanager != null) texturemanager.bindTexture(location);
+    }
+    
     @Override
     public void renderTileEntityAt(TileEntityToroid te, double x, double y, double z, float partialTicks, int destroyStage) {
      	GlStateManager.pushAttrib();
@@ -78,7 +85,7 @@ public class RenderToroid extends TileEntitySpecialRenderer<TileEntityToroid> {
         
         // Translate back to local view coordinates so that we can do the acual rendering here
 //        GlStateManager.translate(-te.getPos().getX(), -te.getPos().getY(), -te.getPos().getZ());
-        this.bindTexture(new ResourceLocation("labstuff:textures/models/toroid.png"));
+        bindTexture(new ResourceLocation("labstuff:textures/models/toroid.png"));
         Minecraft.getMinecraft().getBlockRendererDispatcher().getBlockModelRenderer().renderModelBrightness(getBakedModel(), world.getBlockState(te.getPos()), bright, true);
 
         //RenderHelper.enableStandardItemLighting();

@@ -1,0 +1,11 @@
+{
+	"variants": {
+		"facing=south": { "model": "labstuff:reactionChamber", "y":180},
+		"facing=west": { "model": "labstuff:reactionChamber", "y":270},
+		"facing=east": { "model": "labstuff:reactionChamber", "y":90},
+		"facing=north": { "model": "labstuff:reactionChamber" },
+		"facing=down": { "model": "labstuff:reactionChamber" },
+		"facing=up": { "model": "labstuff:reactionChamber" },
+		"default": { "model": "labstuff:reactionChamber" }
+	}
+}

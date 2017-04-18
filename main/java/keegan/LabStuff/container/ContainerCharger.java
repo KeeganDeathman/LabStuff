@@ -43,38 +43,61 @@ public class ContainerCharger extends Container
 	}
 
 	@Override
-	public ItemStack transferStackInSlot(EntityPlayer player, int slot) {
-        ItemStack stack = null;
-        Slot slotObject = (Slot) inventorySlots.get(slot);
+	public ItemStack transferStackInSlot(EntityPlayer player, int slotID) {
+		ItemStack stack = null;
+		Slot currentSlot = (Slot)inventorySlots.get(slotID);
 
-        //null checks and checks if the item can be stacked (maxStackSize > 1)
-        if (slotObject != null && slotObject.getHasStack()) 
-        {
-                ItemStack stackInSlot = slotObject.getStack();
-                stack = stackInSlot.copy();
+		if(currentSlot != null && currentSlot.getHasStack())
+		{
+			ItemStack slotStack = currentSlot.getStack();
+			stack = slotStack.copy();
 
-                //merges the item into player inventory since its in the tileEntity
-                if (slot < 9) {
-                        if (!this.mergeItemStack(stackInSlot, 0, 35, true)) {
-                                return null;
-                        }
-                }
-                //places it into the tileEntity is possible since its in the player inventory
-                else if (!this.mergeItemStack(stackInSlot, 0, 9, false)) {
-                        return null;
-                }
+			if(slotID != 0 && slotID != 1 && slotID != 2 && slotID != 3)
+			{
+					if(slotID >= 4 && slotID <= 30)
+					{
+						if(!mergeItemStack(slotStack, 31, inventorySlots.size(), false))
+						{
+							return null;
+						}
+					}
+					else if(slotID > 30)
+					{
+						if(!mergeItemStack(slotStack, 4, 30, false))
+						{
+							return null;
+						}
+					}
+					else {
+						if(!mergeItemStack(slotStack, 4, inventorySlots.size(), true))
+						{
+							return null;
+						}
+					}
+			}
+			else {
+				if(!mergeItemStack(slotStack, 4, inventorySlots.size(), true))
+				{
+					return null;
+				}
+			}
 
-                if (stackInSlot.stackSize == 0) {
-                        slotObject.putStack(null);
-                } else {
-                        slotObject.onSlotChanged();
-                }
+			if(slotStack.stackSize == 0)
+			{
+				currentSlot.putStack((ItemStack)null);
+			}
+			else {
+				currentSlot.onSlotChanged();
+			}
 
-                if (stackInSlot.stackSize == stack.stackSize) {
-                        return null;
-                }
-                slotObject.onPickupFromSlot(player, stackInSlot);
-        }
-        return stack;
+			if(slotStack.stackSize == stack.stackSize)
+			{
+				return null;
+			}
+
+			currentSlot.onPickupFromSlot(player, slotStack);
+		}
+
+		return stack;
 	}
 }

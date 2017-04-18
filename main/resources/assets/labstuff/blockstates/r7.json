@@ -1,0 +1,5 @@
+{
+	"variants": {
+		"complete=false":{ "model": "labstuff:r7" }
+	}
+}

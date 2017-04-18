@@ -1,0 +1,17 @@
+{
+	"forge_marker":1,
+	"defaults":
+	{
+		"custom":{"flip-v":"true"},
+		"model":"labstuff:ibm650pu"
+	},
+	"variants":
+	{
+		"render=4":{ "model": "labstuff:ibm650powerunit.obj","y":270},
+		"render=3":{ "model": "labstuff:ibm650powerunit.obj","y":180},
+		"render=2":{ "model": "labstuff:ibm650powerunit.obj","y":90},
+		"render=1":{ "model": "labstuff:ibm650powerunit.obj"},
+		"render=0":{ "model": "labstuff:ibm650pu"},
+		"normal":{ "model": "labstuff:ibm650pu" }
+	}
+}

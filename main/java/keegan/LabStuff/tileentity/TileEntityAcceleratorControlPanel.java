@@ -2,10 +2,13 @@ package keegan.labstuff.tileentity;
 
 import java.util.*;
 
+import keegan.labstuff.common.Coord4D;
+import keegan.labstuff.network.*;
 import keegan.labstuff.recipes.*;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 
-public class TileEntityAcceleratorControlPanel extends DataConnectedDevice
+public class TileEntityAcceleratorControlPanel extends TileEntity implements IDataDevice
 {
 	private boolean hasMatter;
 	private boolean isPowered;
@@ -69,12 +72,12 @@ public class TileEntityAcceleratorControlPanel extends DataConnectedDevice
 	public void collision()
 	{
 		System.out.println(launched + " launched");
-		if (getNetwork() != null)
+		if (DataUtils.getDevices(pos, worldObj) != null)
 		{
 			isRunning = launched && isPowered;
-			for (int i = 0; i < getNetwork().getDeviceCount(); i++)
+			for (Coord4D coord : DataUtils.getDevices(pos, worldObj).keySet())
 			{
-				if (getNetwork().getDeviceByIndex(i) instanceof TileEntityAcceleratorInterface)
+				if (worldObj.getTileEntity(coord.getPos()) instanceof TileEntityAcceleratorInterface)
 				{
 					if (isRunning)
 					{
@@ -83,21 +86,15 @@ public class TileEntityAcceleratorControlPanel extends DataConnectedDevice
 						int R = r.nextInt(3);
 						if (R == 2)
 						{
-							System.out.println("Cheese~!");
 							for(int j = 0; j < Recipes.accelDiscoveries.size(); j++)
 							{
-								System.out.println("Cheese~~!");
 								AcceleratorDiscovery discov = Recipes.accelDiscoveries.get(j);
 								if(!discovered.contains(discov))
 								{
-									System.out.println("Cheese~~~!");
 									if(discov.getDependency() == null)
-										getNetwork().sendMessage(new DataPackage(getNetwork().getDeviceByIndex(i), "discovery_" + j));
-									else
-									{
-										if(discovered.contains(discov.getDependency()))
-											getNetwork().sendMessage(new DataPackage(getNetwork().getDeviceByIndex(i), "discovery_" + j));
-									}
+										DataUtils.sendMessage(new DataPackage(DataUtils.getDevices(pos, worldObj).get(coord), "discovery_" + j));
+									else if(discovered.contains(discov.getDependency()))
+										DataUtils.sendMessage(new DataPackage(DataUtils.getDevices(pos, worldObj).get(coord), "discovery_" + j));
 								}
 							}
 						}
@@ -107,25 +104,26 @@ public class TileEntityAcceleratorControlPanel extends DataConnectedDevice
 		}
 	}
 
-	@Override
-	public void update()
-	{
-		super.update();
-	}
 
 	public void launch()
 	{
-		if (getNetwork() != null)
+		if (DataUtils.getNetwork(pos, worldObj) != null)
 		{
-			for (int i = 0; i < getNetwork().getDeviceCount(); i++)
+			for (Coord4D coord : DataUtils.getDevices(pos, worldObj).keySet())
 			{
-				if (getNetwork().getDeviceByIndex(i) instanceof TileEntityAcceleratorInterface && hasMatter && isPowered && !launched)
+				if (worldObj.getTileEntity(coord.getPos()) instanceof TileEntityAcceleratorInterface && hasMatter && isPowered && !launched)
 				{
-					getNetwork().sendMessage(new DataPackage(getNetwork().getDeviceByIndex(i), "launch"));
+					DataUtils.sendMessage(new DataPackage(DataUtils.getDevices(pos, worldObj).get(coord), "launch"));
 					worldObj.scheduleUpdate(pos, getBlockType(), 100);
 					launched = true;
 				}
 			}
 		}
+	}
+
+	@Override
+	public String getDeviceType() {
+		// TODO Auto-generated method stub
+		return "accelerator_control_panel";
 	}
 }

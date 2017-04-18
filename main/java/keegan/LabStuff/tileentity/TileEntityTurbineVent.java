@@ -1,21 +1,44 @@
 package keegan.labstuff.tileentity;
 
+import keegan.labstuff.common.capabilities.CapabilityWrapperManager;
+import keegan.labstuff.network.*;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.*;
+import net.minecraftforge.fluids.capability.*;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 
-@SuppressWarnings("deprecation")
-public class TileEntityTurbineVent extends TileEntity implements IFluidHandler, ITickable
+public class TileEntityTurbineVent extends TileEntity implements IFluidHandlerWrapper, ITickable
 {
 	
 	private FluidTank tank = new FluidTank(500000000);
 	
 	
 	@Override
+	public boolean hasCapability(Capability<?> capability, EnumFacing side)
+	{
+		return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY || super.hasCapability(capability, side);
+	}
+	
+	public CapabilityWrapperManager manager = new CapabilityWrapperManager(IFluidHandlerWrapper.class, FluidHandlerWrapper.class);
+
+	@Override
+	public <T> T getCapability(Capability<T> capability, EnumFacing side)
+	{
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+		{
+			return (T)manager.getWrapper(this, side);
+		}
+		
+		return super.getCapability(capability, side);
+	}
+	
+	@Override
 	public void update()
 	{
 		if(getWaterMain() != null)
-			getWaterMain().fill(getDir((TileEntity) getWaterMain()),tank.drain(1000, true),true);
+			getWaterMain().fill(tank.drain(1000, true),true);
 	}
 
 	protected IFluidHandler getWaterMain()
@@ -35,6 +58,8 @@ public class TileEntityTurbineVent extends TileEntity implements IFluidHandler, 
 		// TODO Auto-generated method stub
 		return EnumFacing.getFacingFromVector(pos.getX() - remote.getPos().getX(), pos.getY() - remote.getPos().getY(), pos.getZ() - remote.getPos().getZ());
 	}
+
+
 
 	@Override
 	public int fill(EnumFacing from, FluidStack resource, boolean doFill) {

@@ -73,13 +73,11 @@ public class GuiDSCBench extends GuiContainer
 		}
 		else if (par1GuiButton.id == 0)
 		{
-			DiscoveryItem item;
 			for(DiscoveryItem i : designs)
 			{
 				if(i.getName().equals(itemName))
 				{
-					item = i;
-					LabStuffMain.packetPipeline.sendToServer(new PacketDSCBench(item,tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ()));
+					LabStuffMain.packetPipeline.sendToServer(new PacketDSCBench(i,tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ()));
 				}
 			}
 		}

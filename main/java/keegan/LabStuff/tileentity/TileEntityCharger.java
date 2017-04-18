@@ -1,17 +1,23 @@
 package keegan.labstuff.tileentity;
 
-import java.util.ArrayList;
+import java.util.*;
 
+import keegan.labstuff.common.capabilities.Capabilities;
+import keegan.labstuff.network.*;
 import keegan.labstuff.recipes.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ITickable;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.*;
+import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.common.capabilities.Capability;
 
-public class TileEntityCharger extends TileEntityPowerConnection implements IInventory, ITickable
+public class TileEntityCharger extends TileEntity implements ITickable, IEnergyWrapper
 {
 
 	public ItemStack[] chestContents = new ItemStack[1];
+	private int buffer = 0;
 	
 	@Override
 	public int getSizeInventory() {
@@ -46,6 +52,28 @@ public class TileEntityCharger extends TileEntityPowerConnection implements IInv
 				}
 				return stack;
 	}
+	
+	@Override
+	public boolean hasCapability(Capability<?> capability, EnumFacing facing)
+	{
+		return capability == Capabilities.ENERGY_STORAGE_CAPABILITY
+				|| capability == Capabilities.ENERGY_ACCEPTOR_CAPABILITY
+				|| capability == Capabilities.CABLE_OUTPUTTER_CAPABILITY
+				|| super.hasCapability(capability, facing);
+	}
+
+	@Override
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing)
+	{
+		if(capability == Capabilities.ENERGY_STORAGE_CAPABILITY || capability == Capabilities.ENERGY_ACCEPTOR_CAPABILITY
+				|| capability == Capabilities.CABLE_OUTPUTTER_CAPABILITY)
+		{
+			return (T)this;
+		}
+		
+		return super.getCapability(capability, facing);
+	}
+
 
 	@Override
 	public void setInventorySlotContents(int slot, ItemStack itemstack) {
@@ -84,12 +112,13 @@ public class TileEntityCharger extends TileEntityPowerConnection implements IInv
 			{
 				if(getStackInSlot(0) != null && getStackInSlot(0).getItem().equals(charges.get(i).getDeadItem()))
 				{
-					getPowerSource().subtractPower(50, this);
+					buffer -= 50;
 					setInventorySlotContents(0, new ItemStack(charges.get(i).getChargedItem(), getStackInSlot(0).stackSize));
 				}
 			}
 		}
 	}
+	
 
 	@Override
 	public String getName() {
@@ -144,6 +173,65 @@ public class TileEntityCharger extends TileEntityPowerConnection implements IInv
 		// TODO Auto-generated method stub
 		for(ItemStack stack : chestContents)
 			stack = null;
+	}
+
+	@Override
+	public double getEnergy() {
+		// TODO Auto-generated method stub
+		return buffer;
+	}
+
+	@Override
+	public void setEnergy(double energy) {
+		buffer = (int)energy;
+	}
+
+	@Override
+	public double getMaxEnergy() {
+		// TODO Auto-generated method stub
+		return 10000;
+	}
+
+	@Override
+	public double transferEnergyToAcceptor(EnumFacing side, double amount) {
+		// TODO Auto-generated method stub
+		return buffer+=amount;
+	}
+
+	@Override
+	public boolean canReceiveEnergy(EnumFacing side) {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public boolean canOutputTo(EnumFacing side) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public EnumSet<EnumFacing> getOutputtingSides() {
+		// TODO Auto-generated method stub
+		return EnumSet.noneOf(EnumFacing.class);
+	}
+
+	@Override
+	public EnumSet<EnumFacing> getConsumingSides() {
+		// TODO Auto-generated method stub
+		return EnumSet.allOf(EnumFacing.class);
+	}
+
+	@Override
+	public double getMaxOutput() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public double removeEnergyFromProvider(EnumFacing side, double amount) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 }

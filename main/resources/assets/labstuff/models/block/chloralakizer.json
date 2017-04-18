@@ -1,0 +1,11 @@
+{
+	"parent": "block/cube",
+	"textures": {
+		"up": "labstuff:blocks/blockCircuitMaker",
+		"down": "labstuff:blocks/blockCircuitMaker",
+		"south": "labstuff:blocks/blockCircuitMakerSide",
+		"west": "labstuff:blocks/blockCircuitMakerSide",
+		"east": "labstuff:blocks/blockCircuitMakerSide",
+		"north": "labstuff:blocks/chloralakizer"
+	}
+}

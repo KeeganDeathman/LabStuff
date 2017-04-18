@@ -31,19 +31,17 @@ public class PacketDSCBench extends AbstractPacket
 		y = arg1.readInt();
 		z = arg1.readInt();
 		discov = Recipes.discoveryItems.get(dis);
-		System.out.println("Only 60's kids.");
 
 	}
 
 	@Override
 	public void encodeInto(ChannelHandlerContext arg0, ByteBuf arg1)
 	{
-		int dis = discov.getIndex();
+		int dis = Recipes.discoveryItems.indexOf(discov);
 		arg1.writeInt(dis);
 		arg1.writeInt(x);
 		arg1.writeInt(y);
 		arg1.writeInt(z);
-		System.out.println("Only 70's kids.");
 
 	}
 
@@ -63,7 +61,6 @@ public class PacketDSCBench extends AbstractPacket
 		System.out.println(z);
 		if(tile != null & tile instanceof DSCBench)
 		{
-			System.out.println("Only 80's kids.");
 			((DSCBench)tile).make(discov);
 		}
 	}

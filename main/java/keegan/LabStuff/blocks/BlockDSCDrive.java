@@ -1,5 +1,7 @@
 package keegan.labstuff.blocks;
 
+import java.util.List;
+
 import keegan.labstuff.LabStuffMain;
 import keegan.labstuff.tileentity.DSCDrive;
 import net.minecraft.block.*;
@@ -43,6 +45,14 @@ public class BlockDSCDrive extends Block implements ITileEntityProvider
 			}
 		}
 		return false;
+	}
+	
+	@Override
+	public void addInformation(ItemStack itemstack, EntityPlayer entityplayer, List<String> list, boolean flag)
+	{
+		super.addInformation(itemstack, entityplayer, list, flag);
+
+		list.add("Requires 3 RAM");
 	}
 
 }

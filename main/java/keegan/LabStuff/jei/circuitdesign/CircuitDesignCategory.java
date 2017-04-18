@@ -31,7 +31,7 @@ public class CircuitDesignCategory extends BlankRecipeCategory<CircuitDesignWrap
 		IGuiItemStackGroup guiItemStacks = recipeLayout.getItemStacks();
 
 		guiItemStacks.init(0, true, 24, 5);
-		guiItemStacks.init(1, false, 24, 43);		
+		guiItemStacks.init(1, false, 24, 31);		
 		guiItemStacks.set(0, recipeWrapper.getInputs().get(0));
 		guiItemStacks.set(1, recipeWrapper.getOutputs().get(0));
 		
