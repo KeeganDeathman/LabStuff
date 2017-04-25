@@ -1,15 +1,9 @@
 package keegan.labstuff.world;
 
+import net.minecraft.world.World;
+import net.minecraft.world.chunk.ChunkPrimer;
 import java.util.Random;
 
-import net.minecraft.world.World;
-import net.minecraft.world.chunk.*;
-
-/**
- * Do not include this prefab class in your released mod download.
- * <p/>
- * This is a base class for World Gen such as caves. Override and generate features in recursiveGenerate
- */
 public abstract class MapGenBaseMeta
 {
     /**
@@ -27,7 +21,7 @@ public abstract class MapGenBaseMeta
      */
     protected World worldObj;
 
-    public void generate(IChunkGenerator par1IChunkGenerator, World world, int chunkX, int chunkZ, ChunkPrimer primer)
+    public void generate(World world, int chunkX, int chunkZ, ChunkPrimer primer)
     {
         this.worldObj = world;
         this.rand.setSeed(world.getSeed());

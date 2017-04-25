@@ -1,23 +1,17 @@
 package keegan.labstuff.world;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldProvider;
-import net.minecraft.world.biome.BiomeProvider;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.chunk.IChunkGenerator;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
 import java.lang.reflect.Constructor;
 import java.util.Arrays;
 
 import keegan.labstuff.config.ConfigManagerCore;
 import keegan.labstuff.util.Vector3;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.math.*;
+import net.minecraft.world.*;
+import net.minecraft.world.biome.BiomeProvider;
+import net.minecraft.world.chunk.*;
+import net.minecraftforge.fml.relauncher.*;
 
 public abstract class WorldProviderSpace extends WorldProvider implements ILabstuffWorldProvider
 {
@@ -34,7 +28,7 @@ public abstract class WorldProviderSpace extends WorldProvider implements ILabst
     /**
      * Whether or not there will be rain or snow in this dimension
      *
-     * @deprecated Use new shouldDisablePrecipitation method in ILabstuffWorldProvider interface
+     * @deprecated Use new shouldDisablePrecipitation method in IGalacticraftWorldProvider interface
      */
     @Deprecated
     public boolean canRainOrSnow()
@@ -68,6 +62,11 @@ public abstract class WorldProviderSpace extends WorldProvider implements ILabst
     public boolean isGasPresent(IAtmosphericGas gas)
     {
         return this.getCelestialBody().atmosphere.contains(gas);
+    }
+
+    public boolean hasAtmosphere()
+    {
+        return this.getCelestialBody().atmosphere.size() > 0;
     }
 
     @Override

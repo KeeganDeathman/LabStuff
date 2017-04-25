@@ -3,16 +3,11 @@ package keegan.labstuff.world;
 import keegan.labstuff.LabStuffMain;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.color.BlockColors;
-import net.minecraft.client.renderer.color.IBlockColor;
-import net.minecraft.client.renderer.color.IItemColor;
-import net.minecraft.client.renderer.color.ItemColors;
+import net.minecraft.client.renderer.color.*;
 import net.minecraft.item.ItemBlock;
-import net.minecraft.world.ColorizerFoliage;
-import net.minecraft.world.ColorizerGrass;
+import net.minecraft.world.*;
 import net.minecraft.world.biome.BiomeColorHelper;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.*;
 
 
 @SideOnly(Side.CLIENT)

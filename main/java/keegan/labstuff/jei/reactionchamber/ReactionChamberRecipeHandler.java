@@ -1,7 +1,7 @@
 package keegan.labstuff.jei.reactionchamber;
 
 
-import keegan.labstuff.recipes.*;
+import keegan.labstuff.recipes.Reaction;
 import mezz.jei.api.*;
 import mezz.jei.api.recipe.*;
 

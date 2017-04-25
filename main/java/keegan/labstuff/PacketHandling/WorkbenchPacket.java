@@ -5,9 +5,8 @@ import io.netty.channel.ChannelHandlerContext;
 import keegan.labstuff.tileentity.TileEntityWorkbench;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 
-public class WorkbenchPacket extends AbstractPacket {
+public class WorkbenchPacket extends PacketBase {
 
 	private BlockPos pos;
 	
@@ -18,7 +17,7 @@ public class WorkbenchPacket extends AbstractPacket {
 	}
 
 	@Override
-	public void encodeInto(ChannelHandlerContext ctx, ByteBuf buffer) {
+	public void encodeInto(ByteBuf buffer) {
 		// TODO Auto-generated method stub
 		buffer.writeInt(pos.getX());
 		buffer.writeInt(pos.getY());
@@ -26,7 +25,7 @@ public class WorkbenchPacket extends AbstractPacket {
 	}
 
 	@Override
-	public void decodeInto(ChannelHandlerContext ctx, ByteBuf buffer) {
+	public void decodeInto(ByteBuf buffer) {
 		pos = new BlockPos(buffer.readInt(), buffer.readInt(), buffer.readInt());
 	}
 

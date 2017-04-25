@@ -5,14 +5,11 @@ import org.lwjgl.opengl.GL11;
 import keegan.labstuff.blocks.BlockTurbine;
 import keegan.labstuff.models.ModelTurbineRotor;
 import keegan.labstuff.tileentity.TileEntityTurbine;
-import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
 
 public class RenderTurbineRotor extends TileEntitySpecialRenderer{
 

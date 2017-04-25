@@ -1,10 +1,7 @@
 package keegan.labstuff.network;
 
-import java.util.EnumSet;
-
 import keegan.labstuff.common.Coord4D;
 import keegan.labstuff.common.capabilities.*;
-import keegan.labstuff.network.PlasmaHandlerWrapper.PlasmaWrapper;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 

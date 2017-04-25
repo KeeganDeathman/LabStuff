@@ -3,8 +3,7 @@ package keegan.labstuff.entities;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.*;
 import net.minecraft.world.World;
 
 public abstract class InventoryEntity extends NetworkedEntity implements IInventory

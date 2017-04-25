@@ -1,8 +1,7 @@
 package keegan.labstuff.jei.dsc;
 
 
-import keegan.labstuff.jei.dsc.DSCRecipeWrapper;
-import keegan.labstuff.recipes.*;
+import keegan.labstuff.recipes.DiscoveryItem;
 import mezz.jei.api.*;
 import mezz.jei.api.recipe.*;
 

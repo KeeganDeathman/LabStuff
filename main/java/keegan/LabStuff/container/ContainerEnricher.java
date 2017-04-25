@@ -1,6 +1,5 @@
 package keegan.labstuff.container;
 
-import keegan.labstuff.slot.SlotCharger;
 import keegan.labstuff.tileentity.TileEntityEnricher;
 import net.minecraft.entity.player.*;
 import net.minecraft.inventory.*;

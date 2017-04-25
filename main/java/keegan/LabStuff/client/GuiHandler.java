@@ -2,7 +2,9 @@ package keegan.labstuff.client;
 
 
 import keegan.labstuff.client.gui.*;
+import keegan.labstuff.common.capabilities.LSPlayerStats;
 import keegan.labstuff.container.*;
+import keegan.labstuff.entities.EntityTieredRocket;
 import keegan.labstuff.tileentity.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
@@ -15,6 +17,18 @@ public class GuiHandler implements IGuiHandler
 
 	@Override
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
+		
+		LSPlayerStats stats = LSPlayerStats.get(player);
+
+        if (ID == 36 && player.getRidingEntity() instanceof EntityTieredRocket)
+        {
+            return new ContainerRocketInventory(player.inventory, (EntityTieredRocket) player.getRidingEntity(), ((EntityTieredRocket) player.getRidingEntity()).getType(), player);
+        }
+        else if (ID == 37)
+        {
+            return new ContainerExtendedInventory(player, stats.getExtendedInventory());
+        }
+		
 		TileEntity tileEntity = world.getTileEntity(new BlockPos(x,y,z));
 		
 		if(tileEntity instanceof TileEntityCircuitDesignTable)

@@ -1,7 +1,5 @@
 package keegan.labstuff.common.capabilities;
 
-import java.util.ArrayList;
-
 import keegan.labstuff.common.EnumGravity;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.AxisAlignedBB;

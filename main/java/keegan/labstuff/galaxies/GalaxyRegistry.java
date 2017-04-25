@@ -1,10 +1,11 @@
 package keegan.labstuff.galaxies;
 
+import java.util.*;
+
 import com.google.common.collect.*;
+
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.Event;
-
-import java.util.*;
 
 /**
  * Credits to KingLemming and CovertJaguar, since this is based on the

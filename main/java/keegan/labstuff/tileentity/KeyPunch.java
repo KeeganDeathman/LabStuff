@@ -1,9 +1,5 @@
 package keegan.labstuff.tileentity;
 
-import java.util.ArrayList;
-
-import org.apache.commons.lang3.ArrayUtils;
-
 import keegan.labstuff.LabStuffMain;
 import keegan.labstuff.util.LabStuffUtils;
 import net.minecraft.entity.player.EntityPlayer;

@@ -1,7 +1,7 @@
 package keegan.labstuff.blocks;
 
 import keegan.labstuff.tileentity.TERadioKit;
-import net.minecraft.block.*;
+import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;

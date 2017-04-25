@@ -57,7 +57,7 @@ public class BlockLandingPadFull extends BlockAdvancedTile implements IPartialSe
         this.setHardness(1.0F);
         this.setResistance(10.0F);
         this.setSoundType(SoundType.METAL);
-        this.setUnlocalizedName(assetName);
+        this.setRegistryName("labstuff",assetName);
 //        this.maxY = 0.25F;
     }
 

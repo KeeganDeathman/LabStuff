@@ -3,7 +3,7 @@ package keegan.labstuff.blocks;
 import java.util.Random;
 
 import keegan.labstuff.LabStuffMain;
-import net.minecraft.block.*;
+import net.minecraft.block.BlockLog;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.*;

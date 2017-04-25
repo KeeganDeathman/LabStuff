@@ -2,8 +2,7 @@ package keegan.labstuff.common.capabilities;
 
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.capabilities.*;
 
 public class CapabilityProviderStatsClient implements ICapabilityProvider
 {

@@ -3,6 +3,7 @@ package keegan.labstuff.common;
 import keegan.labstuff.util.Vector3;
 import net.minecraft.entity.player.*;
 import net.minecraft.item.Item;
+import net.minecraft.network.*;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.*;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -58,5 +59,18 @@ public class LabStuffCommonProxy
 		}
 		return theServer.worldServerForDimension(dimensionID);
 	}
+
+	public EntityPlayer getPlayerFromNetHandler(INetHandler handler)
+    {
+        if (handler instanceof NetHandlerPlayServer)
+        {
+            return ((NetHandlerPlayServer) handler).playerEntity;
+        }
+        else
+        {
+            return null;
+        }
+    }
+
 
 }

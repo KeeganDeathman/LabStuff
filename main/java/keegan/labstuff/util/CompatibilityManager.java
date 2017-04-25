@@ -1,11 +1,8 @@
 package keegan.labstuff.util;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockContainer;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-
 import java.lang.reflect.Method;
+
+import net.minecraftforge.fml.common.Loader;
 
 //import cpw.mods.fml.common.Loader;
 //import cpw.mods.fml.common.registry.GameRegistry;

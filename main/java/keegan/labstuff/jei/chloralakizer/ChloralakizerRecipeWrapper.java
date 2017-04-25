@@ -1,16 +1,13 @@
 package keegan.labstuff.jei.chloralakizer;
 
-import java.awt.Color;
 import java.util.*;
 
 import javax.annotation.Nonnull;
 
-import keegan.labstuff.recipes.*;
 import mezz.jei.api.*;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.BlankRecipeWrapper;
-import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 

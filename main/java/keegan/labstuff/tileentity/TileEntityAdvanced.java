@@ -4,10 +4,10 @@ import java.lang.reflect.Field;
 import java.util.*;
 
 import io.netty.buffer.ByteBuf;
+import keegan.ditty.Annotations.NetworkedField;
 import keegan.labstuff.LabStuffMain;
 import keegan.labstuff.PacketHandling.*;
 import keegan.labstuff.util.*;
-import keegan.labstuff.util.Annotations.NetworkedField;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;

@@ -1,14 +1,9 @@
 package keegan.labstuff.container;
 
-import keegan.labstuff.items.ItemCircuitDesign;
-import keegan.labstuff.slot.*;
-import keegan.labstuff.tileentity.TileEntityCircuitDesignTable;
+import keegan.labstuff.slot.SlotElectrifier;
 import keegan.labstuff.tileentity.TileEntityElectrifier;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.Slot;
-import net.minecraft.item.Item;
+import net.minecraft.entity.player.*;
+import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 
 public class ContainerElectrifier extends Container

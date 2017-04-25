@@ -1,14 +1,9 @@
 package keegan.labstuff.container;
 
-import keegan.labstuff.slot.SlotCircuitMakerCircuitBoardOutput;
-import keegan.labstuff.slot.SlotCircuitMakerCircuitDesignInput;
-import keegan.labstuff.slot.SlotCircuitMakerCircuitPlateInput;
 import keegan.labstuff.slot.SlotCzoInput;
 import keegan.labstuff.tileentity.TileEntityCzo;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.Slot;
+import net.minecraft.entity.player.*;
+import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 
 public class ContainerCzo extends Container

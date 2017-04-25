@@ -14,7 +14,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
-public class PacketCircuitMaker extends AbstractPacket {
+public class PacketCircuitMaker extends PacketBase {
 
 	int x,y,z;
 	String message;
@@ -32,7 +32,7 @@ public class PacketCircuitMaker extends AbstractPacket {
 	}
 	
 	@Override
-	public void encodeInto(ChannelHandlerContext ctx, ByteBuf buffer)
+	public void encodeInto(ByteBuf buffer)
 	{
 		buffer.writeInt(x);
 		buffer.writeInt(y);
@@ -42,7 +42,7 @@ public class PacketCircuitMaker extends AbstractPacket {
 	}
 
 	@Override
-	public void decodeInto(ChannelHandlerContext ctx, ByteBuf buffer) 
+	public void decodeInto(ByteBuf buffer) 
 	{
 		x = buffer.readInt();
 		y = buffer.readInt();

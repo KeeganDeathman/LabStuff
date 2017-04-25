@@ -1,19 +1,18 @@
 package keegan.labstuff.util;
 
+import java.util.List;
+
+import org.apache.commons.lang3.builder.*;
+import org.lwjgl.util.vector.Vector3f;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.*;
-import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.lwjgl.util.vector.Vector3f;
-
-import java.util.List;
+import net.minecraft.world.*;
 
 /**
  * Vector3 Class is used for defining objects in a 3D space.

@@ -1,6 +1,5 @@
 package keegan.labstuff.blocks;
 
-import keegan.labstuff.network.FluidHandlerWrapper;
 import keegan.labstuff.tileentity.TileEntityReservoir;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;

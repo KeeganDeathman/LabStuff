@@ -1,9 +1,19 @@
 package keegan.labstuff.dimension;
 
-import keegan.labstuff.world.WorldProviderSpace;
+import keegan.labstuff.world.*;
 import net.minecraft.world.biome.BiomeProvider;
 import net.minecraft.world.chunk.IChunkGenerator;
+import net.minecraftforge.fml.relauncher.*;
 
+/***
+ * Properties of a WorldProviderSpaceStation
+ *     1.  Spinnable with Spin Thrusters (if you don't want spin, create your own SpinManager subclass which does nothing)
+ *         (note: your SkyProvider needs to rotate according to setSpinDeltaPerTick()
+ *     2.  Oregen from other mods is inhibited in this dimension
+ *     3.  AstroMiner placement is inhibited in this dimension
+ *     4.  The player on arrival into this dimension (after rocket flight) will be in 1st person view
+ *
+ */
 public abstract class WorldProviderSpaceStation extends WorldProviderSpace
 {
     private SpinManager spinManager = new SpinManager(this, this.worldObj);
@@ -48,4 +58,13 @@ public abstract class WorldProviderSpaceStation extends WorldProviderSpace
         super.updateWeather();
         spinManager.updateSpin();
     }
+	
+	@SideOnly(Side.CLIENT)
+	public abstract void setSpinDeltaPerTick(float angle);
+	
+    @SideOnly(Side.CLIENT)
+    public abstract float getSkyRotation();
+
+    @SideOnly(Side.CLIENT)
+	public abstract void createSkyProvider();
 }

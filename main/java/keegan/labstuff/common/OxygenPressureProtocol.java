@@ -4,6 +4,7 @@ import java.util.*;
 
 import keegan.labstuff.blocks.IPartialSealableBlock;
 import keegan.labstuff.config.ConfigManagerCore;
+import keegan.labstuff.tileentity.*;
 import keegan.labstuff.util.*;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;

@@ -2,7 +2,6 @@ package keegan.labstuff.network;
 
 import java.util.*;
 
-import cofh.api.energy.*;
 import keegan.labstuff.common.Coord4D;
 import keegan.labstuff.common.capabilities.*;
 import net.minecraft.tileentity.TileEntity;

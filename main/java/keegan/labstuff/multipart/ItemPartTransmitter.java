@@ -2,15 +2,11 @@ package keegan.labstuff.multipart;
 
 import java.util.List;
 
-import org.apache.http.util.LangUtils;
-
 import keegan.labstuff.LabStuffMain;
-import keegan.labstuff.common.EnumColor;
 import keegan.labstuff.items.IMetaItem;
-import keegan.labstuff.network.*;
+import keegan.labstuff.network.TransmitterType;
 import mcmultipart.item.ItemMultiPart;
 import mcmultipart.multipart.IMultipart;
-import net.minecraft.client.settings.GameSettings;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.*;

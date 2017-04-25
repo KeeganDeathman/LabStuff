@@ -4,13 +4,12 @@ import java.util.EnumSet;
 
 import cofh.api.energy.*;
 import keegan.labstuff.common.capabilities.Capabilities;
-import keegan.labstuff.network.*;
+import keegan.labstuff.network.IEnergyWrapper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
-import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 
 public class TileEntityLVToRF extends TileEntity implements IEnergyProvider, ITickable, IEnergyWrapper

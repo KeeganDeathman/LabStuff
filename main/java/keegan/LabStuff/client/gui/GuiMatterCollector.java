@@ -13,7 +13,6 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.*;
 import net.minecraft.util.*;
-import net.minecraft.util.text.TextComponentTranslation;
 
 public class GuiMatterCollector extends GuiContainer
 {

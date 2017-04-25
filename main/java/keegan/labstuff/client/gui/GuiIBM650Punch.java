@@ -5,8 +5,8 @@ import java.io.IOException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
-import keegan.labstuff.container.*;
-import keegan.labstuff.tileentity.*;
+import keegan.labstuff.container.ContainerIBM650Punch;
+import keegan.labstuff.tileentity.IBM650Punch;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.*;
 import net.minecraft.util.ResourceLocation;

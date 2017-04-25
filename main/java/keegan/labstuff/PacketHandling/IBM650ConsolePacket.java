@@ -6,26 +6,27 @@ import keegan.labstuff.tileentity.IBM650Console;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
 
-public class IBM650ConsolePacket extends AbstractPacket {
+public class IBM650ConsolePacket extends PacketBase {
 
 	public IBM650ConsolePacket(){}
 	
 	private BlockPos pos;
 	
-	public IBM650ConsolePacket(BlockPos pos)
+	public IBM650ConsolePacket(BlockPos pos, int dimID)
 	{
+		super(dimID);
 		this.pos = pos;
 	}
 	
 	@Override
-	public void encodeInto(ChannelHandlerContext ctx, ByteBuf buffer) {
+	public void encodeInto(ByteBuf buffer) {
 		buffer.writeInt(pos.getX());
 		buffer.writeInt(pos.getY());
 		buffer.writeInt(pos.getZ());
 	}
 
 	@Override
-	public void decodeInto(ChannelHandlerContext ctx, ByteBuf buffer) {
+	public void decodeInto(ByteBuf buffer) {
 		pos = new BlockPos(buffer.readInt(), buffer.readInt(), buffer.readInt());
 	}
 

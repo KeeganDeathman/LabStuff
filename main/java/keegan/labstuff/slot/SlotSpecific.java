@@ -1,11 +1,7 @@
 package keegan.labstuff.slot;
 
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
+import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * Creates a slot with a specific amount of items that matches the slot's

@@ -3,14 +3,12 @@ package keegan.labstuff.tileentity;
 import java.util.ArrayList;
 
 import keegan.labstuff.LabStuffMain;
-import keegan.labstuff.recipes.CircuitDesign;
-import keegan.labstuff.recipes.Recipes;
+import keegan.labstuff.recipes.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.*;
 import net.minecraft.tileentity.TileEntity;
 
 public class TileEntityCircuitDesignTable extends TileEntity implements IInventory

@@ -14,7 +14,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.*;
 import net.minecraft.util.math.*;
 import net.minecraft.world.*;
-import net.minecraft.world.gen.feature.*;
+import net.minecraft.world.gen.feature.WorldGenerator;
 import net.minecraftforge.fml.relauncher.*;
 
 public class BlockRubberSapling extends BlockBush implements IGrowable

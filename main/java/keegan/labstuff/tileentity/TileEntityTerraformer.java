@@ -2,12 +2,12 @@ package keegan.labstuff.tileentity;
 
 import java.util.*;
 
-import keegan.labstuff.blocks.*;
+import keegan.ditty.Annotations.NetworkedField;
+import keegan.labstuff.blocks.ITerraformableBlock;
 import keegan.labstuff.common.capabilities.*;
 import keegan.labstuff.container.ContainerTerraformer;
-import keegan.labstuff.entity.IBubbleProvider;
+import keegan.labstuff.entities.IBubbleProvider;
 import keegan.labstuff.network.*;
-import keegan.labstuff.util.Annotations.NetworkedField;
 import keegan.labstuff.util.FluidUtil;
 import keegan.labstuff.util.LabStuffUtils;
 import net.minecraft.block.*;
@@ -22,8 +22,7 @@ import net.minecraft.util.math.*;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.*;
-import net.minecraftforge.fluids.capability.*;
-import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.relauncher.*;
 
 public class TileEntityTerraformer extends TileEntity implements ISidedInventory, IDisableableMachine, IBubbleProvider, IFluidHandlerWrapper, IEnergyWrapper, ITickable
@@ -88,7 +87,7 @@ public class TileEntityTerraformer extends TileEntity implements ISidedInventory
     public void update()
     {
     	ticks++;
-    	this.hasEnoughEnergyToRun = this.buffer >= 45;
+    	this.hasEnoughEnergyToRun = this.buffer >= 90;
 //        if (this.terraformBubble == null)
 //        {
 //            if (!this.worldObj.isRemote)

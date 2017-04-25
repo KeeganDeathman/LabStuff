@@ -3,14 +3,14 @@ package keegan.labstuff.tileentity;
 import java.io.IOException;
 import java.util.*;
 
+import keegan.ditty.Annotations.NetworkedField;
 import keegan.labstuff.LabStuffMain;
 import keegan.labstuff.PacketHandling.PacketSimple;
 import keegan.labstuff.PacketHandling.PacketSimple.EnumSimplePacket;
-import keegan.labstuff.blocks.*;
+import keegan.labstuff.blocks.BlockLandingPadFull;
 import keegan.labstuff.config.ConfigManagerCore;
 import keegan.labstuff.entities.*;
 import keegan.labstuff.network.IEnergyWrapper;
-import keegan.labstuff.util.Annotations.NetworkedField;
 import keegan.labstuff.util.LabStuffUtils;
 import keegan.labstuff.world.ChunkLoadingCallback;
 import net.minecraft.block.Block;
@@ -32,7 +32,7 @@ import net.minecraftforge.fml.relauncher.Side;
 
 public class TileEntityLaunchController extends TileEntity implements IChunkLoader, ISidedInventory, ILandingPadAttachable, IEnergyWrapper,ITickable
 {
-    public static final int LV_PER_TICK = 45;
+    public static final int LV_PER_TICK = 90;
     private ItemStack[] containingItems = new ItemStack[1];
     @NetworkedField(targetSide = Side.CLIENT)
     public boolean launchPadRemovalDisabled = true;
@@ -64,7 +64,7 @@ public class TileEntityLaunchController extends TileEntity implements IChunkLoad
 //    private static Map<Integer, Integer> instanceCounts = new HashMap();
 
     public TileEntityLaunchController()
-    {
+    {	
     }
     
     int ticks = 0;

@@ -3,7 +3,6 @@ package keegan.labstuff.blocks;
 import java.lang.reflect.Method;
 
 import keegan.labstuff.LabStuffMain;
-import keegan.labstuff.common.capabilities.IWrenchable;
 import keegan.labstuff.util.CompatibilityManager;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;

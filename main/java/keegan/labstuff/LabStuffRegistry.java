@@ -6,6 +6,7 @@ import com.google.common.collect.Lists;
 
 import keegan.labstuff.client.IGameScreen;
 import keegan.labstuff.items.EnumExtendedInventorySlot;
+import keegan.labstuff.util.LSLog;
 import keegan.labstuff.world.*;
 import net.minecraft.item.*;
 import net.minecraft.util.ResourceLocation;
@@ -81,6 +82,7 @@ public class LabStuffRegistry
         LabStuffRegistry.dungeonLootMap.put(tier, dungeonStacks);
     }
 
+
     public static ITeleportType getTeleportTypeForDimension(Class<? extends WorldProvider> clazz)
     {
         if (!ILabstuffWorldProvider.class.isAssignableFrom(clazz))
@@ -113,7 +115,6 @@ public class LabStuffRegistry
         return LabStuffRegistry.spaceStations;
     }
 
-
 	@SideOnly(Side.CLIENT)
     public static ResourceLocation getResouceLocationForDimension(Class<? extends WorldProvider> clazz)
     {
@@ -143,13 +144,23 @@ public class LabStuffRegistry
         }
 
         DimensionType type = DimensionType.register(name, suffix, id, provider, keepLoaded);
-        LabStuffRegistry.dimensionTypeIDs.add(id);
+        LabStuffRegistry.dimensionTypeIDs.add(type == null ? 0 : id);
+        if (type == null)
+        {
+            LSLog.severe("Problem registering dimension type " + id + ".  May be fixable by changing config.");
+        }
+        
         return type;
     }
-    
+
     public static int getDimensionTypeID(int index)
     {
     	return LabStuffRegistry.dimensionTypeIDs.get(index);
+    }
+    
+    public static boolean isDimensionTypeIDRegistered(int typeId)
+    {
+        return LabStuffRegistry.dimensionTypeIDs.contains(typeId);
     }
     
     /**

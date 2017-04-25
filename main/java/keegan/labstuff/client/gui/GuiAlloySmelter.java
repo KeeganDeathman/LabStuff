@@ -5,14 +5,11 @@ import java.io.IOException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
-import keegan.labstuff.container.*;
-import keegan.labstuff.render.LabStuffRenderer;
-import keegan.labstuff.render.LabStuffRenderer.FluidType;
-import keegan.labstuff.tileentity.*;
+import keegan.labstuff.container.ContainerAlloySmelter;
+import keegan.labstuff.tileentity.AlloySmelter;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.*;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fluids.*;
 
 public class GuiAlloySmelter extends GuiContainer
 {

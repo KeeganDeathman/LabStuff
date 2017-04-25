@@ -3,7 +3,6 @@ package keegan.labstuff.blocks;
 import java.util.*;
 
 import keegan.labstuff.LabStuffMain;
-import keegan.labstuff.config.ConfigManagerCore;
 import keegan.labstuff.items.IShiftDescription;
 import keegan.labstuff.tileentity.*;
 import keegan.labstuff.util.*;
@@ -19,9 +18,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.*;
 import net.minecraft.world.*;
-import net.minecraft.world.chunk.storage.IChunkLoader;
-import net.minecraftforge.common.ForgeChunkManager;
-import net.minecraftforge.common.ForgeChunkManager.Type;
 import net.minecraftforge.fml.relauncher.*;
 
 public class BlockMachineMars extends BlockTileLS implements IShiftDescription, ISortableBlock, IPartialSealableBlock

@@ -7,9 +7,10 @@ import org.lwjgl.opengl.GL11;
 
 import keegan.labstuff.LabStuffMain;
 import keegan.labstuff.PacketHandling.*;
-import keegan.labstuff.container.*;
+import keegan.labstuff.container.ContainerKeyPunch;
 import keegan.labstuff.recipes.Recipes;
-import keegan.labstuff.tileentity.*;
+import keegan.labstuff.tileentity.KeyPunch;
+import keegan.labstuff.util.LabStuffUtils;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.*;
@@ -73,11 +74,11 @@ public class GuiKeyPunch extends GuiContainer
 				program = Recipes.punchProgramsKeys.get(Recipes.punchProgramsKeys.indexOf(program)+1);
 		}
 		else if(btn.id == 2)
-			LabStuffMain.packetPipeline.sendToServer(new KeyPunchPacket(tile.getPos(), Recipes.punchPrograms.get(program)));
+			LabStuffMain.packetPipeline.sendToServer(new KeyPunchPacket(tile.getPos(), Recipes.punchPrograms.get(program), LabStuffUtils.getDimensionID(tile.getWorld())));
 		else if(btn.id == 3)
-			LabStuffMain.packetPipeline.sendToServer(new GuiChangePacket(tile.getPos(), 29));
+			LabStuffMain.packetPipeline.sendToServer(new GuiChangePacket(tile.getPos(), 29, LabStuffUtils.getDimensionID(tile.getWorld())));
 		else if(btn.id == 4)
-			LabStuffMain.packetPipeline.sendToServer(new GuiChangePacket(tile.getPos(), 30));
+			LabStuffMain.packetPipeline.sendToServer(new GuiChangePacket(tile.getPos(), 30, LabStuffUtils.getDimensionID(tile.getWorld())));
 	}
 
 	@Override

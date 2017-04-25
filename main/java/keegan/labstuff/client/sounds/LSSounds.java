@@ -1,7 +1,6 @@
 package keegan.labstuff.client.sounds;
 
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
+import net.minecraft.util.*;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class LSSounds

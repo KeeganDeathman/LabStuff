@@ -6,6 +6,7 @@ import keegan.labstuff.LabStuffMain;
 import keegan.labstuff.PacketHandling.PacketACP;
 import keegan.labstuff.container.ContainerACP;
 import keegan.labstuff.tileentity.TileEntityAcceleratorControlPanel;
+import keegan.labstuff.util.LabStuffUtils;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.util.ResourceLocation;
 
@@ -41,7 +42,7 @@ public class GuiACP extends GuiContainer
 			//Start button
 			if(texX > 216 && texX < 245 && texY > 55 && texY < 87)
 			{
-				LabStuffMain.packetPipeline.sendToServer(new PacketACP(tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ(), "launch"));
+				LabStuffMain.packetPipeline.sendToServer(new PacketACP(tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ(), "launch", LabStuffUtils.getDimensionID(tile.getWorld())));
 			}
 		}
 	}

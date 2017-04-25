@@ -2,19 +2,23 @@ package keegan.labstuff.client;
 
 import java.util.*;
 
-import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
+import com.google.common.collect.Lists;
+
+import keegan.labstuff.PacketHandling.LabstuffPacketHandler;
+import keegan.labstuff.client.gui.overlay.*;
 import keegan.labstuff.common.capabilities.LSPlayerStatsClient;
 import keegan.labstuff.config.ConfigManagerCore;
-import keegan.labstuff.entities.EntitySpaceshipBase;
+import keegan.labstuff.entities.*;
 import keegan.labstuff.entities.EntitySpaceshipBase.EnumLaunchPhase;
 import keegan.labstuff.network.IClientTicker;
+import keegan.labstuff.tileentity.TileEntityScreen;
 import keegan.labstuff.util.*;
 import keegan.labstuff.world.ILabstuffWorldProvider;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.gui.*;
+import net.minecraft.client.gui.GuiIngameMenu;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraftforge.fml.client.FMLClientHandler;
@@ -32,6 +36,9 @@ public class ClientTickHandler
 
 	public static int airRemaining;
     public static int airRemaining2;
+    public static HashSet<TileEntityScreen> screenConnectionsUpdateList = new HashSet<TileEntityScreen>();
+    private static List<LabstuffPacketHandler> packetHandlers = Lists.newCopyOnWriteArrayList();
+
     
 	@SubscribeEvent
 	public void onTick(ClientTickEvent event)
@@ -61,6 +68,11 @@ public class ClientTickHandler
 			}
 		}
 	}
+	
+	public static void addPacketHandler(LabstuffPacketHandler handler)
+    {
+        ClientTickHandler.packetHandlers.add(handler);
+    }
 
 	public static void zoom(float value)
     {

@@ -8,7 +8,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 
-public class PacketDSCBench extends AbstractPacket
+public class PacketDSCBench extends PacketBase
 {
 	private DiscoveryItem discov;
 	private int x,y,z;
@@ -24,7 +24,7 @@ public class PacketDSCBench extends AbstractPacket
 	
 	
 	@Override
-	public void decodeInto(ChannelHandlerContext arg0, ByteBuf arg1)
+	public void decodeInto(ByteBuf arg1)
 	{
 		int dis = arg1.readInt();
 		x = arg1.readInt();
@@ -35,7 +35,7 @@ public class PacketDSCBench extends AbstractPacket
 	}
 
 	@Override
-	public void encodeInto(ChannelHandlerContext arg0, ByteBuf arg1)
+	public void encodeInto(ByteBuf arg1)
 	{
 		int dis = Recipes.discoveryItems.indexOf(discov);
 		arg1.writeInt(dis);

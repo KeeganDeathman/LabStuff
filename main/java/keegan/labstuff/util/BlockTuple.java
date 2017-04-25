@@ -1,8 +1,7 @@
 package keegan.labstuff.util;
 
 import net.minecraft.block.Block;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
 
 public class BlockTuple
 {

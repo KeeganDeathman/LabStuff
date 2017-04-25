@@ -1,7 +1,7 @@
 package keegan.labstuff.jei.alloysmelter;
 
 
-import keegan.labstuff.recipes.*;
+import keegan.labstuff.recipes.Alloy;
 import mezz.jei.api.*;
 import mezz.jei.api.recipe.*;
 

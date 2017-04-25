@@ -5,11 +5,8 @@ import java.io.IOException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
-import keegan.labstuff.LabStuffMain;
-import keegan.labstuff.PacketHandling.PacketGravity;
 import keegan.labstuff.container.ContainerEnricher;
-import keegan.labstuff.tileentity.*;
-import net.minecraft.client.gui.GuiTextField;
+import keegan.labstuff.tileentity.TileEntityEnricher;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.*;
 import net.minecraft.util.ResourceLocation;

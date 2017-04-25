@@ -1,7 +1,7 @@
 package keegan.labstuff.blocks;
 
 import keegan.labstuff.LabStuffMain;
-import keegan.labstuff.tileentity.*;
+import keegan.labstuff.tileentity.IBM650Punch;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.*;
@@ -12,7 +12,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.*;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 
 public class BlockIBM650Punch extends Block implements ITileEntityProvider
 {

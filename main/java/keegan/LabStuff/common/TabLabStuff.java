@@ -3,7 +3,7 @@ package keegan.labstuff.common;
 
 import keegan.labstuff.LabStuffMain;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.*;
+import net.minecraft.item.Item;
 
 public class TabLabStuff extends CreativeTabs {
 

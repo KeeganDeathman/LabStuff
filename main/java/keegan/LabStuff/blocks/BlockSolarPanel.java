@@ -2,8 +2,7 @@ package keegan.labstuff.blocks;
 
 import keegan.labstuff.LabStuffMain;
 import keegan.labstuff.tileentity.TileEntitySolarPanel;
-import net.minecraft.block.Block;
-import net.minecraft.block.ITileEntityProvider;
+import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
@@ -11,8 +10,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.*;
-import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
+import net.minecraft.world.*;
 
 public class BlockSolarPanel extends Block implements ITileEntityProvider
 {

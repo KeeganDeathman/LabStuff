@@ -9,7 +9,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
-public class PacketCircuitDesignTable extends AbstractPacket {
+public class PacketCircuitDesignTable extends PacketBase {
 
 	
 	public int x,y,z;
@@ -27,7 +27,7 @@ public class PacketCircuitDesignTable extends AbstractPacket {
 	}
 	
 	@Override
-	public void encodeInto(ChannelHandlerContext ctx, ByteBuf buffer) 
+	public void encodeInto(ByteBuf buffer) 
 	{
 		buffer.writeInt(x);
 		buffer.writeInt(y);
@@ -36,7 +36,7 @@ public class PacketCircuitDesignTable extends AbstractPacket {
 	}
 
 	@Override
-	public void decodeInto(ChannelHandlerContext ctx, ByteBuf buffer) {
+	public void decodeInto(ByteBuf buffer) {
 		x = buffer.readInt();
 		y = buffer.readInt();
 		z = buffer.readInt();

@@ -1,7 +1,8 @@
 package keegan.labstuff.world.layer_mapping;
 
-import com.google.common.collect.Lists;
 import java.util.List;
+
+import com.google.common.collect.Lists;
 
 public class IntCache
 {

@@ -3,7 +3,7 @@ package keegan.labstuff.blocks;
 import java.util.Random;
 
 import keegan.labstuff.LabStuffMain;
-import keegan.labstuff.tileentity.*;
+import keegan.labstuff.tileentity.Fermenter;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.*;

@@ -11,7 +11,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
-public class PacketDLLaptopUSB extends AbstractPacket
+public class PacketDLLaptopUSB extends PacketBase
 {
 	
 	
@@ -32,7 +32,7 @@ public class PacketDLLaptopUSB extends AbstractPacket
 	
 	
 	@Override
-	public void encodeInto(ChannelHandlerContext ctx, ByteBuf buffer) 
+	public void encodeInto(ByteBuf buffer) 
 	{
 		buffer.writeInt(x);
 		buffer.writeInt(y);
@@ -42,7 +42,7 @@ public class PacketDLLaptopUSB extends AbstractPacket
 	}
 
 	@Override
-	public void decodeInto(ChannelHandlerContext ctx, ByteBuf buffer) 
+	public void decodeInto(ByteBuf buffer) 
 	{
 		this.x = buffer.readInt();
 		this.y = buffer.readInt();

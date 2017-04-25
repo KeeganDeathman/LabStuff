@@ -7,7 +7,7 @@ import keegan.labstuff.common.capabilities.Capabilities;
 import keegan.labstuff.network.IEnergyWrapper;
 import keegan.labstuff.recipes.*;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.*;
+import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.*;
 import net.minecraft.network.NetworkManager;

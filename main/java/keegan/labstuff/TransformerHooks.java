@@ -1,36 +1,44 @@
 package keegan.labstuff;
 
-import java.lang.reflect.Method;
+import static keegan.labstuff.client.LabStuffClientProxy.*;
+
+import java.lang.reflect.*;
+import java.util.*;
 
 import org.lwjgl.opengl.GL11;
 
-import keegan.labstuff.client.LabStuffClientProxy;
+import keegan.labstuff.client.*;
 import keegan.labstuff.common.EnumGravity;
 import keegan.labstuff.common.capabilities.LSPlayerStatsClient;
+import keegan.labstuff.config.ConfigManagerCore;
 import keegan.labstuff.dimension.*;
-import keegan.labstuff.entities.IAntiGrav;
+import keegan.labstuff.entities.*;
 import keegan.labstuff.items.IArmorGravity;
 import keegan.labstuff.util.*;
 import keegan.labstuff.world.*;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.multiplayer.WorldClient;
+import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.*;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
-import net.minecraft.world.chunk.IChunkProvider;
+import net.minecraft.world.chunk.*;
 import net.minecraftforge.client.ForgeHooksClient;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.IWorldGenerator;
 import net.minecraftforge.fml.relauncher.*;
 
-
 /**
- * These methods are called from vanilla minecraft through bytecode injection done in MicdoodleCore
+ * These methods are called from vanilla minecraft through bytecode injection done in Ditty
  *
  * See https://github.com/micdoodle8/MicdoodleCore
  */
@@ -142,8 +150,10 @@ public class TransformerHooks
         return world.prevRainingStrength + (world.rainingStrength - world.prevRainingStrength) * partialTicks;
     }
 
-    public static boolean otherModPreventGenerate(int chunkX, int chunkZ, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider)
+    public static boolean otherModPreventGenerate(int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator)
     {
+        IChunkProvider chunkProvider = world.getChunkProvider();
+
         if (!(world.provider instanceof ILabstuffWorldProvider))
         {
             return false;
@@ -153,7 +163,187 @@ public class TransformerHooks
             return true;
         }
 
+        if (!generatorsInitialised)
+        {
+            generatorsInitialised = true;
 
+            try
+            {
+                Class GCGreg = Class.forName("bloodasp.galacticgreg.GT_Worldgenerator_Space");
+                if (GCGreg != null)
+                {
+                    final Field regField = Class.forName("cpw.mods.fml.common.registry.GameRegistry").getDeclaredField("worldGenerators");
+                    regField.setAccessible(true);
+                    Set<IWorldGenerator> registeredGenerators = (Set<IWorldGenerator>) regField.get(null);
+                    for (IWorldGenerator gen : registeredGenerators)
+                    {
+                        if (GCGreg.isInstance(gen))
+                        {
+                            generatorGCGreg = gen;
+                            break;
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+            }
+
+            try
+            {
+                Class cofh = Class.forName("cofh.core.world.WorldHandler");
+            }
+            catch (Exception e)
+            {
+            }
+
+            try
+            {
+                Class denseOres = Class.forName("com.rwtema.denseores.WorldGenOres");
+                if (denseOres != null)
+                {
+                    final Field regField = Class.forName("cpw.mods.fml.common.registry.GameRegistry").getDeclaredField("worldGenerators");
+                    regField.setAccessible(true);
+                    Set<IWorldGenerator> registeredGenerators = (Set<IWorldGenerator>) regField.get(null);
+                    for (IWorldGenerator gen : registeredGenerators)
+                    {
+                        if (denseOres.isInstance(gen))
+                        {
+                            generatorDenseOres = gen;
+                            break;
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+            }
+
+            try
+            {
+                Class ae2meteorPlace = null;
+                try
+                {
+                    ae2meteorPlace = Class.forName("appeng.hooks.MeteoriteWorldGen");
+                }
+                catch (ClassNotFoundException e)
+                {
+                }
+
+                if (ae2meteorPlace == null)
+                {
+                    try
+                    {
+                        ae2meteorPlace = Class.forName("appeng.worldgen.MeteoriteWorldGen");
+                    }
+                    catch (ClassNotFoundException e)
+                    {
+                    }
+                }
+
+                if (ae2meteorPlace != null)
+                {
+                    final Field regField = Class.forName("cpw.mods.fml.common.registry.GameRegistry").getDeclaredField("worldGenerators");
+                    regField.setAccessible(true);
+                    Set<IWorldGenerator> registeredGenerators = (Set<IWorldGenerator>) regField.get(null);
+                    for (IWorldGenerator gen : registeredGenerators)
+                    {
+                        if (ae2meteorPlace.isInstance(gen))
+                        {
+                            generatorAE2meteors = gen;
+                            break;
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+            }
+
+            try
+            {
+                Class genThaumCraft = Class.forName("thaumcraft.common.lib.world.ThaumcraftWorldGenerator");
+                if (genThaumCraft != null)
+                {
+                    final Field regField = Class.forName("cpw.mods.fml.common.registry.GameRegistry").getDeclaredField("worldGenerators");
+                    regField.setAccessible(true);
+                    Set<IWorldGenerator> registeredGenerators = (Set<IWorldGenerator>) regField.get(null);
+                    for (IWorldGenerator gen : registeredGenerators)
+                    {
+                        if (genThaumCraft.isInstance(gen))
+                        {
+                            generatorTCAuraNodes = gen;
+                            break;
+                        }
+                    }
+                }
+
+            }
+            catch (Exception e)
+            {
+            }
+
+            if (generatorGCGreg != null)
+            {
+                System.out.println("Whitelisting GalacticGreg oregen on planets.");
+            }
+            if (generatorCoFH != null)
+            {
+                System.out.println("Whitelisting CoFHCore custom oregen on planets.");
+            }
+            if (generatorDenseOres != null)
+            {
+                System.out.println("Whitelisting Dense Ores oregen on planets.");
+            }
+            if (generatorAE2meteors != null)
+            {
+                System.out.println("Whitelisting AE2 meteorites worldgen on planets.");
+            }
+            if (generatorTCAuraNodes != null && generateTCAuraNodes != null)
+            {
+                System.out.println("Whitelisting ThaumCraft aura node generation on planets.");
+            }
+        }
+
+        if (generatorGCGreg != null || generatorCoFH != null || generatorDenseOres != null || generatorTCAuraNodes != null || generatorAE2meteors != null)
+        {
+            try
+            {
+                long worldSeed = world.getSeed();
+                Random fmlRandom = new Random(worldSeed);
+                long xSeed = fmlRandom.nextLong() >> 2 + 1L;
+                long zSeed = fmlRandom.nextLong() >> 2 + 1L;
+                long chunkSeed = (xSeed * chunkX + zSeed * chunkZ) ^ worldSeed;
+                fmlRandom.setSeed(chunkSeed);
+
+                if (generatorCoFH != null)
+                {
+                    generatorCoFH.generate(fmlRandom, chunkX, chunkZ, world, chunkGenerator, chunkProvider);
+                }
+                if (generatorDenseOres != null)
+                {
+                    generatorDenseOres.generate(fmlRandom, chunkX, chunkZ, world, chunkGenerator, chunkProvider);
+                }
+                if (generatorGCGreg != null)
+                {
+                    generatorGCGreg.generate(fmlRandom, chunkX, chunkZ, world, chunkGenerator, chunkProvider);
+                }
+                if (generatorAE2meteors != null)
+                {
+                    generatorAE2meteors.generate(fmlRandom, chunkX, chunkZ, world, chunkGenerator, chunkProvider);
+                }
+                if (generateTCAuraNodes != null)
+                {
+                    generateTCAuraNodes.invoke(generatorTCAuraNodes, world, fmlRandom, chunkX, chunkZ, false, true);
+                }
+
+            }
+            catch (Exception e)
+            {
+                LSLog.severe("Error in another mod's worldgen.  This is NOT a LabStuff bug.");
+                e.printStackTrace();
+            }
+        }
         return true;
     }
 
@@ -210,7 +400,7 @@ public class TransformerHooks
             var20 = MathHelper.sqrt_float(var20);
             final float var21 = Math.max(1.0F - var20 * 40.0F, 0.0F);
 
-            Vec3 vec = world.getFogColor(1.0F);
+            Vec3d vec = world.getFogColor(1.0F);
 
             return new Vec3d(vec.xCoord * Math.max(1.0F - var20 * 1.29F, 0.0F), vec.yCoord * Math.max(1.0F - var20 * 1.29F, 0.0F), vec.zCoord * Math.max(1.0F - var20 * 1.29F, 0.0F));
         }
@@ -304,7 +494,7 @@ public class TransformerHooks
             {
                 return true;
             }
-            //Disable fire on Labstuff worlds with no oxygen
+            //Disable fire on LabStuff worlds with no oxygen
         }
 
         return false;
@@ -318,6 +508,18 @@ public class TransformerHooks
 
         Entity viewEntity = LabStuffClientProxy.mc.getRenderViewEntity();
 
+        if (player.getRidingEntity() instanceof EntityTieredRocket && LabStuffClientProxy.mc.gameSettings.thirdPersonView == 0)
+        {
+            EntityTieredRocket entity = (EntityTieredRocket) player.getRidingEntity();
+            float offset = entity.getRotateOffset() + PLAYER_Y_OFFSET;
+            GL11.glTranslatef(0, -offset, 0);
+            float anglePitch = entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks;
+            float angleYaw = entity.prevRotationYaw + (entity.rotationYaw - entity.prevRotationYaw) * partialTicks;
+            GL11.glRotatef(-anglePitch, 0.0F, 0.0F, 1.0F);
+            GL11.glRotatef(angleYaw, 0.0F, 1.0F, 0.0F);
+
+            GL11.glTranslatef(0, offset, 0);
+        }
 
         if (viewEntity instanceof EntityLivingBase && viewEntity.worldObj.provider instanceof IZeroGDimension && !((EntityLivingBase)viewEntity).isPlayerSleeping())
         {
@@ -356,4 +558,66 @@ public class TransformerHooks
 //        GL11.glTranslatef(0.0F, f1, 0.0F);
     }
 
+    @SideOnly(Side.CLIENT)
+    public static void renderLiquidOverlays(float partialTicks)
+    {
+        boolean within = false;
+        for (Map.Entry<Fluid, ResourceLocation> entry : submergedTextures.entrySet())
+        {
+            if (FluidUtil.isInsideOfFluid(LabStuffClientProxy.mc.thePlayer, entry.getKey()))
+            {
+                within = true;
+                LabStuffClientProxy.mc.getTextureManager().bindTexture(entry.getValue());
+                break;
+            }
+        }
+
+        if (!within)
+        {
+            return;
+        }
+
+        Tessellator tessellator = Tessellator.getInstance();
+        float f1 = LabStuffClientProxy.mc.thePlayer.getBrightness(partialTicks) / 3.0F;
+        GL11.glColor4f(f1, f1, f1, 1.0F);
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GL11.glPushMatrix();
+        float f2 = 4.0F;
+        float f3 = -1.1F;
+        float f4 = 1.1F;
+        float f5 = -1.1F;
+        float f6 = 1.1F;
+        float f7 = -0.25F;
+        float f8 = -LabStuffClientProxy.mc.thePlayer.rotationYaw / 64.0F;
+        float f9 = LabStuffClientProxy.mc.thePlayer.rotationPitch / 64.0F;
+        VertexBuffer worldRenderer = tessellator.getBuffer();
+        worldRenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+        worldRenderer.pos(f3, f5, f7).tex(f2 + f8, f2 + f9).endVertex();
+        worldRenderer.pos(f4, f5, f7).tex(0.0F + f8, f2 + f9).endVertex();
+        worldRenderer.pos(f4, f6, f7).tex(0.0F + f8, 0.0F + f9).endVertex();
+        worldRenderer.pos(f3, f6, f7).tex(f2 + f8, 0.0F + f9).endVertex();
+        tessellator.draw();
+        GL11.glPopMatrix();
+        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        GL11.glDisable(GL11.GL_BLEND);
+    }
+
+
+    @SideOnly(Side.CLIENT)
+    public static double getCameraZoom(double previous)
+    {
+        if (ConfigManagerCore.disableVehicleCameraChanges)
+        {
+            return previous;
+        }
+
+        EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+        if (player.getRidingEntity() != null && player.getRidingEntity() instanceof ICameraZoomEntity)
+        {
+            return ((ICameraZoomEntity) player.getRidingEntity()).getCameraZoom();
+        }
+
+        return previous;
+    }
 }

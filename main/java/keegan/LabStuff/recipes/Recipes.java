@@ -129,6 +129,7 @@ public class Recipes
 		CraftingManager.getInstance().getRecipeList().add(new ShapedOreRecipe(new ItemStack(keyPunch), " p ", "bbb", "sss", 'p', new ItemStack(punchCard), 'b', new ItemStack(Blocks.STONE_BUTTON), 's', "ingotSteel"));
 		CraftingManager.getInstance().getRecipeList().add(new ShapedOreRecipe(new ItemStack(ibm650), "vvv","vsv","vvv", 's', "blockSteel", 'v', new ItemStack(vaccumTube)));
 		CraftingManager.getInstance().getRecipeList().add(new ShapedOreRecipe(new ItemStack(fuelingTower), "asa", "asa", "asa", 'a', new ItemStack(amg6t), 's', new ItemStack(itemPartTransmitter, 1, 1)));
+		CraftingManager.getInstance().getRecipeList().add(new ShapedOreRecipe(new ItemStack(tin), "ttt", "ttt", "ttt", 't', "ingotTin"));
 	}
 	
 	public static void performAction(String action, TileEntity tile) {
@@ -158,6 +159,8 @@ public class Recipes
 		GameRegistry.addSmelting(LabStuffMain.itemGoldDust, new ItemStack(Items.GOLD_INGOT), 3);
 		GameRegistry.addSmelting(titaniumOre, new ItemStack(titanium), 5);
 		GameRegistry.addSmelting(titaniumDust, new ItemStack(titanium), 3);
+		GameRegistry.addSmelting(cassiterite, new ItemStack(tinIngot), 3);
+		GameRegistry.addSmelting(tinDust, new ItemStack(tinIngot), 3);
 	}
 	
 	public static void addCircuitDesign(String name, Item output)

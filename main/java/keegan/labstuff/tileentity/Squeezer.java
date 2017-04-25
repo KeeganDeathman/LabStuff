@@ -2,7 +2,6 @@ package keegan.labstuff.tileentity;
 
 import java.util.EnumSet;
 
-import keegan.labstuff.LabStuffMain;
 import keegan.labstuff.common.capabilities.*;
 import keegan.labstuff.network.*;
 import keegan.labstuff.recipes.*;

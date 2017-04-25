@@ -1,6 +1,5 @@
 package keegan.labstuff.jei.fermenter;
 
-import java.awt.Color;
 import java.util.*;
 
 import javax.annotation.Nonnull;

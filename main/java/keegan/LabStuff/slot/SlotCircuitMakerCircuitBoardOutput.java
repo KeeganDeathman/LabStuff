@@ -2,9 +2,7 @@ package keegan.labstuff.slot;
 
 import keegan.labstuff.LabStuffMain;
 import keegan.labstuff.container.ContainerCircuitMaker;
-
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
+import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 
 public class SlotCircuitMakerCircuitBoardOutput extends Slot 

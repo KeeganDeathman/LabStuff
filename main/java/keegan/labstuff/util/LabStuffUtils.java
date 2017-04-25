@@ -7,11 +7,17 @@ import keegan.labstuff.PacketHandling.PacketSimple;
 import keegan.labstuff.PacketHandling.PacketSimple.EnumSimplePacket;
 import keegan.labstuff.common.Coord4D;
 import keegan.labstuff.common.capabilities.*;
+import keegan.labstuff.container.*;
+import keegan.labstuff.entities.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.entity.player.*;
 import net.minecraft.init.*;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.*;
+import net.minecraft.launchwrapper.Launch;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
@@ -20,6 +26,36 @@ import net.minecraft.world.*;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
 public class LabStuffUtils {
+
+	private static boolean deobfuscated;
+
+	static {
+		try {
+			deobfuscated = Launch.classLoader.getClassBytes("net.minecraft.world.World") != null;
+		} catch (final Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	 public static void openCargoRocketInventory(EntityPlayerMP player, EntityCargoRocket rocket)
+	    {
+	        player.getNextWindowId();
+	        player.closeContainer();
+	        int windowId = player.currentWindowId;
+	        LabStuffMain.packetPipeline.sendTo(new PacketSimple(EnumSimplePacket.C_OPEN_CUSTOM_GUI, LabStuffUtils.getDimensionID(player.worldObj), new Object[] { windowId, 1, rocket.getEntityId() }), player);
+	        player.openContainer = new ContainerRocketInventory(player.inventory, rocket, rocket.rocketType, player);
+	        player.openContainer.windowId = windowId;
+	        player.openContainer.addListener(player);
+	    }
+	
+	public static int min(int[] nums) {
+		int smallest = nums[0];
+		for (int i = 0; i < nums.length; i++)
+			if (smallest > nums[i])
+				smallest = nums[i];
+		return smallest;
+	}
+
 	public static void notifyLoadedNeighborsOfTileChange(World world, Coord4D coord) {
 		for (EnumFacing dir : EnumFacing.VALUES) {
 			Coord4D offset = coord.offset(dir);
@@ -43,6 +79,22 @@ public class LabStuffUtils {
 		}
 	}
 
+	public static void openLanderInv(EntityPlayerMP player, EntityLanderBase landerInv) {
+		player.getNextWindowId();
+		player.closeContainer();
+		int windowId = player.currentWindowId;
+		LabStuffMain.packetPipeline.sendTo(new PacketSimple(EnumSimplePacket.C_OPEN_PARACHEST_GUI,
+				getDimensionID(player.worldObj), new Object[] { windowId, 1, landerInv.getEntityId() }), player);
+		player.openContainer = new ContainerLander(player.inventory, landerInv, player);
+		player.openContainer.windowId = windowId;
+		player.openContainer.addListener(player);
+	}
+
+	public static ScaledResolution getScaledRes(Minecraft minecraft, int width, int height) {
+		return new ScaledResolution(minecraft);
+		// return VersionUtil.getScaledRes(minecraft, width, height);
+	}
+
 	public static String translate(String key) {
 		String result = I18n.translateToLocal(key);
 		int comment = result.indexOf('#');
@@ -54,6 +106,10 @@ public class LabStuffUtils {
 			}
 		}
 		return ret;
+	}
+
+	public static boolean isDeobfuscated() {
+		return deobfuscated;
 	}
 
 	public static int[] convertToBinary(String string) {
@@ -176,6 +232,10 @@ public class LabStuffUtils {
 		return provider.getDimension();
 	}
 
+	public static int getDimensionID(TileEntity tileEntity) {
+		return tileEntity.getWorld().provider.getDimension();
+	}
+
 	public static void sendToAllDimensions(EnumSimplePacket packetType, Object[] data) {
 		for (WorldServer world : FMLCommonHandler.instance().getMinecraftServerInstance().worldServers) {
 			int id = getDimensionID(world);
@@ -194,5 +254,16 @@ public class LabStuffUtils {
 			}
 		}
 		return ret;
+	}
+
+	public static void openBuggyInv(EntityPlayerMP player, IInventory buggyInv, int type) {
+		player.getNextWindowId();
+		player.closeContainer();
+		int id = player.currentWindowId;
+		LabStuffMain.packetPipeline.sendTo(new PacketSimple(EnumSimplePacket.C_OPEN_PARACHEST_GUI,
+				player.worldObj.provider.getDimension(), new Object[] { id, 0, 0 }), player);
+		player.openContainer = new ContainerBuggy(player.inventory, buggyInv, type, player);
+		player.openContainer.windowId = id;
+		player.openContainer.addListener(player);
 	}
 }

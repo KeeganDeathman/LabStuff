@@ -1,6 +1,6 @@
 package keegan.labstuff.jei.circuitmaker;
 
-import keegan.labstuff.recipes.*;
+import keegan.labstuff.recipes.Recipes;
 import mezz.jei.api.IJeiHelpers;
 import mezz.jei.api.recipe.*;
 

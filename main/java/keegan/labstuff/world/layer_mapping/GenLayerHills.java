@@ -1,9 +1,9 @@
 package keegan.labstuff.world.layer_mapping;
 
+import org.apache.logging.log4j.*;
+
 import net.minecraft.init.Biomes;
 import net.minecraft.world.biome.Biome;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 public class GenLayerHills extends GenLayerLSMap
 {

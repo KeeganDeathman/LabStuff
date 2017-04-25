@@ -36,7 +36,7 @@ public class CommandLSInv extends CommandBase
     @Override
     public String getCommandName()
     {
-        return "gcinv";
+        return "LSInv";
     }
 
     @Override
@@ -72,30 +72,30 @@ public class CommandLSInv extends CommandBase
         {
             try
             {
-                EntityPlayerMP thePlayer = PlayerUtil.getPlayerBaseServerFromPlayerUsername(args[1], true, server.getEntityWorld());
+                EntityPlayerMP thePlayer = PlayerUtil.getPlayerBaseServerFromPlayerUsername(args[1], true);
                 if (thePlayer != null && !thePlayer.isDead && thePlayer.worldObj != null)
                 {
                     LSPlayerStats stats = LSPlayerStats.get(thePlayer);
 
                     if (args[0].equalsIgnoreCase("drop"))
                     {
-                        InventoryExtended gcInventory = stats.getExtendedInventory();
-                        gcInventory.dropExtendedItems(thePlayer);
+                        InventoryExtended LSInventory = stats.getExtendedInventory();
+                        LSInventory.dropExtendedItems(thePlayer);
                     }
                     else if (args[0].equalsIgnoreCase("save"))
                     {
-                        InventoryExtended gcInventory = stats.getExtendedInventory();
-                        ItemStack[] saveinv = new ItemStack[gcInventory.getSizeInventory()];
-                        for (int i = 0; i < gcInventory.getSizeInventory(); i++)
+                        InventoryExtended LSInventory = stats.getExtendedInventory();
+                        ItemStack[] saveinv = new ItemStack[LSInventory.getSizeInventory()];
+                        for (int i = 0; i < LSInventory.getSizeInventory(); i++)
                         {
-                            saveinv[i] = gcInventory.getStackInSlot(i);
-                            gcInventory.setInventorySlotContents(i, null);
+                            saveinv[i] = LSInventory.getStackInSlot(i);
+                            LSInventory.setInventorySlotContents(i, null);
                         }
 
                         CommandLSInv.savedata.put(args[1].toLowerCase(), saveinv);
                         CommandLSInv.dontload.add(args[1].toLowerCase());
                         CommandLSInv.writefile();
-                        System.out.println("[GCInv] Saving and clearing GC inventory slots of " + thePlayer.getGameProfile().getName());
+                        System.out.println("[LSInv] Saving and clearing LS inventory slots of " + thePlayer.getGameProfile().getName());
                     }
                     else if (args[0].equalsIgnoreCase("restore"))
                     {
@@ -103,7 +103,7 @@ public class CommandLSInv extends CommandBase
                         CommandLSInv.dontload.remove(args[1].toLowerCase());
                         if (saveinv == null)
                         {
-                            System.out.println("[GCInv] Tried to restore but player " + thePlayer.getGameProfile().getName() + " had no saved GC inventory items.");
+                            System.out.println("[LSInv] Tried to restore but player " + thePlayer.getGameProfile().getName() + " had no saved LS inventory items.");
                             return;
                         }
 
@@ -111,15 +111,15 @@ public class CommandLSInv extends CommandBase
                     }
                     else if (args[0].equalsIgnoreCase("clear"))
                     {
-                        InventoryExtended gcInventory = stats.getExtendedInventory();
-                        for (int i = 0; i < gcInventory.getSizeInventory(); i++)
+                        InventoryExtended LSInventory = stats.getExtendedInventory();
+                        for (int i = 0; i < LSInventory.getSizeInventory(); i++)
                         {
-                            gcInventory.setInventorySlotContents(i, null);
+                            LSInventory.setInventorySlotContents(i, null);
                         }
                     }
                     else
                     {
-                        throw new WrongUsageException("Invalid GCInv command. Usage: " + this.getCommandUsage(sender), new Object[0]);
+                        throw new WrongUsageException("Invalid LSInv command. Usage: " + this.getCommandUsage(sender), new Object[0]);
                     }
                 }
                 else
@@ -132,7 +132,7 @@ public class CommandLSInv extends CommandBase
                         ItemStack[] saveinv = CommandLSInv.savedata.get(args[1].toLowerCase());
                         if (saveinv != null)
                         {
-                            System.out.println("[GCInv] Restore command for offline player " + args[1] + ", setting to restore GCInv on next login.");
+                            System.out.println("[LSInv] Restore command for offline player " + args[1] + ", setting to restore LSInv on next login.");
                             CommandLSInv.dontload.remove(args[1].toLowerCase());
                             // Now it can autoload on next player logon
                             return;
@@ -142,11 +142,11 @@ public class CommandLSInv extends CommandBase
                     // No player found, and not a 'restore' command
                     if (args[0].equalsIgnoreCase("clear") || args[0].equalsIgnoreCase("save") || args[0].equalsIgnoreCase("drop"))
                     {
-                        System.out.println("GCInv command: player " + args[1] + " not found.");
+                        System.out.println("LSInv command: player " + args[1] + " not found.");
                     }
                     else
                     {
-                        throw new WrongUsageException("Invalid GCInv command. Usage: " + this.getCommandUsage(sender), new Object[0]);
+                        throw new WrongUsageException("Invalid LSInv command. Usage: " + this.getCommandUsage(sender), new Object[0]);
                     }
                 }
             }
@@ -172,19 +172,19 @@ public class CommandLSInv extends CommandBase
         // auto-restore on a server restart.
         {
             ItemStack[] saveinv = CommandLSInv.savedata.get(theName);
-            InventoryExtended gcInventory = LSPlayerStats.get(thePlayer).getExtendedInventory();
-            for (int i = 0; i < gcInventory.getSizeInventory(); i++)
+            InventoryExtended LSInventory = LSPlayerStats.get(thePlayer).getExtendedInventory();
+            for (int i = 0; i < LSInventory.getSizeInventory(); i++)
             {
-                gcInventory.setInventorySlotContents(i, saveinv[i]);
+                LSInventory.setInventorySlotContents(i, saveinv[i]);
             }
             CommandLSInv.savedata.remove(theName);
             CommandLSInv.writefile();
-            System.out.println("[GCInv] Restored GC inventory slots of " + thePlayer.getGameProfile().getName());
+            System.out.println("[LSInv] Restored LS inventory slots of " + thePlayer.getGameProfile().getName());
 
         }
         else
         {
-            System.out.println("[GCInv] Player " + thePlayer.getGameProfile().getName() + " was spawned without restoring the GCInv save.  Run /gcinv restore playername to restore it.");
+            System.out.println("[LSInv] Player " + thePlayer.getGameProfile().getName() + " was spawned without restoring the LSInv save.  Run /LSInv restore playername to restore it.");
         }
     }
 

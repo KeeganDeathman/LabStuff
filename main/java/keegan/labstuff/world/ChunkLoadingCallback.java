@@ -44,7 +44,7 @@ public class ChunkLoadingCallback implements LoadingCallback
 
                 if (tile instanceof IChunkLoader)
                 {
-                    ((IChunkLoader) tile).onTicketLoaded(ticket, false);
+                    ((IChunkLoader) tile).chunkTick();
                 }
             }
         }

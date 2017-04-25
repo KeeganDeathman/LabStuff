@@ -2,7 +2,7 @@ package keegan.labstuff.tileentity;
 
 import java.util.EnumSet;
 
-import keegan.labstuff.common.capabilities.*;
+import keegan.labstuff.common.capabilities.Capabilities;
 import keegan.labstuff.network.IEnergyWrapper;
 import keegan.labstuff.recipes.*;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,7 +12,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 
 public class TileEntityWorkbench extends TileEntity  implements IEnergyWrapper

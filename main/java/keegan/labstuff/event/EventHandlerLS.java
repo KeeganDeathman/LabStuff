@@ -1,80 +1,49 @@
 package keegan.labstuff.event;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockGravel;
-import net.minecraft.block.BlockLiquid;
-import net.minecraft.block.BlockSand;
+import java.lang.reflect.Field;
+import java.util.*;
+
+import keegan.labstuff.*;
+import keegan.labstuff.client.*;
+import keegan.labstuff.common.TickHandlerServer;
+import keegan.labstuff.common.capabilities.LSPlayerStats;
+import keegan.labstuff.config.ConfigManagerCore;
+import keegan.labstuff.dimension.WorldProviderSpaceStation;
+import keegan.labstuff.entities.*;
+import keegan.labstuff.util.*;
+import keegan.labstuff.world.*;
+import keegan.labstuff.wrappers.PlayerGearData;
+import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.ISound;
-import net.minecraft.client.audio.PositionedSound;
-import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.audio.*;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.monster.EntityEnderman;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Biomes;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.MobEffects;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemFireball;
-import net.minecraft.item.ItemFlintAndSteel;
-import net.minecraft.item.ItemStack;
+import net.minecraft.entity.player.*;
+import net.minecraft.init.*;
+import net.minecraft.item.*;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.*;
+import net.minecraft.util.math.*;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.BiomeDesert;
-import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.*;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.event.sound.PlaySoundEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.EntityEvent;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.event.entity.living.LivingFallEvent;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.event.entity.living.ZombieEvent;
-import net.minecraftforge.event.entity.player.FillBucketEvent;
-import net.minecraftforge.event.entity.player.PlayerDropsEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.terraingen.PopulateChunkEvent;
-import net.minecraftforge.event.terraingen.TerrainGen;
+import net.minecraftforge.event.entity.*;
+import net.minecraftforge.event.entity.living.*;
+import net.minecraftforge.event.entity.player.*;
+import net.minecraftforge.event.terraingen.*;
 import net.minecraftforge.event.world.ChunkDataEvent;
 import net.minecraftforge.event.world.ChunkEvent.Load;
 import net.minecraftforge.event.world.WorldEvent.Save;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
-import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraftforge.fml.common.eventhandler.*;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
-import java.lang.reflect.Field;
-import java.util.*;
-
-import keegan.labstuff.*;
-import keegan.labstuff.client.LabStuffClientProxy;
-import keegan.labstuff.common.TickHandlerServer;
-import keegan.labstuff.common.capabilities.LSPlayerStats;
-import keegan.labstuff.config.ConfigManagerCore;
-import keegan.labstuff.dimension.WorldProviderSpaceStation;
-import keegan.labstuff.util.*;
-import keegan.labstuff.world.*;
+import net.minecraftforge.fml.relauncher.*;
 
 public class EventHandlerLS
 {
@@ -100,7 +69,7 @@ public class EventHandlerLS
     }
 
     @SubscribeEvent
-    public void onConfigChanged(ConfigChangedEvent event)
+    public void onConfiLShanged(ConfigChangedEvent event)
     {
         if (event.getModID().equals("labstuff"))
         {
@@ -278,7 +247,7 @@ public class EventHandlerLS
 
                     if (!OxygenUtil.isAABBInBreathableAirBlock(entityLiving))
                     {
-                        GCCoreOxygenSuffocationEvent suffocationEvent = new GCCoreOxygenSuffocationEvent.Pre(entityLiving);
+                        LSCoreOxygenSuffocationEvent suffocationEvent = new LSCoreOxygenSuffocationEvent.Pre(entityLiving);
                         MinecraftForge.EVENT_BUS.post(suffocationEvent);
 
                         if (suffocationEvent.isCanceled())
@@ -286,9 +255,9 @@ public class EventHandlerLS
                             return;
                         }
 
-                        entityLiving.attackEntityFrom(DamageSourceGC.oxygenSuffocation, 1);
+                        entityLiving.attackEntityFrom(DamageSourceLS.oxygenSuffocation, 1);
 
-                        GCCoreOxygenSuffocationEvent suffocationEventPost = new GCCoreOxygenSuffocationEvent.Post(entityLiving);
+                        LSCoreOxygenSuffocationEvent suffocationEventPost = new LSCoreOxygenSuffocationEvent.Post(entityLiving);
                         MinecraftForge.EVENT_BUS.post(suffocationEventPost);
                     }
                 }

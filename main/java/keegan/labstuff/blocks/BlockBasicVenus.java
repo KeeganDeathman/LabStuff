@@ -1,0 +1,279 @@
+package keegan.labstuff.blocks;
+
+import java.util.*;
+
+import com.google.common.base.Predicate;
+
+import keegan.labstuff.LabStuffMain;
+import keegan.labstuff.util.EnumSortCategoryBlock;
+import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.PropertyEnum;
+import net.minecraft.block.state.*;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.Entity;
+import net.minecraft.init.*;
+import net.minecraft.item.*;
+import net.minecraft.util.*;
+import net.minecraft.util.math.*;
+import net.minecraft.world.*;
+import net.minecraftforge.common.IPlantable;
+import net.minecraftforge.fml.relauncher.*;
+
+public class BlockBasicVenus extends Block implements ITerraformableBlock, ISortableBlock
+{
+    public static final PropertyEnum BASIC_TYPE_VENUS = PropertyEnum.create("basictypevenus", EnumBlockBasicVenus.class);
+
+    public enum EnumBlockBasicVenus implements IStringSerializable
+    {
+        ROCK_SOFT(0, "venus_rock_0"),
+        ROCK_HARD(1, "venus_rock_1"),
+        ROCK_MAGMA(2, "venus_rock_2"),
+        ROCK_VOLCANIC_DEPOSIT(3, "venus_rock_3"),
+        ORE_ALUMINUM(4, "venus_ore_aluminum"),
+        ORE_COPPER(5, "venus_ore_copper"),
+        ORE_GALENA(6, "venus_ore_galena"),
+        ORE_QUARTZ(7, "venus_ore_quartz"),
+        ORE_SILICON(8, "venus_ore_silicon"),
+        ORE_TIN(9, "venus_ore_tin");
+
+        private final int meta;
+        private final String name;
+
+        EnumBlockBasicVenus(int meta, String name)
+        {
+            this.meta = meta;
+            this.name = name;
+        }
+
+        public int getMeta()
+        {
+            return this.meta;
+        }
+
+        public static EnumBlockBasicVenus byMetadata(int meta)
+        {
+            return values()[meta];
+        }
+
+        @Override
+        public String getName()
+        {
+            return this.name;
+        }
+    }
+
+    public BlockBasicVenus(String assetName)
+    {
+        super(Material.ROCK);
+        this.blockHardness = 2.2F;
+        this.blockResistance = 2.5F;
+        this.setDefaultState(this.blockState.getBaseState().withProperty(BASIC_TYPE_VENUS, EnumBlockBasicVenus.ROCK_SOFT));
+        this.setRegistryName("labstuff",assetName);
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    public CreativeTabs getCreativeTabToDisplayOn()
+    {
+    	return LabStuffMain.tabLabStuffSpace;
+    }
+
+    @Override
+    public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
+    {
+        super.breakBlock(worldIn, pos, state);
+
+        EnumBlockBasicVenus type = ((EnumBlockBasicVenus) state.getValue(BASIC_TYPE_VENUS));
+        if (type == EnumBlockBasicVenus.ROCK_MAGMA)
+        {
+            worldIn.setBlockState(pos, Blocks.FLOWING_LAVA.getDefaultState());
+        }
+    }
+
+    @Override
+    public float getExplosionResistance(World world, BlockPos pos, Entity exploder, Explosion explosion)
+    {
+        EnumBlockBasicVenus type = ((EnumBlockBasicVenus) world.getBlockState(pos).getValue(BASIC_TYPE_VENUS));
+
+        if (type == EnumBlockBasicVenus.ROCK_HARD)
+        {
+            return 6.0F;
+        }
+        else if (type == EnumBlockBasicVenus.ORE_ALUMINUM || type == EnumBlockBasicVenus.ORE_COPPER ||
+                type == EnumBlockBasicVenus.ORE_GALENA || type == EnumBlockBasicVenus.ORE_QUARTZ ||
+                type == EnumBlockBasicVenus.ORE_SILICON || type == EnumBlockBasicVenus.ORE_TIN)
+        {
+            return 3.0F;
+        }
+
+        return this.blockResistance / 5.0F;
+    }
+
+    @Override
+    public float getBlockHardness(IBlockState blockState, World worldIn, BlockPos pos)
+    {
+        EnumBlockBasicVenus type = ((EnumBlockBasicVenus) worldIn.getBlockState(pos).getValue(BASIC_TYPE_VENUS));
+
+        if (type == EnumBlockBasicVenus.ROCK_HARD)
+        {
+            return 1.5F;
+        }
+
+        if (type == EnumBlockBasicVenus.ROCK_SOFT)
+        {
+            return 0.9F;
+        }
+
+        if (type == EnumBlockBasicVenus.ORE_ALUMINUM || type == EnumBlockBasicVenus.ORE_COPPER ||
+                type == EnumBlockBasicVenus.ORE_GALENA || type == EnumBlockBasicVenus.ORE_QUARTZ ||
+                type == EnumBlockBasicVenus.ORE_SILICON || type == EnumBlockBasicVenus.ORE_TIN)
+        {
+            return 5.0F;
+        }
+
+        return this.blockHardness;
+    }
+
+    @Override
+    public Item getItemDropped(IBlockState state, Random rand, int fortune)
+    {
+        EnumBlockBasicVenus type = ((EnumBlockBasicVenus) state.getValue(BASIC_TYPE_VENUS));
+        switch (type)
+        {
+        case ORE_SILICON:
+        	return LabStuffMain.itemSiliconIngot;
+        case ORE_QUARTZ:
+            return Items.QUARTZ;
+        default:
+            return Item.getItemFromBlock(this);
+        }
+    }
+
+    @Override
+    public int damageDropped(IBlockState state)
+    {
+        EnumBlockBasicVenus type = ((EnumBlockBasicVenus) state.getValue(BASIC_TYPE_VENUS));
+        switch (type)
+        {
+        case ORE_SILICON:
+            return 2;
+        case ORE_QUARTZ:
+            return 0;
+        default:
+            return getMetaFromState(state);
+        }
+    }
+
+    @Override
+    public int quantityDropped(IBlockState state, int fortune, Random random)
+    {
+        EnumBlockBasicVenus type = ((EnumBlockBasicVenus) state.getValue(BASIC_TYPE_VENUS));
+        switch (type)
+        {
+        case ORE_SILICON:
+            if (fortune > 0)
+            {
+                int j = random.nextInt(fortune + 2) - 1;
+
+                if (j < 0)
+                {
+                    j = 0;
+                }
+
+                return this.quantityDropped(random) * (j + 1);
+            }
+        default:
+            return this.quantityDropped(random);
+        }
+    }
+
+    @Override
+    public int getExpDrop(IBlockState state, IBlockAccess world, BlockPos pos, int fortune)
+    {
+        EnumBlockBasicVenus type = ((EnumBlockBasicVenus) state.getValue(BASIC_TYPE_VENUS));
+        Random rand = world instanceof World ? ((World)world).rand : new Random();
+        if (this.getItemDropped(state, rand, fortune) != Item.getItemFromBlock(this))
+        {
+            int i;
+
+            switch (type)
+            {
+            case ORE_SILICON:
+                i = MathHelper.getRandomIntegerInRange(rand, 2, 5);
+                break;
+            default:
+                i = 0;
+                break;
+            }
+
+            return i;
+        }
+        return 0;
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void getSubBlocks(Item par1, CreativeTabs par2CreativeTabs, List<ItemStack> par3List)
+    {
+        for (EnumBlockBasicVenus type : EnumBlockBasicVenus.values())
+        {
+            par3List.add(new ItemStack(par1, 1, type.getMeta()));
+        }
+    }
+
+    @Override
+    public boolean canSustainPlant(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing direction, IPlantable plantable)
+    {
+        return false;
+    }
+
+    @Override
+    public boolean isTerraformable(World world, BlockPos pos)
+    {
+        return false;
+    }
+
+    @Override
+    public boolean isReplaceableOreGen(IBlockState state, IBlockAccess world, BlockPos pos, Predicate<IBlockState> target)
+    {
+        EnumBlockBasicVenus type = ((EnumBlockBasicVenus) world.getBlockState(pos).getValue(BASIC_TYPE_VENUS));
+        return type == EnumBlockBasicVenus.ROCK_HARD;
+    }
+
+    @Override
+    public IBlockState getStateFromMeta(int meta)
+    {
+        return this.getDefaultState().withProperty(BASIC_TYPE_VENUS, EnumBlockBasicVenus.byMetadata(meta));
+    }
+
+    @Override
+    public int getMetaFromState(IBlockState state)
+    {
+        return ((EnumBlockBasicVenus) state.getValue(BASIC_TYPE_VENUS)).getMeta();
+    }
+
+    @Override
+    protected BlockStateContainer createBlockState()
+    {
+        return new BlockStateContainer(this, BASIC_TYPE_VENUS);
+    }
+
+    @Override
+    public EnumSortCategoryBlock getCategory(int meta)
+    {
+        EnumBlockBasicVenus type = ((EnumBlockBasicVenus) getStateFromMeta(meta).getValue(BASIC_TYPE_VENUS));
+        switch (type)
+        {
+        case ORE_ALUMINUM:
+        case ORE_COPPER:
+        case ORE_GALENA:
+        case ORE_QUARTZ:
+        case ORE_SILICON:
+        case ORE_TIN:
+            return EnumSortCategoryBlock.ORE;
+        default:
+            return EnumSortCategoryBlock.GENERAL;
+        }
+    }
+}

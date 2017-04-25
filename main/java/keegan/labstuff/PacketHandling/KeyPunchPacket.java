@@ -7,7 +7,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
-public class KeyPunchPacket extends AbstractPacket {
+public class KeyPunchPacket extends PacketBase {
 
 	public KeyPunchPacket()
 	{
@@ -17,14 +17,15 @@ public class KeyPunchPacket extends AbstractPacket {
 	private BlockPos pos;
 	private String program;
 	
-	public KeyPunchPacket(BlockPos pos, String program)
+	public KeyPunchPacket(BlockPos pos, String program, int dimID)
 	{
+		super(dimID);
 		this.pos = pos;
 		this.program = program;
 	}
 	
 	@Override
-	public void encodeInto(ChannelHandlerContext ctx, ByteBuf buffer) {
+	public void encodeInto(ByteBuf buffer) {
 		buffer.writeInt(pos.getX());
 		buffer.writeInt(pos.getY());
 		buffer.writeInt(pos.getZ());
@@ -32,7 +33,7 @@ public class KeyPunchPacket extends AbstractPacket {
 	}
 
 	@Override
-	public void decodeInto(ChannelHandlerContext ctx, ByteBuf buffer) {
+	public void decodeInto(ByteBuf buffer) {
 		pos = new BlockPos(buffer.readInt(), buffer.readInt(), buffer.readInt());
 		program = ByteBufUtils.readUTF8String(buffer);
 	}

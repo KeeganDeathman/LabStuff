@@ -1,7 +1,5 @@
 package keegan.labstuff.network;
 
-import keegan.labstuff.network.IDataDevice;
-
 public class DataPackage
 {
 	private IDataDevice target;

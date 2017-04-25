@@ -1,9 +1,7 @@
 package keegan.labstuff.world.layer_mapping;
 
 import net.minecraft.init.Biomes;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.BiomeJungle;
-import net.minecraft.world.biome.BiomeMesa;
+import net.minecraft.world.biome.*;
 
 public class GenLayerShore extends GenLayerLSMap
 {

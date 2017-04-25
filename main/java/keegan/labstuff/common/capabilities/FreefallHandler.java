@@ -1,9 +1,9 @@
 package keegan.labstuff.common.capabilities;
 
-import java.util.List;
-
 import keegan.labstuff.*;
-import keegan.labstuff.config.ConfigManagerCore;
+import keegan.labstuff.dimension.*;
+import keegan.labstuff.entities.*;
+import keegan.labstuff.util.LSLog;
 import keegan.labstuff.world.IZeroGDimension;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
@@ -28,6 +28,12 @@ public class FreefallHandler
     public boolean onWall;
 
     public int pjumpticks = 0;
+    private LSPlayerStatsClient stats;
+
+    public FreefallHandler(LSPlayerStatsClient statsClientCapability)
+    {
+        stats = statsClientCapability;
+    }
 
     public boolean testFreefall(EntityPlayer player)
     {
@@ -40,7 +46,7 @@ public class FreefallHandler
         Block b = state.getBlock();
         if (b.getMaterial(state) != Material.AIR && !(b instanceof BlockLiquid))
         {
-            double blockYmax = playerFeetOnY + b.getCollisionBoundingBox(state, player.worldObj, pos).maxY;
+            double blockYmax = playerFeetOnY + b.getBoundingBox(state, player.worldObj, pos).maxY;
             if (player.getEntityBoundingBox().minY - blockYmax < 0.01D && player.getEntityBoundingBox().minY - blockYmax > -0.5D)
             {
                 player.onGround = true;
@@ -51,7 +57,8 @@ public class FreefallHandler
                 }
                 else if (b.canCollideCheck(player.worldObj.getBlockState(new BlockPos(xx, playerFeetOnY, zz)), false))
                 {
-                    AxisAlignedBB collisionBox = b.getCollisionBoundingBox(state, player.worldObj, new BlockPos(xx, playerFeetOnY, zz));
+                    BlockPos offsetPos = new BlockPos(xx, playerFeetOnY, zz);
+                    AxisAlignedBB collisionBox = b.getCollisionBoundingBox(player.worldObj.getBlockState(offsetPos), player.worldObj, offsetPos);
                     if (collisionBox != null && collisionBox.intersectsWith(player.getEntityBoundingBox()))
                     {
                         player.posY -= player.getEntityBoundingBox().minY - blockYmax;
@@ -73,7 +80,6 @@ public class FreefallHandler
         {
             return false;
         }
-        IStatsClientCapability stats = p.getCapability(CapabilityStatsClientHandler.LS_STATS_CLIENT_CAPABILITY, null);
         if (this.pjumpticks > 0 || (stats.isSsOnGroundLast() && p.movementInput.jump))
         {
             return false;
@@ -151,7 +157,7 @@ public class FreefallHandler
                     {
                         for (int z = zm; z <= zz; z++)
                         {
-                            //Blocks.air is hard vacuum - we want to check for that, here
+                            //Blocks.AIR is hard vacuum - we want to check for that, here
                             Block b = world.getBlockState(new BlockPos(x, y, z)).getBlock();
                             if (Blocks.AIR != b && LabStuffMain.brightAir != b)
                             {
@@ -164,7 +170,7 @@ public class FreefallHandler
             }
         }
 
-		/*
+        /*
         if (freefall)
 		{
 			//If that check didn't produce a result, see if the player is inside the walls
@@ -224,7 +230,7 @@ public class FreefallHandler
 			for(int x = xmin; x <= xmax; x++)
 				for (int z = zmin; z <= zmax; z++)
 					for (int y = ymin; y <= ymax; y++)
-						if (Blocks.air != this.worldProvider.worldObj.getBlock(x, y, z))
+						if (Blocks.AIR != this.worldProvider.worldObj.getBlock(x, y, z))
 						{
 							freefall = false;
 							break BLOCKCHECK0;
@@ -235,6 +241,7 @@ public class FreefallHandler
         return true;
     }
 
+    @SideOnly(Side.CLIENT)
     public void setupFreefallPre(EntityPlayerSP p)
     {
         double dY = p.motionY - pPrevMotionY;
@@ -245,6 +252,7 @@ public class FreefallHandler
         pPrevMotionZ = p.motionZ;
     }
 
+    @SideOnly(Side.CLIENT)
     public void freefallMotion(EntityPlayerSP p)
     {
         boolean jetpackUsed = false;
@@ -258,12 +266,13 @@ public class FreefallHandler
         double posOffsetZ = -p.motionZ;
         //if (p.capabilities.isFlying)
 
+        LSPlayerStatsClient stats = LSPlayerStatsClient.get(p);
         ///Undo whatever vanilla tried to do to our y motion
         if (dY < 0D && p.motionY != 0.0D)
         {
             p.motionY = pPrevMotionY;
         }
-        else if (dY > 0.01D && p.getCapability(CapabilityStatsClientHandler.LS_STATS_CLIENT_CAPABILITY, null).isInFreefallLast())
+        else if (dY > 0.01D && stats.isInFreefallLast())
         {
             //Impulse upwards - it's probably a jetpack from another mod
             if (dX < 0.01D && dZ < 0.01D)
@@ -286,8 +295,8 @@ public class FreefallHandler
 
         if (p.movementInput.moveForward != 0)
         {
-            p.motionX -= p.movementInput.moveForward * MathHelper.sin(p.rotationYaw / 57.29578F) / (200F);
-            p.motionZ += p.movementInput.moveForward * MathHelper.cos(p.rotationYaw / 57.29578F) / (200F);
+            p.motionX -= p.movementInput.moveForward * MathHelper.sin(p.rotationYaw / 57.29578F) / 200F;
+            p.motionZ += p.movementInput.moveForward * MathHelper.cos(p.rotationYaw / 57.29578F) / 200F;
         }
 
         if (jetpackBoost != 0)
@@ -300,7 +309,7 @@ public class FreefallHandler
         {
             if (!sneakLast)
             {
-//            	posOffsetY += 0.0268;
+//              posOffsetY += 0.0268;
                 sneakLast = true;
             }
             p.motionY -= 0.0032D;
@@ -308,7 +317,7 @@ public class FreefallHandler
         else if (sneakLast)
         {
             sneakLast = false;
-//        	posOffsetY -= 0.0268;
+//          posOffsetY -= 0.0268;
         }
 
         if (!jetpackUsed && p.movementInput.jump)
@@ -348,26 +357,26 @@ public class FreefallHandler
         p.moveEntity(p.motionX + posOffsetX, p.motionY + posOffsetY, p.motionZ + posOffsetZ);
     }
 
-	/*				double dyaw = p.rotationYaw - p.prevRotationYaw;
+    /*              double dyaw = p.rotationYaw - p.prevRotationYaw;
     p.rotationYaw -= dyaw * 0.8D;
-	double dyawh = p.rotationYawHead - p.prevRotationYawHead;
-	p.rotationYawHead -= dyawh * 0.8D;
-	while (p.rotationYaw > 360F)
-	{
-		p.rotationYaw -= 360F;
-	}
-	while (p.rotationYaw < 0F)
-	{
-		p.rotationYaw += 360F;
-	}
-	while (p.rotationYawHead > 360F)
-	{
-		p.rotationYawHead -= 360F;
-	}
-	while (p.rotationYawHead < 0F)
-	{
-		p.rotationYawHead += 360F;
-	}
+    double dyawh = p.rotationYawHead - p.prevRotationYawHead;
+    p.rotationYawHead -= dyawh * 0.8D;
+    while (p.rotationYaw > 360F)
+    {
+        p.rotationYaw -= 360F;
+    }
+    while (p.rotationYaw < 0F)
+    {
+        p.rotationYaw += 360F;
+    }
+    while (p.rotationYawHead > 360F)
+    {
+        p.rotationYawHead -= 360F;
+    }
+    while (p.rotationYawHead < 0F)
+    {
+        p.rotationYawHead += 360F;
+    }
 */
 
 
@@ -382,7 +391,6 @@ public class FreefallHandler
     public void preVanillaMotion(EntityPlayerSP p)
     {
         this.setupFreefallPre(p);
-        IStatsClientCapability stats = p.getCapability(CapabilityStatsClientHandler.LS_STATS_CLIENT_CAPABILITY, null);
         stats.setSsOnGroundLast(p.onGround);
     }
 
@@ -395,7 +403,6 @@ public class FreefallHandler
         {
             return;
         }
-        IStatsClientCapability stats = p.getCapability(CapabilityStatsClientHandler.LS_STATS_CLIENT_CAPABILITY, null);
         boolean freefall = stats.isInFreefall();
         freefall = this.testFreefall(p, freefall);
         stats.setInFreefall(freefall);
@@ -406,110 +413,20 @@ public class FreefallHandler
         {
             spinManager = ((WorldProviderSpaceStation) worldProvider).getSpinManager();
         }
-        boolean doGravity = spinManager != null;
+        boolean doCentrifugal = spinManager != null;
 
         if (freefall)
         {
-            doGravity = false;
             this.pjumpticks = 0;
-            
-            //Do spinning
-            if (spinManager != null && spinManager.doSpinning && spinManager.angularVelocityRadians != 0F)
-            {
-                //TODO maybe need to test to make sure xx and zz are not too large (outside sight range of SS)
-                //TODO think about server + network load (loading/unloading chunks) when movement is rapid
-                //Maybe reduce chunkloading radius?
-                float angle;
-                final double xx = p.posX - spinManager.spinCentreX;
-                final double zz = p.posZ - spinManager.spinCentreZ;
-                double arc = Math.sqrt(xx * xx + zz * zz);
-                if (xx == 0D)
-                {
-                    angle = zz > 0 ? 3.1415926535F / 2 : -3.1415926535F / 2;
-                }
-                else
-                {
-                    angle = (float) Math.atan(zz / xx);
-                }
-                if (xx < 0D)
-                {
-                    angle += 3.1415926535F;
-                }
-                angle += spinManager.angularVelocityRadians / 3F;
-                arc = arc * spinManager.angularVelocityRadians;
-                double offsetX = -arc * MathHelper.sin(angle);
-                double offsetZ = arc * MathHelper.cos(angle);
-
-                //Check for block collisions here - if so move the player appropriately
-                //First check that there are no existing collisions where the player is now (TODO: bounce the player away)
-                if (world.getCollisionBoxes(p, p.getEntityBoundingBox()).size() == 0)
-                {
-                    //Now check for collisions in the new direction and if there are some, try reducing the movement
-                    int collisions = 0;
-                    do
-                    {
-                        List<AxisAlignedBB> list = world.getCollisionBoxes(p, p.getEntityBoundingBox().addCoord(offsetX, 0.0D, offsetZ));
-                        collisions = list.size();
-                        if (collisions > 0)
-                        {
-                            if (!doGravity)
-                            {
-                                p.motionX += -offsetX;
-                                p.motionZ += -offsetZ;
-                            }
-                            offsetX /= 2D;
-                            offsetZ /= 2D;
-                            if (offsetX < 0.01D && offsetX > -0.01D)
-                            {
-                                offsetX = 0D;
-                            }
-                            if (offsetZ < 0.01D && offsetZ > -0.01D)
-                            {
-                                offsetZ = 0D;
-                            }
-                            doGravity = true;
-
-                        }
-                    }
-                    while (collisions > 0);
-
-                    p.posX += offsetX;
-                    p.posZ += offsetZ;
-                    p.setEntityBoundingBox(p.getEntityBoundingBox().offset(offsetX, 0.0D, offsetZ));
-                }
-
-                p.rotationYaw += spinManager.skyAngularVelocity;
-                p.prevRotationYaw += spinManager.skyAngularVelocity;
-                while (p.rotationYaw > 360F)
-                {
-                    p.rotationYaw -= 360F;
-                }
-                while (p.rotationYaw < 0F)
-                {
-                    p.rotationYaw += 360F;
-                }
-                while (p.prevRotationYaw > 360F)
-                {
-                    p.prevRotationYaw -= 360F;
-                }
-                while (p.prevRotationYaw < 0F)
-                {
-                    p.prevRotationYaw += 360F;
-                }
-
-				/*				//Just started freefall - give some impulse
-                                if (!p.inFreefall && p.inFreefallFirstCheck)
-								{
-									p.motionX += offsetX * 0.91F;
-									p.motionZ += offsetZ * 0.91F;
-								}*/
-            }
-            //end of spinning section
-
             //Reverse effects of deceleration
             p.motionX /= 0.91F;
             p.motionZ /= 0.91F;
             p.motionY /= 0.9800000190734863D;
+            
+            if (spinManager != null)
+            {
+                doCentrifugal = spinManager.updatePlayerForSpin(p, 1F);
+            }
 
             //Do freefall motion
             if (!p.capabilities.isCreativeMode)
@@ -566,7 +483,7 @@ public class FreefallHandler
             //if (p.motionY != 0) p.motionY = this.pPrevMotionY;
             if (p.movementInput.jump)
             {
-                if (p.onGround || stats.isSsOnGroundLast())
+                if ((p.onGround || stats.isSsOnGroundLast()) && !p.capabilities.isCreativeMode)
                 {
                     if (this.pjumpticks < 25) this.pjumpticks++;
                     p.motionY -= dy;
@@ -596,49 +513,11 @@ public class FreefallHandler
         }
 
         //Artificial gravity
-        if (doGravity && !p.onGround)
+        if (doCentrifugal && !p.onGround)
         {
-            int quadrant = 0;
-            double xd = p.posX - spinManager.spinCentreX;
-            double zd = p.posZ - spinManager.spinCentreZ;
-            double accel = Math.sqrt(xd * xd + zd * zd) * spinManager.angularVelocityRadians * spinManager.angularVelocityRadians * 4D;
-
-            if (xd < 0)
-            {
-                if (xd < -Math.abs(zd))
-                {
-                    quadrant = 2;
-                }
-                else
-                {
-                    quadrant = zd < 0 ? 3 : 1;
-                }
-            }
-            else if (xd > Math.abs(zd))
-            {
-                quadrant = 0;
-            }
-            else
-            {
-                quadrant = zd < 0 ? 3 : 1;
-            }
-
-            switch (quadrant)
-            {
-            case 0:
-                p.motionX += accel;
-                break;
-            case 1:
-                p.motionZ += accel;
-                break;
-            case 2:
-                p.motionX -= accel;
-                break;
-            case 3:
-            default:
-                p.motionZ -= accel;
-            }
+            spinManager.applyCentrifugalForce(p);
         }
+
         this.pPrevMotionX = p.motionX;
         this.pPrevMotionY = p.motionY;
         this.pPrevMotionZ = p.motionZ;
@@ -787,5 +666,7 @@ public class FreefallHandler
             }
         }
         
+        if (warnLog)
+            LSLog.debug(e.getName() + " moving too fast");
     }
 }

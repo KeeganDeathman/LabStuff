@@ -1,8 +1,7 @@
 package keegan.labstuff.common;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.*;
 import net.minecraft.world.WorldSavedData;
 
 public class LSInvSaveData extends WorldSavedData

@@ -70,7 +70,7 @@ public class BlockMulti extends BlockAdvanced implements IPartialSealableBlock, 
         super(Material.IRON);
         this.setHardness(1.0F);
         this.setSoundType(SoundType.METAL);
-        this.setUnlocalizedName(assetName);
+        this.setRegistryName("labstuff",assetName);
         this.setResistance(1000000000000000.0F);
     }
 
@@ -405,7 +405,7 @@ public class BlockMulti extends BlockAdvanced implements IPartialSealableBlock, 
             if (tile != null && tile.mainBlockPosition != null)
             {
                 IBlockState stateMain = worldIn.getBlockState(tile.mainBlockPosition);
-                if (stateMain.getBlock() == LabStuffMain.cyroChamber)
+                if (stateMain.getBlock() == LabStuffMain.cryoChamber)
                 {
                     EnumFacing dir = stateMain.getValue(BlockMachineMars.FACING);
                     renderType += dir.getHorizontalIndex();

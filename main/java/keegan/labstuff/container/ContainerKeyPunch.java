@@ -1,6 +1,6 @@
 package keegan.labstuff.container;
 
-import keegan.labstuff.tileentity.*;
+import keegan.labstuff.tileentity.KeyPunch;
 import net.minecraft.entity.player.*;
 import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;

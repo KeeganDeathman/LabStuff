@@ -2,8 +2,8 @@ package keegan.labstuff.tileentity;
 
 import java.util.EnumSet;
 
-import keegan.labstuff.common.capabilities.*;
-import keegan.labstuff.network.*;
+import keegan.labstuff.common.capabilities.Capabilities;
+import keegan.labstuff.network.IPlasmaHandler;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;

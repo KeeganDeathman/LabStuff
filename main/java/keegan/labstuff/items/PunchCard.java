@@ -9,7 +9,6 @@ import net.minecraft.item.*;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
-import scala.actors.threadpool.Arrays;
 
 public class PunchCard extends Item 
 {

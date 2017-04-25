@@ -1,7 +1,5 @@
 package keegan.labstuff.world;
 
-import keegan.labstuff.world.ILabstuffWorldProvider;
-
 public interface IOrbitDimension extends ILabstuffWorldProvider
 {
     /**

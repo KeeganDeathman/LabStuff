@@ -5,7 +5,7 @@ import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.world.World;
 
 public class BlockFusionPlasmaTap extends Block implements ITileEntityProvider

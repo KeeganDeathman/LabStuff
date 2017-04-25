@@ -3,8 +3,6 @@ package keegan.labstuff.blocks;
 import keegan.labstuff.tileentity.TileEntityAcceleratorDetectorCore;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.*;
-import net.minecraft.block.state.*;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 

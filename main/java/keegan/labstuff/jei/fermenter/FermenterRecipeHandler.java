@@ -1,7 +1,7 @@
 package keegan.labstuff.jei.fermenter;
 
 
-import keegan.labstuff.recipes.*;
+import keegan.labstuff.recipes.Ferment;
 import mezz.jei.api.*;
 import mezz.jei.api.recipe.*;
 

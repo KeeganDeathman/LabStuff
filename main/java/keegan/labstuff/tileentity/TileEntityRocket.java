@@ -1,7 +1,7 @@
 package keegan.labstuff.tileentity;
 
 import keegan.labstuff.blocks.*;
-import keegan.labstuff.common.capabilities.*;
+import keegan.labstuff.common.capabilities.CapabilityWrapperManager;
 import keegan.labstuff.network.*;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;

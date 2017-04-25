@@ -5,23 +5,23 @@ import io.netty.channel.ChannelHandlerContext;
 import keegan.labstuff.LabStuffMain;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 
-public class GuiChangePacket extends AbstractPacket {
+public class GuiChangePacket extends PacketBase {
 
 	public GuiChangePacket(){}
 	
 	private BlockPos pos;
 	private int id;
 	
-	public GuiChangePacket(BlockPos pos, int id)
+	public GuiChangePacket(BlockPos pos, int id, int dimID)
 	{
+		super(dimID);
 		this.pos = pos;
 		this.id = id;
 	}
 	
 	@Override
-	public void encodeInto(ChannelHandlerContext ctx, ByteBuf buffer) {
+	public void encodeInto(ByteBuf buffer) {
 		buffer.writeInt(pos.getX());
 		buffer.writeInt(pos.getY());
 		buffer.writeInt(pos.getZ());
@@ -29,7 +29,7 @@ public class GuiChangePacket extends AbstractPacket {
 	}
 
 	@Override
-	public void decodeInto(ChannelHandlerContext ctx, ByteBuf buffer) {
+	public void decodeInto(ByteBuf buffer) {
 		pos = new BlockPos(buffer.readInt(), buffer.readInt(), buffer.readInt());
 		id = buffer.readInt();
 	}

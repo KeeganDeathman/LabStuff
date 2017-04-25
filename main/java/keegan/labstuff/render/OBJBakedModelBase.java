@@ -1,42 +1,24 @@
 package keegan.labstuff.render;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.lang.reflect.*;
+import java.util.*;
 
 import javax.vecmath.Matrix4f;
 
+import com.google.common.base.Optional;
+import com.google.common.collect.*;
+
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.block.model.*;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.obj.OBJModel;
-import net.minecraftforge.client.model.obj.OBJModel.Face;
-import net.minecraftforge.client.model.obj.OBJModel.Group;
-import net.minecraftforge.client.model.obj.OBJModel.Normal;
-import net.minecraftforge.client.model.obj.OBJModel.OBJBakedModel;
-import net.minecraftforge.client.model.obj.OBJModel.OBJState;
-import net.minecraftforge.client.model.obj.OBJModel.TextureCoordinate;
-import net.minecraftforge.client.model.obj.OBJModel.Vertex;
-import net.minecraftforge.client.model.pipeline.LightUtil;
-import net.minecraftforge.client.model.pipeline.UnpackedBakedQuad;
-import net.minecraftforge.common.model.IModelState;
-import net.minecraftforge.common.model.TRSRTransformation;
-
-import com.google.common.base.Optional;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Lists;
+import net.minecraftforge.client.model.obj.OBJModel.*;
+import net.minecraftforge.client.model.pipeline.*;
+import net.minecraftforge.common.model.*;
 
 public abstract class OBJBakedModelBase extends OBJBakedModel
 {

@@ -1,31 +1,23 @@
 package keegan.labstuff.config;
 
+import static net.minecraftforge.common.config.Configuration.CATEGORY_GENERAL;
+
+import java.io.File;
+import java.util.*;
+
+import org.lwjgl.input.Keyboard;
+
 import com.google.common.primitives.Ints;
 
 import keegan.labstuff.util.BlockTuple;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
+import net.minecraft.item.*;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.config.ConfigElement;
-import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.common.config.Property;
+import net.minecraftforge.common.config.*;
 import net.minecraftforge.fml.client.config.IConfigElement;
-import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.common.registry.GameData;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
-import org.lwjgl.input.Keyboard;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
-import static net.minecraftforge.common.config.Configuration.CATEGORY_GENERAL;
+import net.minecraftforge.fml.relauncher.*;
 
 public class ConfigManagerCore
 {
@@ -40,7 +32,10 @@ public class ConfigManagerCore
     public static int idDimensionOverworld;
     public static int idDimensionOverworldOrbit;
     public static int idDimensionOverworldOrbitStatic;
-    public static int idDimensionMoon;
+    public static int idDimensionLuna;
+    public static int idDimensionMars;
+    public static int idDimensionVenus;
+    public static int idDimensionAsteroids;
     public static boolean disableBiomeTypeRegistrations;
     public static int[] staticLoadDimensions = {};
     public static int[] disableRocketLaunchDimensions = { -1, 1 };
@@ -50,6 +45,7 @@ public class ConfigManagerCore
     
     // GENERAL
     public static boolean launchControllerChunkLoad;
+    public static int astroMinerMax;
 
     // CLIENT / VISUAL FX
     public static boolean disableSpaceshipParticles;
@@ -117,10 +113,10 @@ public class ConfigManagerCore
             idDimensionOverworld = prop.getInt();
             propOrder.add(prop.getName());
 
-            prop = config.get("dimensions", "idDimensionMoon", -28);
-            prop.setComment("Dimension ID for the Moon");
-            prop.setLanguageKey("ls.configgui.idDimensionMoon").setRequiresMcRestart(true);
-            idDimensionMoon = prop.getInt();
+            prop = config.get("dimensions", "idDimensionLuna", -28);
+            prop.setComment("Dimension ID for Luna");
+            prop.setLanguageKey("ls.configgui.idDimensionLuna").setRequiresMcRestart(true);
+            idDimensionLuna = prop.getInt();
             propOrder.add(prop.getName());
 
             prop = config.get("dimensions", "idDimensionOverworldOrbit", -27);
@@ -135,7 +131,21 @@ public class ConfigManagerCore
             idDimensionOverworldOrbitStatic = prop.getInt();
             propOrder.add(prop.getName());
 
-            propOrder.add(prop.getName());
+            prop = config.get("dimensions", "idDimensionMars", -30);
+            prop.setComment("Dimension ID for Mars");
+            prop.setLanguageKey("ls.configgui.idDimensionMars").setRequiresMcRestart(true);
+            idDimensionMars = prop.getInt();
+            
+            prop = config.get("dimensions", "idDimensionVenus", -30);
+            prop.setComment("Dimension ID for Venus");
+            prop.setLanguageKey("ls.configgui.idDimensionVenus").setRequiresMcRestart(true);
+            idDimensionVenus = prop.getInt();
+            
+            prop = config.get("dimensions", "idDimensionAsteroids", -30);
+            prop.setComment("Dimension ID for Asteroids");
+            prop.setLanguageKey("ls.configgui.idDimensionAsteroids").setRequiresMcRestart(true);
+            idDimensionAsteroids = prop.getInt();
+
 
             prop = config.get("dimensions", "Static Loaded Dimensions", ConfigManagerCore.staticLoadDimensions);
             prop.setComment("IDs to load at startup, and keep loaded until server stops. Can be added via /lskeeploaded");
@@ -158,7 +168,7 @@ public class ConfigManagerCore
             propOrder.add(prop.getName());
 
             prop = config.get("general", "Force Overworld Spawn", false);
-            prop.setComment("By default, you will respawn on galacticraft dimensions if you die. If you set this to true, you will respawn back on earth.");
+            prop.setComment("By default, you will respawn on LabStuff dimensions if you die. If you set this to true, you will respawn back on earth.");
             prop.setLanguageKey("ls.configgui.forceOverworldRespawn");
             forceOverworldRespawn = prop.getBoolean(false);
             propOrder.add(prop.getName());
@@ -168,6 +178,12 @@ public class ConfigManagerCore
             prop.setComment("Whether or not the launch controller acts as a chunk loader. Will cause issues if disabled!");
             prop.setLanguageKey("ls.configgui.launchControllerChunkLoad");
             launchControllerChunkLoad = prop.getBoolean(true);
+            
+            prop = config.get("general", "maximumAstroMiners", 6);
+            prop.setComment("Maximum number of Astro Miners each player is allowed to have active (default 4).");
+            prop.setLanguageKey("ls.configgui.astroMinersMax");
+            astroMinerMax = prop.getInt(6);
+            propOrder.add(prop.getName());
 
 //Client side
 
@@ -179,7 +195,7 @@ public class ConfigManagerCore
             propOrder.add(prop.getName());
 
             prop = config.get("general", "Disable Vehicle Third-Person and Zoom", false);
-            prop.setComment("If you're using this mod in virtual reality, or if you don't want the camera changes when entering a Galacticraft vehicle, set this to true.");
+            prop.setComment("If you're using this mod in virtual reality, or if you don't want the camera changes when entering a LabStuff vehicle, set this to true.");
             prop.setLanguageKey("ls.configgui.disableVehicleCameraChanges");
             disableVehicleCameraChanges = prop.getBoolean(false);
             propOrder.add(prop.getName());

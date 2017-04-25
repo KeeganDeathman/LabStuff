@@ -2,7 +2,6 @@ package keegan.labstuff.jei.circuitmaker;
 
 import java.util.*;
 
-import keegan.labstuff.LabStuffMain;
 import keegan.labstuff.recipes.*;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.BlankRecipeWrapper;

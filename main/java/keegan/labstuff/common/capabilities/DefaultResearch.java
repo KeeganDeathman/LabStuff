@@ -2,8 +2,6 @@ package keegan.labstuff.common.capabilities;
 
 import java.util.ArrayList;
 
-import keegan.labstuff.common.capabilities.DefaultStorageHelper.NullStorage;
-import keegan.labstuff.network.IPlasmaHandler;
 import keegan.labstuff.recipes.Research;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 

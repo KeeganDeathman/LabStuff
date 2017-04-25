@@ -1,7 +1,8 @@
 package keegan.labstuff.util;
 
-import net.minecraftforge.fml.relauncher.FMLRelaunchLog;
 import org.apache.logging.log4j.Level;
+
+import net.minecraftforge.fml.relauncher.FMLRelaunchLog;
 
 public class LSLog
 {

@@ -1,7 +1,5 @@
 package keegan.labstuff.common.capabilities;
 
-import java.util.ArrayList;
-
 import keegan.labstuff.common.EnumGravity;
 import net.minecraft.util.math.AxisAlignedBB;
 
@@ -43,7 +41,7 @@ public class StatsClientCapability extends LSPlayerStatsClient
 
     public boolean ssOnGroundLast;
 
-    public FreefallHandler freefallHandler = new FreefallHandler();
+    public FreefallHandler freefallHandler = new FreefallHandler(this);
 
 
     @Override

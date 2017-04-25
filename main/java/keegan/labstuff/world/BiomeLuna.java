@@ -1,6 +1,5 @@
 package keegan.labstuff.world;
 
-import keegan.labstuff.config.ConfigManagerCore;
 import net.minecraft.world.biome.*;
 
 public class BiomeLuna extends Biome

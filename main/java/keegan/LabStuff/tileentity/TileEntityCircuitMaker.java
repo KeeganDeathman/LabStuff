@@ -1,13 +1,11 @@
 package keegan.labstuff.tileentity;
 
 import keegan.labstuff.LabStuffMain;
-import keegan.labstuff.items.ItemCircuitBoard;
-import keegan.labstuff.items.ItemPartialCircuitBoard;
+import keegan.labstuff.items.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.*;
 import net.minecraft.tileentity.TileEntity;
 
 public class TileEntityCircuitMaker extends TileEntity implements IInventory

@@ -2,10 +2,8 @@ package keegan.labstuff.slot;
 
 import keegan.labstuff.container.ContainerCircuitDesignTable;
 import keegan.labstuff.items.ItemCircuitDesign;
-
 import net.minecraft.init.Items;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
+import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 
 public class SlotCircuitDesignTable extends Slot {

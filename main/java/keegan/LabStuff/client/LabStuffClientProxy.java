@@ -27,6 +27,7 @@ import net.minecraft.client.renderer.block.model.*;
 import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.*;
+import net.minecraft.network.*;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.*;
@@ -56,7 +57,7 @@ public class LabStuffClientProxy extends LabStuffCommonProxy
 
     public static HashMap<Integer, Integer> clientSpaceStationID = Maps.newHashMap();
     public static MusicTicker.MusicType MUSIC_TYPE_MARS;
-    public static EnumRarity galacticraftItem = EnumHelper.addRarity("GCRarity", TextFormatting.BLUE, "Space");
+    public static EnumRarity labStuffItem = EnumHelper.addRarity("LSRarity", TextFormatting.BLUE, "Space");
     public static Map<String, String> capeMap = new HashMap<>();
     public static InventoryExtended dummyInventory = new InventoryExtended();
     public static Map<Fluid, ResourceLocation> submergedTextures = Maps.newHashMap();
@@ -80,6 +81,20 @@ public class LabStuffClientProxy extends LabStuffCommonProxy
     {
         EffectHandler.spawnParticle(particleID, position, motion, otherInfo);
     }
+    
+    @Override
+    public EntityPlayer getPlayerFromNetHandler(INetHandler handler)
+    {
+        if (handler instanceof NetHandlerPlayServer)
+        {
+            return ((NetHandlerPlayServer) handler).playerEntity;
+        }
+        else
+        {
+            return FMLClientHandler.instance().getClientPlayerEntity();
+        }
+    }
+
 	
 	@Override
 	public void registerRenders()

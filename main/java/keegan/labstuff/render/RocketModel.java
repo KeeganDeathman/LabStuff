@@ -26,7 +26,7 @@ import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.model.*;
 import net.minecraftforge.client.model.obj.OBJModel;
 import net.minecraftforge.client.model.obj.OBJModel.Face;
-import net.minecraftforge.common.model.*;
+import net.minecraftforge.common.model.IModelState;
 
 public class RocketModel extends OBJBakedModelBase
 {

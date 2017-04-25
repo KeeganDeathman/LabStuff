@@ -1,13 +1,15 @@
 package keegan.labstuff.dimension;
 
-import java.util.*;
+	import java.util.*;
 
 import keegan.labstuff.LabStuffMain;
+import keegan.labstuff.client.*;
 import keegan.labstuff.config.ConfigManagerCore;
 import keegan.labstuff.galaxies.CelestialBody;
 import keegan.labstuff.util.Vector3;
 import keegan.labstuff.world.*;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.DimensionType;
 import net.minecraftforge.fml.relauncher.*;
@@ -235,5 +237,33 @@ public class WorldProviderOverworldOrbit extends WorldProviderSpaceStation imple
     {
         freefallingEntities.clear();
         super.updateWeather();
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void setSpinDeltaPerTick(float angle)
+    {
+        SkyProviderOrbit skyProvider = ((SkyProviderOrbit)this.getSkyRenderer());
+        if (skyProvider != null)
+            skyProvider.spinDeltaPerTick = angle;
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public float getSkyRotation()
+    {
+        SkyProviderOrbit skyProvider = ((SkyProviderOrbit)this.getSkyRenderer());
+        return skyProvider.spinAngle;
+    }
+    
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void createSkyProvider()
+    {
+        this.setSkyRenderer(new SkyProviderOrbit(new ResourceLocation("labstuff:textures/celestialbodies/earth.png"), true, true));
+        this.setSpinDeltaPerTick(this.getSpinManager().getSpinRate());
+        
+        if (this.getCloudRenderer() == null)
+            this.setCloudRenderer(new CloudRenderer());
     }
 }

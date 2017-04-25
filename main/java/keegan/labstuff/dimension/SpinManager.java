@@ -7,20 +7,20 @@ import com.google.common.collect.Lists;
 import keegan.labstuff.LabStuffMain;
 import keegan.labstuff.PacketHandling.PacketSimple;
 import keegan.labstuff.blocks.BlockSpinThruster;
-import keegan.labstuff.client.SkyProviderOrbit;
 import keegan.labstuff.common.capabilities.FreefallHandler;
+import keegan.labstuff.config.ConfigManagerCore;
 import keegan.labstuff.entities.ITumblable;
 import keegan.labstuff.util.*;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.*;
 import net.minecraft.entity.item.*;
 import net.minecraft.entity.player.*;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
-import net.minecraftforge.client.IRenderHandler;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.*;
 
@@ -76,7 +76,7 @@ public class SpinManager
      */
     public void registerServerSide()
     {
-        if (!this.world.isRemote)
+        if (!world.isRemote)
         {
             this.clientSide = false;
         }
@@ -106,22 +106,14 @@ public class SpinManager
     @SideOnly(Side.CLIENT)
     private void updateSkyProviderSpinRate()
     {
-        IRenderHandler sky = this.worldProvider.getSkyRenderer();
-        if (sky instanceof SkyProviderOrbit)
-        {
-            ((SkyProviderOrbit) sky).spinDeltaPerTick = this.skyAngularVelocity;
-        }
+        this.worldProvider.setSpinDeltaPerTick(this.skyAngularVelocity);
     }
 
     public void setSpinRate(float angle, boolean firing)
     {
         this.angularVelocityRadians = angle;
         this.skyAngularVelocity = angle * 180F / 3.1415927F;
-        IRenderHandler sky = this.worldProvider.getSkyRenderer();
-        if (sky instanceof SkyProviderOrbit)
-        {
-            ((SkyProviderOrbit) sky).spinDeltaPerTick = this.skyAngularVelocity;
-        }
+        this.worldProvider.setSpinDeltaPerTick(this.skyAngularVelocity);
         this.thrustersFiring = firing;
     }
 
@@ -172,7 +164,7 @@ public class SpinManager
      */
     public boolean refresh(BlockPos baseBlock, boolean placingThruster)
     {
-        if (this.oneSSBlock == null || this.world.getBlockState(this.oneSSBlock).getBlock().isAir(this.world.getBlockState(this.oneSSBlock), this.world, this.oneSSBlock))
+        if (this.oneSSBlock == null || world.getBlockState(this.oneSSBlock).getBlock().isAir(world.getBlockState(this.oneSSBlock), world, this.oneSSBlock))
         {
             if (baseBlock != null)
             {
@@ -192,7 +184,7 @@ public class SpinManager
         this.checked.clear();
         currentLayer.add(new BlockVec3(this.oneSSBlock));
         this.checked.add(new BlockVec3(this.oneSSBlock));
-        Block bStart = this.world.getBlockState(this.oneSSBlock).getBlock();
+        Block bStart = world.getBlockState(this.oneSSBlock).getBlock();
         if (bStart instanceof BlockSpinThruster)
         {
             foundThrusters.add(this.oneSSBlock);
@@ -252,12 +244,12 @@ public class SpinManager
                     if (!this.checked.contains(sideVec))
                     {
                         this.checked.add(sideVec);
-                        IBlockState state = sideVec.getBlockState(this.world);
+                        IBlockState state = sideVec.getBlockState(world);
                         Block b = state.getBlock();
-                        if (b != null && !b.isAir(this.world.getBlockState(sideVec.toBlockPos()), this.world, sideVec.toBlockPos()))
+                        if (b != null && !b.isAir(world.getBlockState(sideVec.toBlockPos()), world, sideVec.toBlockPos()))
                         {
                             nextLayer.add(sideVec);
-                            if (bStart.isAir(this.world.getBlockState(this.oneSSBlock), this.world, this.oneSSBlock))
+                            if (bStart.isAir(world.getBlockState(this.oneSSBlock), world, this.oneSSBlock))
                             {
                                 this.oneSSBlock = sideVec.toBlockPos();
                                 bStart = b;
@@ -267,7 +259,7 @@ public class SpinManager
                             if (!(b instanceof BlockLiquid))
                             {
                                 //For most blocks, hardness gives a good idea of mass
-                                m = b.getBlockHardness(this.world.getBlockState(sideVec.toBlockPos()), this.world, sideVec.toBlockPos());
+                                m = b.getBlockHardness(world.getBlockState(sideVec.toBlockPos()), world, sideVec.toBlockPos());
                                 if (m < 0.1F)
                                 {
                                     m = 0.1F;
@@ -290,7 +282,7 @@ public class SpinManager
                             thismassCentreZ += m * sideVec.z;
                             thismass += m;
                             thismoment += m * (sideVec.x * sideVec.x + sideVec.z * sideVec.z);
-                            if (b instanceof BlockSpinThruster && !RedstoneUtil.isBlockReceivingRedstone(this.world, sideVec.toBlockPos()))
+                            if (b instanceof BlockSpinThruster && !RedstoneUtil.isBlockReceivingRedstone(world, sideVec.toBlockPos()))
                             {
                                 foundThrusters.add(sideVec.toBlockPos());
                             }
@@ -317,7 +309,7 @@ public class SpinManager
             if (!this.oneSSBlock.equals(baseBlock))
             {
                 this.oneSSBlock = baseBlock;
-                IBlockState state = this.world.getBlockState(this.oneSSBlock);
+                IBlockState state = world.getBlockState(this.oneSSBlock);
                 if (state.getBlock().getMaterial(state) != Material.AIR)
                 {
                     return this.refresh(baseBlock, true);
@@ -333,7 +325,7 @@ public class SpinManager
         this.thrustersMinus.clear();
         for (BlockPos thruster : foundThrusters)
         {
-            IBlockState state = this.world.getBlockState(thruster);
+            IBlockState state = world.getBlockState(thruster);
             int facing = state.getBlock().getMetaFromState(state) & 8;
             if (facing == 0)
             {
@@ -473,7 +465,7 @@ public class SpinManager
         {
             if (this.dataNotLoaded)
             {
-                this.savefile = OrbitSpinSaveData.initWorldData(this.world);
+                this.savefile = OrbitSpinSaveData.initWorldData(world);
                 this.readFromNBT(this.savefile.datacompound);
                 this.dataNotLoaded = false;
             }
@@ -523,7 +515,7 @@ public class SpinManager
 
             //Update entity positions if in freefall
             this.loadedEntities.clear();
-            this.loadedEntities.addAll(this.world.loadedEntityList);
+            this.loadedEntities.addAll(world.loadedEntityList);
             for (Entity e : this.loadedEntities)
             {
                 //TODO: What about vehicles from GC (buggies) and other mods?
@@ -533,7 +525,7 @@ public class SpinManager
                     boolean outsideStation = entityBoundingBox.maxX < this.ssBoundsMinX || entityBoundingBox.minX > this.ssBoundsMaxX || entityBoundingBox.maxY < this.ssBoundsMinY ||
                             entityBoundingBox.minY > this.ssBoundsMaxY || entityBoundingBox.maxZ < this.ssBoundsMinZ || entityBoundingBox.minZ > this.ssBoundsMaxZ;
 
-                    if (outsideStation || FreefallHandler.testEntityFreefall(this.world, entityBoundingBox))
+                    if (outsideStation || FreefallHandler.testEntityFreefall(world, entityBoundingBox))
                     {
                         if (this.doSpinning)
                         {
@@ -623,6 +615,138 @@ public class SpinManager
         }
     }
     
+    @SideOnly(Side.CLIENT)
+    public boolean updatePlayerForSpin(EntityPlayerSP p, float partial)
+    {
+        float angleDelta = partial * this.angularVelocityRadians;
+        if (this.doSpinning && angleDelta != 0F)
+        {
+            //TODO maybe need to test to make sure xx and zz are not too large (outside sight range of SS)
+            //TODO think about server + network load (loading/unloading chunks) when movement is rapid
+            //Maybe reduce chunkloading radius?
+            
+            boolean doCentrifugal = false;
+            float angle;
+            final double xx = p.posX - this.spinCentreX;
+            final double zz = p.posZ - this.spinCentreZ;
+            double arc = Math.sqrt(xx * xx + zz * zz);
+            if (xx == 0D)
+            {
+                angle = zz > 0 ? 3.1415926535F / 2 : -3.1415926535F / 2;
+            }
+            else
+            {
+                angle = (float) Math.atan(zz / xx);
+            }
+            if (xx < 0D)
+            {
+                angle += 3.1415926535F;
+            }
+            angle += angleDelta / 3F;
+            arc = arc * angleDelta;
+            double offsetX = -arc * Math.sin(angle);
+            double offsetZ = arc * Math.cos(angle);
+
+            //Check for block collisions here - if so move the player appropriately
+            //First check that there are no existing collisions where the player is now (TODO: bounce the player away)
+            if (p.worldObj.getCollisionBoxes(p, p.getEntityBoundingBox()).size() == 0)
+            {
+                //Now check for collisions in the new direction and if there are some, try reducing the movement
+                int collisions = 0;
+                do
+                {
+                    List<AxisAlignedBB> list = p.worldObj.getCollisionBoxes(p, p.getEntityBoundingBox().addCoord(offsetX, 0.0D, offsetZ));
+                    collisions = list.size();
+                    if (collisions > 0)
+                    {
+                        if (!doCentrifugal)
+                        {
+                            p.motionX += -offsetX;
+                            p.motionZ += -offsetZ;
+                        }
+                        offsetX /= 2D;
+                        offsetZ /= 2D;
+                        if (offsetX < 0.01D && offsetX > -0.01D)
+                        {
+                            offsetX = 0D;
+                        }
+                        if (offsetZ < 0.01D && offsetZ > -0.01D)
+                        {
+                            offsetZ = 0D;
+                        }
+                        doCentrifugal = true;
+
+                    }
+                }
+                while (collisions > 0);
+
+                p.posX += offsetX;
+                p.posZ += offsetZ;
+                p.setEntityBoundingBox(p.getEntityBoundingBox().offset(offsetX, 0.0D, offsetZ));
+            }
+
+            p.rotationYaw += this.skyAngularVelocity * partial;
+            p.renderYawOffset += this.skyAngularVelocity * partial;
+            while (p.rotationYaw > 360F)
+            {
+                p.rotationYaw -= 360F;
+            }
+            while (p.rotationYaw < 0F)
+            {
+                p.rotationYaw += 360F;
+            }
+
+            return doCentrifugal;
+        }
+
+        return false;
+    }
+    
+    @SideOnly(Side.CLIENT)
+    public void applyCentrifugalForce(EntityPlayerSP p)
+    {
+        int quadrant = 0;
+        double xd = p.posX - this.spinCentreX;
+        double zd = p.posZ - this.spinCentreZ;
+        double accel = Math.sqrt(xd * xd + zd * zd) * this.angularVelocityRadians * this.angularVelocityRadians * 4D;
+
+        if (xd < 0)
+        {
+            if (xd < -Math.abs(zd))
+            {
+                quadrant = 2;
+            }
+            else
+            {
+                quadrant = zd < 0 ? 3 : 1;
+            }
+        }
+        else if (xd > Math.abs(zd))
+        {
+            quadrant = 0;
+        }
+        else
+        {
+            quadrant = zd < 0 ? 3 : 1;
+        }
+
+        switch (quadrant)
+        {
+        case 0:
+            p.motionX += accel;
+            break;
+        case 1:
+            p.motionZ += accel;
+            break;
+        case 2:
+            p.motionX -= accel;
+            break;
+        case 3:
+        default:
+            p.motionZ -= accel;
+        }
+    }
+    
     /**
      * Call this when player first login/transfer to this dimension
      * <p/>
@@ -678,7 +802,7 @@ public class SpinManager
     {
         if (this.savefile == null)
         {
-            this.savefile = OrbitSpinSaveData.initWorldData(this.world);
+            this.savefile = OrbitSpinSaveData.initWorldData(world);
             this.dataNotLoaded = false;
         }
         else

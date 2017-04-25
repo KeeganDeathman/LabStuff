@@ -1,7 +1,5 @@
 package keegan.labstuff.tileentity;
 
-import java.util.ArrayList;
-
 import keegan.labstuff.LabStuffMain;
 import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;

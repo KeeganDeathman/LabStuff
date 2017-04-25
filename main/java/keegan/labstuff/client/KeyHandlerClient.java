@@ -75,7 +75,7 @@ public class KeyHandlerClient extends KeyHandler
             {
                 if (KeyHandlerClient.mc.currentScreen == null)
                 {
-                    KeyHandlerClient.mc.thePlayer.openGui(LabStuffMain.instance, GuiIdsCore.GALAXY_MAP, KeyHandlerClient.mc.theWorld, (int) KeyHandlerClient.mc.thePlayer.posX, (int) KeyHandlerClient.mc.thePlayer.posY, (int) KeyHandlerClient.mc.thePlayer.posZ);
+                    KeyHandlerClient.mc.thePlayer.openGui(LabStuffMain.instance, 33, KeyHandlerClient.mc.theWorld, (int) KeyHandlerClient.mc.thePlayer.posX, (int) KeyHandlerClient.mc.thePlayer.posY, (int) KeyHandlerClient.mc.thePlayer.posZ);
                 }
             }
             else if (kb.getKeyCode() == KeyHandlerClient.openFuelGui.getKeyCode())

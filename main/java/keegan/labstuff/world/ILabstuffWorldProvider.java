@@ -1,5 +1,6 @@
 package keegan.labstuff.world;
 
+import keegan.labstuff.entities.IRocketType;
 import keegan.labstuff.galaxies.CelestialBody;
 
 public interface ILabstuffWorldProvider

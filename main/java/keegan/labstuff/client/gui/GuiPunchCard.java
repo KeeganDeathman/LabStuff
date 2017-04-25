@@ -6,7 +6,6 @@ import keegan.labstuff.util.LabStuffUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
 
 public class GuiPunchCard extends GuiScreen 
 {

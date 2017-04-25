@@ -9,7 +9,6 @@ import keegan.labstuff.render.LabStuffRenderer.*;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.Fluid;
 
 public final class FluidRenderer 

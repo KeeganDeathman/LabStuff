@@ -11,7 +11,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.*;
-import net.minecraftforge.fluids.capability.*;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
 public class TEFuelingTower extends TileEntity implements IEnergyWrapper, IFluidHandlerWrapper, ITickable, IDataDevice
 {

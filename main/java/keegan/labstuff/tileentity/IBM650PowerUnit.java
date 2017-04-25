@@ -1,12 +1,11 @@
 package keegan.labstuff.tileentity;
 
 import keegan.labstuff.blocks.*;
-import keegan.labstuff.common.capabilities.*;
+import keegan.labstuff.common.capabilities.Capabilities;
 import keegan.labstuff.network.*;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
 public class IBM650PowerUnit extends TileEntity implements IStrictEnergyStorage, IStrictEnergyAcceptor, IDataDevice, ITickable
 {

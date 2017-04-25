@@ -3,7 +3,7 @@ package keegan.labstuff.jei.circuitmaker;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.*;
 import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.*;
+import mezz.jei.api.recipe.BlankRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 

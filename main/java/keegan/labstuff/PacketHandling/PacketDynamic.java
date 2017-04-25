@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import io.netty.buffer.*;
-import io.netty.channel.ChannelHandlerContext;
 import keegan.labstuff.LabStuffMain;
 import keegan.labstuff.util.*;
 import net.minecraft.entity.Entity;

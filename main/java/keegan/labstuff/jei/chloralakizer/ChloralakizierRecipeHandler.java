@@ -1,7 +1,6 @@
 package keegan.labstuff.jei.chloralakizer;
 
 
-import keegan.labstuff.recipes.*;
 import mezz.jei.api.*;
 import mezz.jei.api.recipe.*;
 

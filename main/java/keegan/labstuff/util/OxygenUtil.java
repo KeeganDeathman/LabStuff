@@ -6,6 +6,9 @@ import keegan.labstuff.LabStuffMain;
 import keegan.labstuff.blocks.IPartialSealableBlock;
 import keegan.labstuff.common.OxygenPressureProtocol;
 import keegan.labstuff.common.capabilities.LSPlayerStats;
+import keegan.labstuff.items.*;
+import keegan.labstuff.items.IBreathableArmor.EnumGearType;
+import keegan.labstuff.tileentity.TileEntityOxygenDistributor;
 import keegan.labstuff.world.*;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
@@ -174,8 +177,8 @@ public class OxygenUtil
         for (int side = 0; side < 6; side++)
         {
             BlockVec3 sidevec = vec.newVecSide(side);
-            Block newblock = sidevec.getBlockID_noChunkLoad(world);
-            if (OxygenUtil.testContactWithBreathableAir(world, newblock, sidevec.toBlockPos(), 1) >= 0)
+            IBlockState state = sidevec.getBlockState_noChunkLoad(world);
+            if (OxygenUtil.testContactWithBreathableAir(world, state.getBlock(), sidevec.toBlockPos(), 1) >= 0)
             {
                 return true;
             }
@@ -199,7 +202,8 @@ public class OxygenUtil
             return block.getMetaFromState(world.getBlockState(pos));
         }
 
-        if (block == null || block.getMaterial(world.getBlockState(pos)) == Material.AIR)
+        IBlockState state = world.getBlockState(pos);
+        if (block == null || block.getMaterial(state) == Material.AIR)
         {
             return -1;
         }
@@ -208,9 +212,16 @@ public class OxygenUtil
         boolean permeableFlag = false;
         if (!(block instanceof BlockLeaves))
         {
-            if (block.isOpaqueCube(world.getBlockState(pos)))
+            if (block.isOpaqueCube(state))
             {
-                permeableFlag = true;
+                if (block instanceof BlockGravel || block.getMaterial(state) == Material.CLOTH || block instanceof BlockSponge)
+                {
+                    permeableFlag = true;
+                }
+                else
+                {
+                    return -1;
+                }
             }
             else if (block instanceof BlockGlass || block instanceof BlockStainedGlass)
             {
@@ -223,7 +234,6 @@ public class OxygenUtil
             else if (OxygenPressureProtocol.nonPermeableBlocks.containsKey(block))
             {
                 ArrayList<Integer> metaList = OxygenPressureProtocol.nonPermeableBlocks.get(block);
-                IBlockState state = world.getBlockState(pos);
                 if (metaList.contains(Integer.valueOf(-1)) || metaList.contains(state.getBlock().getMetaFromState(state)))
                 {
                     return -1;
@@ -285,7 +295,7 @@ public class OxygenUtil
         if (block instanceof BlockPistonBase)
         {
             IBlockState state = world.getBlockState(vec);
-            if (((Boolean) state.getValue(BlockPistonBase.EXTENDED)).booleanValue())
+            if ((Boolean) state.getValue(BlockPistonBase.EXTENDED))
             {
                 int meta0 = state.getBlock().getMetaFromState(state);
                 EnumFacing facing = BlockPistonBase.getFacing(meta0);

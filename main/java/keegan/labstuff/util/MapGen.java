@@ -1,27 +1,20 @@
 package keegan.labstuff.util;
 
-import net.minecraft.init.Biomes;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldType;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.BiomeCache;
-import net.minecraft.world.biome.BiomeProvider;
-import net.minecraft.world.gen.NoiseGeneratorOctaves;
-import net.minecraft.world.gen.layer.GenLayer;
+import java.io.*;
+import java.nio.*;
+import java.nio.channels.FileChannel;
+import java.util.*;
+import java.util.concurrent.atomic.*;
+
 import org.apache.commons.io.FileUtils;
 
 import keegan.labstuff.world.layer_mapping.*;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.channels.FileChannel;
-import java.util.ArrayList;
-import java.util.Random;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
+import net.minecraft.init.Biomes;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.*;
+import net.minecraft.world.biome.*;
+import net.minecraft.world.gen.NoiseGeneratorOctaves;
+import net.minecraft.world.gen.layer.GenLayer;
 
 public class MapGen extends BiomeProvider implements Runnable
 {

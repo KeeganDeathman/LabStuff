@@ -4,14 +4,11 @@ import org.lwjgl.opengl.GL11;
 
 import keegan.labstuff.blocks.BlockMatterCollector;
 import keegan.labstuff.render.transmitter.RenderTransmitterBase;
-import keegan.labstuff.tileentity.*;
+import keegan.labstuff.tileentity.TileEntityMatterCollector;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
-import net.minecraft.client.renderer.block.model.*;
-import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.*;

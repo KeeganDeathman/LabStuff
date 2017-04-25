@@ -35,7 +35,7 @@ public class BlockSpinThruster extends BlockAdvanced implements IShiftDescriptio
         super(Material.CIRCUITS);
         this.setHardness(0.1F);
         this.setSoundType(SoundType.WOOD);
-        this.setUnlocalizedName(assetName);
+        this.setRegistryName("labstuff",assetName);
         this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
     }
 

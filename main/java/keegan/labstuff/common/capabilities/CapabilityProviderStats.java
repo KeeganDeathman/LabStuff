@@ -1,12 +1,11 @@
 package keegan.labstuff.common.capabilities;
 
+import java.lang.ref.WeakReference;
+
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ICapabilitySerializable;
-
-import java.lang.ref.WeakReference;
+import net.minecraftforge.common.capabilities.*;
 
 public class CapabilityProviderStats implements ICapabilitySerializable<NBTTagCompound>
 {

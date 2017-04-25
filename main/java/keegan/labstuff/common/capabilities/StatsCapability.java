@@ -1,13 +1,12 @@
 package keegan.labstuff.common.capabilities;
 
 import java.lang.ref.WeakReference;
-import java.util.*;
+import java.util.HashMap;
 
 import com.google.common.collect.Maps;
 
 import keegan.labstuff.LabStuffMain;
 import keegan.labstuff.common.CommandLSInv;
-import keegan.labstuff.config.ConfigManagerCore;
 import keegan.labstuff.container.InventoryExtended;
 import keegan.labstuff.util.*;
 import net.minecraft.entity.player.EntityPlayerMP;

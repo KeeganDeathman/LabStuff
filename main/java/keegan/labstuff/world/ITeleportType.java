@@ -1,7 +1,5 @@
 package keegan.labstuff.world;
 
-import java.util.Random;
-
 import keegan.labstuff.util.Vector3;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;

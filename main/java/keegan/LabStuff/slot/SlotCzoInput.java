@@ -2,10 +2,8 @@ package keegan.labstuff.slot;
 
 import keegan.labstuff.LabStuffMain;
 import keegan.labstuff.container.ContainerCzo;
-import keegan.labstuff.items.ItemSiliconBoule;
-import keegan.labstuff.items.ItemSiliconBoulePart;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
+import keegan.labstuff.items.*;
+import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 
 public class SlotCzoInput extends Slot 

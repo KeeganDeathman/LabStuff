@@ -2,7 +2,7 @@ package keegan.labstuff.tileentity;
 
 import java.util.EnumSet;
 
-import keegan.labstuff.common.capabilities.*;
+import keegan.labstuff.common.capabilities.Capabilities;
 import keegan.labstuff.network.IEnergyWrapper;
 import keegan.labstuff.recipes.*;
 import net.minecraft.entity.player.EntityPlayer;

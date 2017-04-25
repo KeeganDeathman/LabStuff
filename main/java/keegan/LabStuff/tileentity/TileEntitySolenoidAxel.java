@@ -1,13 +1,11 @@
 package keegan.labstuff.tileentity;
 
-import org.apache.commons.lang3.BooleanUtils;
-
 import keegan.labstuff.LabStuffMain;
 import keegan.labstuff.blocks.*;
 import keegan.labstuff.blocks.BlockSolenoidAxel.EnumRender;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.*;
+import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;

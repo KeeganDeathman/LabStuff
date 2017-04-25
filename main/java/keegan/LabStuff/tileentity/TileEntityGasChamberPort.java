@@ -1,6 +1,6 @@
 package keegan.labstuff.tileentity;
 
-import java.util.*;
+import java.util.EnumSet;
 
 import keegan.labstuff.LabStuffMain;
 import keegan.labstuff.blocks.*;
@@ -16,7 +16,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
 public class TileEntityGasChamberPort extends TileEntity implements IInventory, ITickable, IPlasmaHandler, ICableOutputter
 {

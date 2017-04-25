@@ -1,7 +1,7 @@
 package keegan.labstuff.blocks;
 
 import keegan.labstuff.LabStuffMain;
-import keegan.labstuff.tileentity.*;
+import keegan.labstuff.tileentity.ReactionChamber;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.*;

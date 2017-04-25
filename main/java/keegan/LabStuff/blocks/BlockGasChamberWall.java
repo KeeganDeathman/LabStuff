@@ -1,7 +1,5 @@
 package keegan.labstuff.blocks;
 
-import keegan.labstuff.LabStuffMain;
-import keegan.labstuff.tileentity.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.*;

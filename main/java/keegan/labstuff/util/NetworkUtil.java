@@ -6,13 +6,11 @@ import java.util.*;
 
 import com.google.common.math.DoubleMath;
 
-import cofh.api.energy.EnergyStorage;
 import io.netty.buffer.*;
 import io.netty.handler.codec.EncoderException;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.*;
 import net.minecraft.nbt.*;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;

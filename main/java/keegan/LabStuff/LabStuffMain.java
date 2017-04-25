@@ -12,6 +12,8 @@ import keegan.labstuff.PacketHandling.PacketTransmitterUpdate.*;
 import keegan.labstuff.blocks.*;
 import keegan.labstuff.blocks.BlockSpaceGlass.*;
 import keegan.labstuff.client.*;
+import keegan.labstuff.client.screen.GameScreenText;
+import keegan.labstuff.command.*;
 import keegan.labstuff.common.*;
 import keegan.labstuff.common.capabilities.*;
 import keegan.labstuff.config.ConfigManagerCore;
@@ -32,7 +34,7 @@ import keegan.labstuff.world.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.*;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.*;
+import net.minecraft.client.particle.Particle;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -55,7 +57,7 @@ import net.minecraftforge.fml.common.registry.*;
 import net.minecraftforge.fml.relauncher.FMLInjectionData;
 import net.minecraftforge.oredict.OreDictionary;
 
-@Mod(modid = "labstuff", name = "LabStuff", version = "2.5", dependencies = "after:mcmultipart")
+@Mod(modid = "labstuff", name = "LabStuff", version = "2.5", dependencies = "after:mcmultipart,Ditty")
 public class LabStuffMain {
 	@SidedProxy(clientSide = "keegan.labstuff.client.LabStuffClientProxy", serverSide = "keegan.labstuff.common.LabStuffCommonProxy")
 	public static LabStuffCommonProxy proxy;
@@ -197,7 +199,7 @@ public class LabStuffMain {
 	public static Block landingPad;
 	public static Block landingPadFull;
 	public static Block fakeBlock;
-	public static Block cyroChamber;
+	public static Block cryoChamber;
 	public static BlockSpaceGlass spaceGlassVanilla;
 	public static BlockSpaceGlass spaceGlassClear;
 	public static BlockSpaceGlass spaceGlassStrong;
@@ -205,6 +207,33 @@ public class LabStuffMain {
 	public static BlockSpaceGlass spaceGlassTinClear;
 	public static BlockSpaceGlass spaceGlassTinStrong;
 	public static Block fallenMeteor;
+	public static Block unlitTorch;
+	public static Block unlitTorchLit;
+	public static Block airLockFrame;
+	public static Block airLockSeal;
+	public static Block oxygenSealer;
+	public static Block blockMinerBase;
+	public static Block minerBaseFull;
+	public static Block asteroid;
+	public static Block tin;
+	public static Block cassiterite;
+	public static Block spaceStationBase;
+	public static Block venusBlock;
+	public static Block spout;
+	public static Block blockSulphuricAcid;
+	public static Block scorchedRock;
+	public static Block crashedProbe;
+	public static Block marsBlock;
+	public static Block blockSludge;
+	public static Block vine;
+	public static Block oxygenDistributor;
+	public static Block oxygenCollector;
+	public static Block fuelLoader;
+	public static Block sealableBlock;
+	public static Block cargoLoader;
+	public static Block spinThruster;
+	public static Block screen;
+	public static Block telemetry;
 
 	// Items
 	public static Item itemFiberGlass;
@@ -300,7 +329,33 @@ public class LabStuffMain {
 	public static Item fuelCanister;
 	public static Item oxygenGear;
 	public static Item shieldController;
-	public static Item buggy; 
+	public static Item buggy;
+	public static Item prelaunchChecklist;
+	public static Item eagle;
+	public static Item thermalControl;
+	public static Item astroMiner;
+	public static Item tinIngot;
+	public static Item tinDust;
+	public static Item oxMask;
+	public static Item oxTankLight;
+	public static Item oxTankMedium;
+	public static Item oxTankHeavy;
+	public static Item canisterLOX;
+	public static Item rocketMars;
+	public static Item thermalCloth;
+	public static Item meteoricIronRaw;
+	public static Item frequencyModule;
+	public static Item canister;
+	public static Item oxygenVent;
+	public static Item oxygenFan;
+	public static Item meteorChunk;
+	public static Item parachute;
+	public static Item oxygenCanisterInfinite;
+	public static Item bioDieselCanister;
+	public static Item ionDrive;
+	public static Item grapple;
+	public static Item tier3Rocket;
+	public static Item thermalPaddingTier2;
 
 	// Sputnik
 	public static Item designRadio;
@@ -338,6 +393,7 @@ public class LabStuffMain {
 	public static Planet planetVenus;
 	public static Planet planetMars;
 	public static Planet planetOverworld;
+	public static Planet planetAsteroids;
 	public static Planet planetJupiter;
 	public static Planet planetSaturn;
 	public static Planet planetUranus;
@@ -374,6 +430,9 @@ public class LabStuffMain {
 	public static final Fluid sulfolane = createFluid("sulfolane", true,
 			fluid -> fluid.setLuminosity(10).setDensity(1600).setViscosity(100),
 			fluid -> new BlockFluidClassic(fluid, new MaterialLiquid(MapColor.ADOBE)));
+	public static final Fluid sulphuricAcid = createFluid("sulphuricAcid", true,
+			fluid -> fluid.setLuminosity(10).setDensity(1600).setViscosity(100),
+			fluid -> new BlockFluidClassic(fluid, new MaterialLiquid(MapColor.ADOBE)));
 
 	static {
 		FluidRegistry.enableUniversalBucket(); // Must be called before preInit
@@ -395,6 +454,9 @@ public class LabStuffMain {
 		}
 
 		handler = new LSPlayerHandler();
+		MinecraftForge.EVENT_BUS.register(this);
+        MinecraftForge.EVENT_BUS.register(handler);
+
 
 		ConfigManagerCore.initialize(new File(event.getModConfigurationDirectory(), "labstuff/core.conf"));
 		// Blocks
@@ -582,9 +644,20 @@ public class LabStuffMain {
 		labstuffBlocks.add(keyPunch = new BlockKeyPunch(Material.IRON).setRegistryName("labstuff:keyPunch")
 				.setCreativeTab(tabLabStuffComputers).setHardness(3F).setResistance(5F));
 
-		labstuffBlocks.add(blockLuna = new BlockLuna("luna").setRegistryName("labstuff:luna")
-				.setCreativeTab(tabLabStuffSpace).setHardness(2F).setResistance(2.5F));
-
+		labstuffBlocks.add(
+				blockLuna = new BlockLuna("luna").setCreativeTab(tabLabStuffSpace).setHardness(2F).setResistance(2.5F));
+		labstuffBlocks.add(breatheableAir = new BlockBreathableAir("breatheable_air"));
+		labstuffBlocks.add(brightAir = new BlockBrightAir("bright_air"));
+		labstuffBlocks.add(brightBreatheableAir = new BlockBrightBreathableAir("bright_breathable_air"));
+		labstuffBlocks.add(landingPad = new BlockLandingPad("landing_pad"));
+		labstuffBlocks.add(landingPadFull = new BlockLandingPadFull("landing_pad_full"));
+		labstuffBlocks.add(unlitTorch = new BlockUnlitTorch(false, "unlit_torch"));
+		labstuffBlocks.add(unlitTorchLit = new BlockUnlitTorch(true, "unlit_torch_lit"));
+		labstuffBlocks.add(oxygenDistributor = new BlockOxygenDistributor("oxygen_distributor"));
+		labstuffBlocks.add(oxygenCollector = new BlockOxygenCollector("oxygen_collector"));
+		labstuffBlocks.add(fallenMeteor = new BlockFallenMeteor("fallen_meteor"));
+		labstuffBlocks.add(airLockFrame = new BlockAirLockFrame("air_lock_frame"));
+		labstuffBlocks.add(airLockSeal = new BlockAirLockSeal("air_lock_seal"));
 		labstuffBlocks.add(spaceGlassVanilla = (BlockSpaceGlass) new BlockSpaceGlass("space_glass_vanilla",
 				GlassType.VANILLA, GlassFrame.PLAIN, null).setHardness(0.3F).setResistance(3F));
 		labstuffBlocks.add(spaceGlassClear = (BlockSpaceGlass) new BlockSpaceGlass("space_glass_clear", GlassType.CLEAR,
@@ -597,6 +670,25 @@ public class LabStuffMain {
 				GlassType.CLEAR, GlassFrame.TIN_DECO, spaceGlassClear).setHardness(0.3F).setResistance(4F));
 		labstuffBlocks.add(spaceGlassTinStrong = (BlockSpaceGlass) new BlockSpaceGlass("space_glass_strong_tin",
 				GlassType.STRONG, GlassFrame.TIN_DECO, spaceGlassStrong).setHardness(4F).setResistance(35F));
+		labstuffBlocks.add(fuelLoader = new BlockFuelLoader("fuel_loader"));
+		labstuffBlocks.add(spaceStationBase = new BlockSpaceStationBase("space_station_base"));
+		labstuffBlocks.add(fakeBlock = new BlockMulti("block_multi"));
+		labstuffBlocks.add(oxygenSealer = new BlockOxygenSealer("oxygen_sealer"));
+		labstuffBlocks.add(sealableBlock = new BlockEnclosed("enclosed"));
+		labstuffBlocks.add(cargoLoader = new BlockCargoLoader("cargo"));
+		labstuffBlocks.add(spinThruster = new BlockSpinThruster("spin_thruster"));
+		labstuffBlocks.add(screen = new BlockScreen("screen"));
+		labstuffBlocks.add(telemetry = new BlockTelemetry("telemetry"));
+		labstuffBlocks.add(blockMinerBase = new BlockMinerBase("miner_base"));
+		labstuffBlocks.add(minerBaseFull = new BlockMinerBaseFull("miner_base_full"));
+		labstuffBlocks.add(venusBlock = new BlockBasicVenus("venus"));
+		labstuffBlocks.add(spout = new BlockSpout("spout"));
+		labstuffBlocks.add(crashedProbe = new BlockCrashedProbe("crashed_probe"));
+		labstuffBlocks.add(scorchedRock = new BlockScorchedRock("venus_rock_scorched"));
+		labstuffBlocks.add(
+				cassiterite = new BlockLabOre().setCreativeTab(tabLabStuff).setRegistryName("labstuff:cassiterite"));
+		labstuffBlocks.add(
+				tin = new BlockLabBlock(Material.IRON).setCreativeTab(tabLabStuff).setRegistryName("labstuff:tin"));
 
 		// Items
 		labstuffItems.add(itemFiberGlass = new ItemFiberGlass().setRegistryName("labstuff:itemFiberGlass")
@@ -794,6 +886,35 @@ public class LabStuffMain {
 				drumStorage = new Item().setRegistryName("labstuff:drumStorage").setCreativeTab(tabLabStuffComputers));
 
 		labstuffItems.add(fuelCanister = new ItemFuelCanister("fuel_canister_partial"));
+		labstuffItems.add(bioDieselCanister = new ItemBioDieselCanister("biodiesel_canister_partial"));
+		labstuffItems.add(oxTankLight = new ItemOxygenTank(1, "oxygen_tank_light_full"));
+		labstuffItems.add(oxTankMedium = new ItemOxygenTank(2, "oxygen_tank_med_full"));
+		labstuffItems.add(oxTankHeavy = new ItemOxygenTank(3, "oxygen_tank_heavy_full"));
+		labstuffItems.add(oxMask = new ItemOxygenMask("oxygen_mask"));
+		labstuffItems.add(eagle = new ItemEagle("eagle"));
+		labstuffItems.add(canister = new ItemCanister("canister"));
+		labstuffItems
+				.add(oxygenVent = new ItemLab().setRegistryName("labstuff:air_vent").setCreativeTab(tabLabStuffSpace));
+		labstuffItems.add(oxygenFan = new ItemLab().setRegistryName("labstuff:air_fan").setCreativeTab(tabLabStuffSpace));
+		labstuffItems.add(buggy = new ItemBuggy("buggy"));
+		labstuffItems.add(oxygenGear = new ItemOxygenGear("oxygen_gear"));
+		labstuffItems.add(parachute = new ItemParaChute("parachute"));
+		labstuffItems.add(oxygenCanisterInfinite = new ItemCanisterOxygenInfinite("infinite_oxygen"));
+		labstuffItems.add(meteorChunk = new ItemMeteorChunk("meteor_chunk"));
+		labstuffItems.add(meteoricIronRaw = new ItemMeteoricIron("meteoric_iron_raw"));
+		labstuffItems.add(prelaunchChecklist = new ItemPreLaunchChecklist("prelaunch_checklist"));
+		labstuffItems.add(frequencyModule = new Item().setCreativeTab(tabLabStuffSpace)
+				.setRegistryName("labstuff:frequency_module"));
+		labstuffItems.add(astroMiner = new ItemAstroMiner("astro_miner"));
+		labstuffItems.add(grapple = new ItemGrappleHook("grapple"));
+		labstuffItems.add(tier3Rocket = new ItemTier3Rocket("tier_3_rocket"));
+		labstuffItems.add(canisterLOX = new ItemCanisterLiquidOxygen("canister_partial_lox"));
+		labstuffItems.add(ionDrive = new ItemIonDrive("ion_drive"));
+		labstuffItems.add(thermalPaddingTier2 = new ItemThermalPaddingTier2("thermal_padding_t2"));
+		labstuffItems.add(rocketMars = new ItemTier2Rocket().setRegistryName("labstuff:rocket_t2"));
+		labstuffItems.add(tinDust = new ItemDust().setCreativeTab(tabLabStuff).setRegistryName("labstuff:dustTin"));
+		labstuffItems
+				.add(tinIngot = new ItemLabIngot().setCreativeTab(tabLabStuff).setRegistryName("labstuff:ingotTin"));
 
 		proxy.preInit();
 
@@ -887,6 +1008,9 @@ public class LabStuffMain {
 
 	/** Research **/
 	public static Research ORBIT = new Research(null, "Orbit");
+	public static Research LUNA = new Research(null, "Luna");
+	public static Research MARS = new Research(null, "Mars");
+	public static Research ASTEROIDS = new Research(null, "Asteroids");
 
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
@@ -894,7 +1018,6 @@ public class LabStuffMain {
 
 		oreDict();
 
-		MinecraftForge.EVENT_BUS.register(this);
 
 		// Proxy junk
 		proxy.registerRenders();
@@ -918,18 +1041,51 @@ public class LabStuffMain {
 		moonLuna = (Moon) new Moon("luna").setParentPlanet(planetOverworld).setRelativeSize(0.2667F)
 				.setRelativeDistanceFromCenter(new CelestialBody.ScalableDistance(13F, 13F))
 				.setRelativeOrbitTime(1 / 0.01F);
-		moonLuna.setDimensionInfo(ConfigManagerCore.idDimensionMoon, WorldProviderLuna.class);
+		moonLuna.setDimensionInfo(ConfigManagerCore.idDimensionLuna, WorldProviderLuna.class);
 		moonLuna.setBodyIcon(new ResourceLocation("labstuff:textures/celestialbodies/luna.png"));
 		moonLuna.addChecklistKeys("equipOxygenSuit");
+
+		planetMars = (Planet) new Planet("mars").setParentSolarSystem(solarSystemSol).setRingColorRGB(0.67F, 0.1F, 0.1F)
+				.setPhaseShift(0.1667F).setRelativeSize(0.5319F)
+				.setRelativeDistanceFromCenter(new CelestialBody.ScalableDistance(1.25F, 1.25F))
+				.setRelativeOrbitTime(1.8811610076670317634173055859803F);
+		planetMars.setBodyIcon(new ResourceLocation("labstuff:textures/celestialbodies/mars.png"));
+		planetMars.setDimensionInfo(ConfigManagerCore.idDimensionMars, WorldProviderMars.class).setTierRequired(2);
+		planetMars.atmosphereComponent(IAtmosphericGas.CO2).atmosphereComponent(IAtmosphericGas.ARGON)
+				.atmosphereComponent(IAtmosphericGas.NITROGEN);
+		planetMars.addChecklistKeys("equipOxygenSuit");
+
+		planetVenus = (Planet) new Planet("venus").setParentSolarSystem(solarSystemSol)
+				.setRingColorRGB(0.1F, 0.9F, 0.6F).setPhaseShift(2.0F)
+				.setRelativeDistanceFromCenter(new CelestialBody.ScalableDistance(0.75F, 0.75F))
+				.setRelativeOrbitTime(0.61527929901423877327491785323111F);
+		planetVenus.setBodyIcon(new ResourceLocation("labstuff:textures/celestialbodies/venus.png"));
+		planetVenus.setDimensionInfo(ConfigManagerCore.idDimensionVenus, WorldProviderVenus.class).setTierRequired(3);
+		planetVenus.addChecklistKeys("equipOxygenSuit", "equipShieldController", "thermalPaddingT2");
+
+		planetAsteroids = new Planet("asteroids").setParentSolarSystem(solarSystemSol);
+		planetAsteroids.setDimensionInfo(ConfigManagerCore.idDimensionAsteroids, WorldProviderAsteroids.class)
+				.setTierRequired(3);
+		planetAsteroids.setRelativeDistanceFromCenter(new CelestialBody.ScalableDistance(1.375F, 1.375F))
+				.setRelativeOrbitTime(45.0F).setPhaseShift((float) (Math.random() * (2 * Math.PI)));
+		planetAsteroids.setBodyIcon(new ResourceLocation("labstuff:textures/celestialbodies/asteroid.png"));
+		planetAsteroids.addChecklistKeys("equipOxygenSuit", "craftGrappleHook", "thermalPadding");
 
 		CompatibilityManager.checkForCompatibleMods();
 
 		GalaxyRegistry.registerSolarSystem(solarSystemSol);
 		GalaxyRegistry.registerPlanet(planetOverworld);
 		GalaxyRegistry.registerMoon(moonLuna);
+		GalaxyRegistry.registerPlanet(planetMars);
+		GalaxyRegistry.registerPlanet(planetVenus);
+		GalaxyRegistry.registerPlanet(planetAsteroids);
 		LabStuffRegistry.registerTeleportType(WorldProviderSurface.class, new TeleportTypeOverworld());
 		LabStuffRegistry.registerTeleportType(WorldProviderOverworldOrbit.class, new TeleportTypeOrbit());
+		LabStuffRegistry.registerTeleportType(WorldProviderSpaceStation.class, new TeleportTypeSpaceStation());
 		LabStuffRegistry.registerTeleportType(WorldProviderLuna.class, new TeleportTypeLuna());
+		LabStuffRegistry.registerTeleportType(WorldProviderMars.class, new TeleportTypeMars());
+		LabStuffRegistry.registerTeleportType(WorldProviderVenus.class, new TeleportTypeVenus());
+		LabStuffRegistry.registerTeleportType(WorldProviderAsteroids.class, new TeleportTypeAsteroids());
 
 		// Crafting Recipes
 		Recipes.registerShaplessCrafting();
@@ -1170,7 +1326,26 @@ public class LabStuffMain {
 		GameRegistry.registerTileEntity(KeyPunch.class, "KeyPunch");
 		GameRegistry.registerTileEntity(TEFuelingTower.class, "Fueling_Tower");
 		GameRegistry.registerTileEntity(TERadioKit.class, "Radio_Kit");
-
+		GameRegistry.registerTileEntity(TileEntityOxygenDistributor.class, "Air_Distributor");
+        GameRegistry.registerTileEntity(TileEntityOxygenCollector.class, "Air_Collector");
+        GameRegistry.registerTileEntity(TileEntityAirLock.class, "Air_Lock_Frame");
+        GameRegistry.registerTileEntity(TileEntityFuelLoader.class, "Fuel_Loader");
+        GameRegistry.registerTileEntity(TileEntityLandingPadSingle.class, "Landing_Pad");
+        GameRegistry.registerTileEntity(TileEntityLandingPad.class, "Landing_Pad_Full");
+        GameRegistry.registerTileEntity(TileEntitySpaceStationBase.class, "Space_Station");
+        GameRegistry.registerTileEntity(TileEntityMulti.class, "Dummy_Block");
+        GameRegistry.registerTileEntity(TileEntityOxygenSealer.class, "Air_Sealer");
+        GameRegistry.registerTileEntity(TileEntityBuggyFueler.class, "Buggy_Fueler");
+        GameRegistry.registerTileEntity(TileEntityBuggyFuelerSingle.class, "Buggy_Fueler_Single");
+        GameRegistry.registerTileEntity(TileEntityCargoLoader.class, "Cargo_Loader");
+        GameRegistry.registerTileEntity(TileEntityCargoUnloader.class, "Cargo_Unloader");
+        GameRegistry.registerTileEntity(TileEntityFallenMeteor.class, "Fallen_Meteor");
+        GameRegistry.registerTileEntity(TileEntityAirLockController.class, "Air_Lock_Controller");
+        GameRegistry.registerTileEntity(TileEntityThruster.class, "Space_Station_Thruster");
+        GameRegistry.registerTileEntity(TileEntityScreen.class, "GC_View_Screen");
+        GameRegistry.registerTileEntity(TileEntityTelemetry.class, "Telemetry_Unit");
+        GameRegistry.registerTileEntity(TileEntityNull.class, "Null_Tile");
+        
 		// Packets
 		packetPipeline.initalise();
 		packetPipeline.registerPacket(PacketCircuitDesignTable.class);
@@ -1321,11 +1496,51 @@ public class LabStuffMain {
 		OreDictionary.registerOre("itemSalt", salt);
 		OreDictionary.registerOre("dustSalt", salt);
 		OreDictionary.registerOre("blockMarble", marble);
+		OreDictionary.registerOre("dustTin", tinDust);
+		OreDictionary.registerOre("ingotTin", tinIngot);
+		OreDictionary.registerOre("oreTin", cassiterite);
 	}
 
 	@EventHandler
 	public void starting(FMLServerStartingEvent event) {
 		event.registerServerCommand(new CommandDimTele());
+		event.registerServerCommand(new CommandSpaceStationAddOwner());
+		event.registerServerCommand(new CommandSpaceStationChangeOwner());
+		event.registerServerCommand(new CommandSpaceStationRemoveOwner());
+		event.registerServerCommand(new CommandLSInv());
+
+		WorldUtil.initialiseDimensionNames();
+		WorldUtil.registerSpaceStations(event.getServer().worldServerForDimension(0).getSaveHandler()
+				.getMapFileFromName("dummy").getParentFile());
+
+		ArrayList<CelestialBody> cBodyList = new ArrayList<CelestialBody>();
+		cBodyList.addAll(GalaxyRegistry.getRegisteredPlanets().values());
+		cBodyList.addAll(GalaxyRegistry.getRegisteredMoons().values());
+
+		for (CelestialBody body : cBodyList) {
+			if (body.shouldAutoRegister()) {
+				if (!WorldUtil.registerPlanet(body.getDimensionID(), body.getReachable(), 0)) {
+					body.setUnreachable();
+				}
+			}
+		}
+	}
+
+	private Planet makeDummyPlanet(String name, SolarSystem system) {
+		// Loop through all planets to make sure it's not registered as a
+		// reachable dimension first
+		for (CelestialBody body : new ArrayList<>(GalaxyRegistry.getRegisteredPlanets().values())) {
+			if (body instanceof Planet && name.equals(body.getName())) {
+				if (((Planet) body).getParentSolarSystem() == system) {
+					return null;
+				}
+			}
+		}
+
+		Planet planet = new Planet(name).setParentSolarSystem(system);
+		planet.setBodyIcon(new ResourceLocation("labstuff:textures/celestialbodies/" + name + ".png"));
+		GalaxyRegistry.registerPlanet(planet);
+		return planet;
 	}
 
 	@EventHandler
@@ -1352,6 +1567,7 @@ public class LabStuffMain {
 		Recipes.addEnrichment(get(Blocks.IRON_ORE), itemIronDust);
 		Recipes.addEnrichment(get(Blocks.GOLD_ORE), itemGoldDust);
 		Recipes.addEnrichment(get(titaniumOre), titaniumDust);
+		Recipes.addEnrichment(get(cassiterite), tinDust);
 		// for(String ore : OreDictionary.getOreNames()){
 		// if(ore.length() > 3 && OreDictionary.getOres(ore, false).size() > 0
 		// && Recipes.getEnrichmentFromInput(OreDictionary.getOres(ore,
@@ -1363,6 +1579,69 @@ public class LabStuffMain {
 		// }
 		// }
 		// }
+
+		planetMercury = makeDummyPlanet("mercury", solarSystemSol);
+		if (planetMercury != null) {
+			planetMercury.setRingColorRGB(0.1F, 0.9F, 0.6F).setPhaseShift(1.45F)
+					.setRelativeDistanceFromCenter(new CelestialBody.ScalableDistance(0.5F, 0.5F))
+					.setRelativeOrbitTime(0.24096385542168674698795180722892F);
+		}
+		planetJupiter = makeDummyPlanet("jupiter", solarSystemSol);
+		if (planetJupiter != null) {
+			planetJupiter.setRingColorRGB(0.1F, 0.9F, 0.6F).setPhaseShift((float) Math.PI)
+					.setRelativeDistanceFromCenter(new CelestialBody.ScalableDistance(1.5F, 1.5F))
+					.setRelativeOrbitTime(11.861993428258488499452354874042F);
+		}
+		planetSaturn = makeDummyPlanet("saturn", solarSystemSol);
+		if (planetSaturn != null) {
+			planetSaturn.setRingColorRGB(0.1F, 0.9F, 0.6F).setPhaseShift(5.45F)
+					.setRelativeDistanceFromCenter(new CelestialBody.ScalableDistance(1.75F, 1.75F))
+					.setRelativeOrbitTime(29.463307776560788608981380065717F);
+		}
+		planetUranus = makeDummyPlanet("uranus", solarSystemSol);
+		if (planetUranus != null) {
+			planetUranus.setRingColorRGB(0.1F, 0.9F, 0.6F).setPhaseShift(1.38F)
+					.setRelativeDistanceFromCenter(new CelestialBody.ScalableDistance(2.0F, 2.0F))
+					.setRelativeOrbitTime(84.063526834611171960569550930997F);
+		}
+		planetNeptune = makeDummyPlanet("neptune", solarSystemSol);
+		if (planetNeptune != null) {
+			planetNeptune.setRingColorRGB(0.1F, 0.9F, 0.6F).setPhaseShift(1.0F)
+					.setRelativeDistanceFromCenter(new CelestialBody.ScalableDistance(2.25F, 2.25F))
+					.setRelativeOrbitTime(164.84118291347207009857612267251F);
+		}
+
+		ArrayList<CelestialBody> cBodyList = new ArrayList<CelestialBody>();
+		cBodyList.addAll(GalaxyRegistry.getRegisteredPlanets().values());
+		cBodyList.addAll(GalaxyRegistry.getRegisteredMoons().values());
+
+		for (CelestialBody body : cBodyList) {
+			if (body.shouldAutoRegister()) {
+				int id = Arrays.binarySearch(ConfigManagerCore.staticLoadDimensions, body.getDimensionID());
+				// It's important this is done in the same order as planets will
+				// be registered by WorldUtil.registerPlanet();
+				DimensionType type = LabStuffRegistry.registerDimension(body.getLocalizedName(),
+						body.getDimensionSuffix(), body.getDimensionID(), body.getWorldProvider(),
+						body.getForceStaticLoad() || id < 0);
+				if (type == null) {
+					body.setUnreachable();
+					LSLog.severe("Tried to register dimension for body: " + body.getLocalizedName()
+							+ " hit conflict with ID " + body.getDimensionID());
+				}
+			}
+		}
+
+		LabStuffDimensions.LUNA = WorldUtil.getDimensionTypeById(ConfigManagerCore.idDimensionLuna);
+		LabStuffDimensions.ORBIT = WorldUtil.getDimensionTypeById(ConfigManagerCore.idDimensionOverworldOrbit);
+		LabStuffDimensions.ORBIT_KEEPLOADED = WorldUtil.getDimensionTypeById(ConfigManagerCore.idDimensionOverworldOrbitStatic);
+		LabStuffDimensions.MARS = WorldUtil.getDimensionTypeById(ConfigManagerCore.idDimensionMars);
+		LabStuffDimensions.VENUS = WorldUtil.getDimensionTypeById(ConfigManagerCore.idDimensionVenus);
+		LabStuffDimensions.ASTEROIDS = WorldUtil.getDimensionTypeById(ConfigManagerCore.idDimensionAsteroids);
+
+		GalaxyRegistry.refreshGalaxies();
+
+		LabStuffRegistry.registerScreen(new GameScreenText());
+
 	}
 
 	public static Item get(Block block) {

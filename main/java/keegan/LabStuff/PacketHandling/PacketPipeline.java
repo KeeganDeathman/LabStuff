@@ -28,10 +28,10 @@ import net.minecraftforge.fml.relauncher.Side;
  * some code from: cpw
  */
 @ChannelHandler.Sharable
-public class PacketPipeline extends MessageToMessageCodec<FMLProxyPacket, AbstractPacket> {
+public class PacketPipeline extends MessageToMessageCodec<FMLProxyPacket, IPacket> {
 
     private EnumMap<Side, FMLEmbeddedChannel>           channels;
-    private LinkedList<Class<? extends AbstractPacket>> packets           = new LinkedList<Class<? extends AbstractPacket>>();
+    private LinkedList<Class<? extends IPacket>> packets           = new LinkedList<Class<? extends IPacket>>();
     private boolean                                     isPostInitialised = false;
     
 	public SimpleNetworkWrapper netHandler = NetworkRegistry.INSTANCE.newSimpleChannel("LAB");
@@ -45,7 +45,7 @@ public class PacketPipeline extends MessageToMessageCodec<FMLProxyPacket, Abstra
      *
      * @return whether registration was successful. Failure may occur if 256 packets have been registered or if the registry already contains this packet
      */
-    public boolean registerPacket(Class<? extends AbstractPacket> clazz) {
+    public boolean registerPacket(Class<? extends IPacket> clazz) {
         if (this.packets.size() > 256) {
             // You should log here!!
             return false;
@@ -67,16 +67,16 @@ public class PacketPipeline extends MessageToMessageCodec<FMLProxyPacket, Abstra
 
     // In line encoding of the packet, including discriminator setting
     @Override
-    protected void encode(ChannelHandlerContext ctx, AbstractPacket msg, List<Object> out) throws Exception {
+    protected void encode(ChannelHandlerContext ctx, IPacket msg, List<Object> out) throws Exception {
         ByteBuf buffer = Unpooled.buffer();
-        Class<? extends AbstractPacket> clazz = msg.getClass();
+        Class<? extends IPacket> clazz = msg.getClass();
         if (!this.packets.contains(msg.getClass())) {
             throw new NullPointerException("No Packet Registered for: " + msg.getClass().getCanonicalName());
         }
 
         byte discriminator = (byte) this.packets.indexOf(clazz);
         buffer.writeByte(discriminator);
-        msg.encodeInto(ctx, buffer);
+        msg.encodeInto(buffer);
         FMLProxyPacket proxyPacket = new FMLProxyPacket(new PacketBuffer(buffer.copy()), ctx.channel().attr(NetworkRegistry.FML_CHANNEL).get());
         out.add(proxyPacket);
     }
@@ -86,13 +86,13 @@ public class PacketPipeline extends MessageToMessageCodec<FMLProxyPacket, Abstra
 	protected void decode(ChannelHandlerContext ctx, FMLProxyPacket msg, List<Object> out) throws Exception {
 		ByteBuf payload = msg.payload();
 		byte discriminator = payload.readByte();
-		Class<? extends AbstractPacket> clazz = this.packets.get(discriminator);
+		Class<? extends IPacket> clazz = this.packets.get(discriminator);
 		if (clazz == null) {
 			throw new NullPointerException("No packet registered for discriminator: " + discriminator);
 		}
 
-		AbstractPacket pkt = clazz.newInstance();
-		pkt.decodeInto(ctx, payload.slice());
+		IPacket pkt = clazz.newInstance();
+		pkt.decodeInto(payload.slice());
 
 		EntityPlayer player;
 		/*
@@ -129,10 +129,10 @@ public class PacketPipeline extends MessageToMessageCodec<FMLProxyPacket, Abstra
         }
 
         this.isPostInitialised = true;
-        Collections.sort(this.packets, new Comparator<Class<? extends AbstractPacket>>() {
+        Collections.sort(this.packets, new Comparator<Class<? extends IPacket>>() {
 
             @Override
-            public int compare(Class<? extends AbstractPacket> clazz1, Class<? extends AbstractPacket> clazz2) {
+            public int compare(Class<? extends IPacket> clazz1, Class<? extends IPacket> clazz2) {
                 int com = String.CASE_INSENSITIVE_ORDER.compare(clazz1.getCanonicalName(), clazz2.getCanonicalName());
                 if (com == 0) {
                     com = clazz1.getCanonicalName().compareTo(clazz2.getCanonicalName());
@@ -150,7 +150,7 @@ public class PacketPipeline extends MessageToMessageCodec<FMLProxyPacket, Abstra
      *
      * @param message The message to send
      */
-    public void sendToAll(AbstractPacket message) {
+    public void sendToAll(IPacket message) {
         this.channels.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.ALL);
         this.channels.get(Side.SERVER).writeAndFlush(message);
     }
@@ -163,7 +163,7 @@ public class PacketPipeline extends MessageToMessageCodec<FMLProxyPacket, Abstra
      * @param message The message to send
      * @param player  The player to send it to
      */
-    public void sendTo(AbstractPacket message, EntityPlayerMP player) {
+    public void sendTo(IPacket message, EntityPlayerMP player) {
         this.channels.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.PLAYER);
         this.channels.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(player);
         this.channels.get(Side.SERVER).writeAndFlush(message);
@@ -177,7 +177,7 @@ public class PacketPipeline extends MessageToMessageCodec<FMLProxyPacket, Abstra
      * @param message The message to send
      * @param point   The {@link cpw.mods.fml.common.network.NetworkRegistry.TargetPoint} around which to send
      */
-    public void sendToAllAround(AbstractPacket message, NetworkRegistry.TargetPoint point) {
+    public void sendToAllAround(IPacket message, NetworkRegistry.TargetPoint point) {
         this.channels.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.ALLAROUNDPOINT);
         this.channels.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(point);
         this.channels.get(Side.SERVER).writeAndFlush(message);
@@ -191,7 +191,7 @@ public class PacketPipeline extends MessageToMessageCodec<FMLProxyPacket, Abstra
      * @param message     The message to send
      * @param dimensionId The dimension id to target
      */
-    public void sendToDimension(AbstractPacket message, int dimensionId) {
+    public void sendToDimension(IPacket message, int dimensionId) {
         this.channels.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.DIMENSION);
         this.channels.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(dimensionId);
         this.channels.get(Side.SERVER).writeAndFlush(message);
@@ -206,7 +206,7 @@ public class PacketPipeline extends MessageToMessageCodec<FMLProxyPacket, Abstra
      *
      * @param message The message to send
      */
-    public void sendToServer(AbstractPacket message) {
+    public void sendToServer(IPacket message) {
         this.channels.get(Side.CLIENT).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.TOSERVER);
         this.channels.get(Side.CLIENT).writeAndFlush(message);
     }

@@ -1,6 +1,7 @@
 package keegan.labstuff.util;
 
 import java.io.*;
+import java.lang.reflect.Field;
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -8,6 +9,7 @@ import org.apache.commons.lang3.ArrayUtils;
 
 import com.google.common.collect.*;
 
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import keegan.labstuff.*;
 import keegan.labstuff.PacketHandling.PacketSimple;
 import keegan.labstuff.PacketHandling.PacketSimple.EnumSimplePacket;
@@ -17,7 +19,9 @@ import keegan.labstuff.config.ConfigManagerCore;
 import keegan.labstuff.dimension.*;
 import keegan.labstuff.entities.*;
 import keegan.labstuff.galaxies.*;
+import keegan.labstuff.items.ItemParaChute;
 import keegan.labstuff.recipes.SpaceStationRecipe;
+import keegan.labstuff.tileentity.TileEntityTelemetry;
 import keegan.labstuff.world.*;
 import net.minecraft.block.Block;
 import net.minecraft.entity.*;
@@ -35,7 +39,6 @@ import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.*;
 
-//import micdoodle8.mods.LabStuff.planets.asteroids.entities.EntityAstroMiner;
 
 public class WorldUtil
 {
@@ -274,7 +277,7 @@ public class WorldUtil
      * @param id
      * @return
      */
-    public static World getWorldForDimensionServer(int id)
+    public static WorldProvider getProviderForDimensionServer(int id)
     {
         MinecraftServer theServer = FMLCommonHandler.instance().getMinecraftServerInstance();
         if (theServer == null)
@@ -283,13 +286,7 @@ public class WorldUtil
             return null;
         }
         World ws = theServer.worldServerForDimension(id);
-        return ws;
-    }
-    
-    public static WorldProvider getProviderForDimensionServer(int id)
-    {
-    	World ws = getWorldForDimensionServer(id);
-    	if (ws != null)
+        if (ws != null)
         {
             return ws.provider;
         }
@@ -308,7 +305,7 @@ public class WorldUtil
     }
 
     /**
-     * This will *load* all the LS dimensions which the player has access to (taking account of space station permissions).
+     * This will *load* all the GC dimensions which the player has access to (taking account of space station permissions).
      * Loading the dimensions through Forge activates any chunk loaders or forced chunks in that dimension,
      * if the dimension was not previously loaded.  This may place load on the server.
      *
@@ -440,18 +437,39 @@ public class WorldUtil
                         // Search for id in server-defined statically loaded dimensions
                         int id = Arrays.binarySearch(ConfigManagerCore.staticLoadDimensions, registeredID);
 
+                        int providerID = id >= 0 ? worldDataTemp.getDimensionIdStatic() : worldDataTemp.getDimensionIdDynamic();
+                        boolean registrationOK = false;
                         if (!DimensionManager.isDimensionRegistered(registeredID))
                         {
+                            DimensionManager.registerDimension(registeredID, WorldUtil.getDimensionTypeById(providerID));
+                            registrationOK = true;
+                        }
+                        else if (LabStuffRegistry.isDimensionTypeIDRegistered(providerID))
+                        {
+                            registrationOK = DimensionManager.getProviderType(id).getId() == providerID;
+                            if (!registrationOK)
+                            {
+                                try {
+                                    Class sponge = Class.forName("org.spongepowered.common.world.WorldManager");
+                                    Field dtDI = sponge.getDeclaredField("dimensionTypeByDimensionId");
+                                    dtDI.setAccessible(true);
+                                    Int2ObjectMap<DimensionType> result = (Int2ObjectMap<DimensionType>) dtDI.get(null);
+                                    if (result != null)
+                                    {
+                                        result.put(id, WorldUtil.getDimensionTypeById(providerID));
+                                        LSLog.info("Re-registered dimension type " + providerID);
+                                    }
+                                    registrationOK = true;
+                                } catch (ClassNotFoundException ignore) { }
+                                catch (Exception e) { e.printStackTrace(); }
+                            }
+                        }
+                        if (registrationOK)
+                        {
+                            WorldUtil.registeredSpaceStations.put(registeredID, providerID);
                             if (id >= 0)
                             {
-                                DimensionManager.registerDimension(registeredID, DimensionType.getById(worldDataTemp.getDimensionIdStatic()));
-                                WorldUtil.registeredSpaceStations.put(registeredID, worldDataTemp.getDimensionIdStatic());
                                 theServer.worldServerForDimension(registeredID);
-                            }
-                            else
-                            {
-                                DimensionManager.registerDimension(registeredID, DimensionType.getById(worldDataTemp.getDimensionIdDynamic()));
-                                WorldUtil.registeredSpaceStations.put(registeredID, worldDataTemp.getDimensionIdDynamic());
                             }
                             WorldUtil.dimNames.put(registeredID, "Space Station " + registeredID);
                         }
@@ -501,6 +519,8 @@ public class WorldUtil
      * <p>
      * IMPORTANT: LabStuffRegistry.registerDimension() must always be called in parallel with this
      * meaning the CelestialBodies are iterated in the same order when registered there and here.
+     * 
+     * The defaultID should be 0, and the id should be both a dimension ID and a DimensionType id.
      */
     public static boolean registerPlanet(int id, boolean initialiseDimensionAtServerInit, int defaultID)
     {
@@ -513,18 +533,26 @@ public class WorldUtil
         {
             if (!DimensionManager.isDimensionRegistered(id))
             {
-                DimensionManager.registerDimension(id, DimensionType.getById(id));
+                DimensionManager.registerDimension(id, WorldUtil.getDimensionTypeById(id));
                 LSLog.info("Registered Dimension: " + id);
                 WorldUtil.registeredPlanets.add(id);
             }
             else
             {
-                LSLog.severe("Dimension already registered to another mod: unable to register planet dimension " + id);
-                //Add 0 to the list to preserve the correct order of the other planets (e.g. if server/client initialise with different dimension IDs in configs, the order becomes important for figuring out what is going on)
-                WorldUtil.registeredPlanets.add(defaultID);
-                return false;
+                if (DimensionManager.getProviderType(id).getId() == id && LabStuffRegistry.isDimensionTypeIDRegistered(id))
+                {
+                    LSLog.info("Re-registered dimension: " + id);
+                    WorldUtil.registeredPlanets.add(id);
+                }
+                else
+                {
+                    LSLog.severe("Dimension already registered: unable to register planet dimension " + id);
+                    //Add 0 to the list to preserve the correct order of the other planets (e.g. if server/client initialise with different dimension IDs in configs, the order becomes important for figuring out what is going on)
+                    WorldUtil.registeredPlanets.add(defaultID);
+                    return false;
+                }
             }
-            World w = FMLCommonHandler.instance().getMinecraftServerInstance().worldServerForDimension(id);
+            World w = WorldUtil.getWorldForDimensionServer(id);
             WorldUtil.dimNames.put(id, getDimensionName(w.provider));
             return true;
         }
@@ -567,7 +595,7 @@ public class WorldUtil
             if (!WorldUtil.registeredPlanets.contains(dimID))
             {
                 WorldUtil.registeredPlanets.add(dimID);
-                DimensionManager.registerDimension(dimID, DimensionType.getById(typeID));
+                DimensionManager.registerDimension(dimID, WorldUtil.getDimensionTypeById(typeID));
             }
             else
             {
@@ -609,12 +637,12 @@ public class WorldUtil
         {
             if (id >= 0)
             {
-                DimensionManager.registerDimension(dimID, DimensionType.getById(staticProviderID));
+                DimensionManager.registerDimension(dimID, WorldUtil.getDimensionTypeById(staticProviderID));
                 WorldUtil.registeredSpaceStations.put(dimID, staticProviderID);
             }
             else
             {
-                DimensionManager.registerDimension(dimID, DimensionType.getById(dynamicProviderID));
+                DimensionManager.registerDimension(dimID, WorldUtil.getDimensionTypeById(dynamicProviderID));
                 WorldUtil.registeredSpaceStations.put(dimID, dynamicProviderID);
             }
         }
@@ -1018,14 +1046,14 @@ public class WorldUtil
     }
 
     /**
-     * What's important here is that LabStuff and the server both register
-     * the same reachable LabStuff planets (and their provider types) in the same order.
+     * What's important here is that Labstuff and the server both register
+     * the same reachable Labstuff planets (and their provider types) in the same order.
      * See WorldUtil.registerPlanet().
      * 
      * Even if there are dimension conflicts or other problems, the planets must be
      * registered in the same order on both client and server.  This should happen
-     * automatically if LabStuff versions match, and if planets modules
-     * match  (including LabStuff-Planets and any other sub-mods).
+     * automatically if Labstuff versions match, and if planets modules
+     * match  (including Labstuff-Planets and any other sub-mods).
      * 
      * It is NOT a good idea for sub-mods to make the registration order of planets variable
      * or dependent on configs.
@@ -1158,7 +1186,7 @@ public class WorldUtil
             if (!DimensionManager.isDimensionRegistered(dimID))
             {
                 WorldUtil.registeredSpaceStations.put(dimID, providerKey);
-                DimensionManager.registerDimension(dimID, DimensionType.getById(providerKey));
+                DimensionManager.registerDimension(dimID, WorldUtil.getDimensionTypeById(providerKey));
             }
             else
             {
@@ -1348,4 +1376,31 @@ public class WorldUtil
 
         return checklistMap;
     }
+    
+    public static DimensionType getDimensionTypeById(int id)
+    {
+        for (DimensionType dimensiontype : DimensionType.values())
+        {
+            if (dimensiontype.getId() == id)
+            {
+                return dimensiontype;
+            }
+        }
+
+        LSLog.severe("There was a problem getting WorldProvider type " + id);
+        LSLog.severe("(possibly this is a conflict, check Labstuff config.)");
+        return null;
+    }
+
+	public static World getWorldForDimensionServer(int idDim) {
+        MinecraftServer theServer = FMLCommonHandler.instance().getMinecraftServerInstance();
+        if (theServer == null)
+        {
+            LSLog.debug("Called WorldUtil server side method but FML returned no server - is this a bug?");
+            return null;
+        }
+        World ws = theServer.worldServerForDimension(idDim);
+        return ws;
+
+	}
 }

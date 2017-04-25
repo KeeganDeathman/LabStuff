@@ -6,9 +6,10 @@ import keegan.labstuff.LabStuffMain;
 import keegan.labstuff.PacketHandling.IBM650ConsolePacket;
 import keegan.labstuff.container.ContainerIBM650Console;
 import keegan.labstuff.tileentity.IBM650Console;
+import keegan.labstuff.util.LabStuffUtils;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.entity.player.*;
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiIBM650Console extends GuiContainer 
@@ -34,7 +35,7 @@ public class GuiIBM650Console extends GuiContainer
 	{
 		if(btn.id == 0)
 		{
-			LabStuffMain.packetPipeline.sendToServer(new IBM650ConsolePacket(tile.getPos()));
+			LabStuffMain.packetPipeline.sendToServer(new IBM650ConsolePacket(tile.getPos(), LabStuffUtils.getDimensionID(tile.getWorld())));
 		}
 	}
 	

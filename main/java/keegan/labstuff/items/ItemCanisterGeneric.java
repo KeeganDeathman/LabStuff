@@ -1,20 +1,16 @@
 package keegan.labstuff.items;
 
+import java.util.List;
+
+import keegan.labstuff.LabStuffMain;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
-import net.minecraft.item.EnumRarity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.*;
 import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
-import java.util.List;
-
-import keegan.labstuff.LabStuffMain;
+import net.minecraftforge.fml.relauncher.*;
 
 public abstract class ItemCanisterGeneric extends ItemFluidContainer
 {
@@ -28,7 +24,7 @@ public abstract class ItemCanisterGeneric extends ItemFluidContainer
         this.setMaxDamage(ItemCanisterGeneric.EMPTY);
         this.setMaxStackSize(1);
         this.setNoRepair();
-        this.setUnlocalizedName(assetName);
+        this.setRegistryName("labstuff",assetName);
         this.setHasSubtypes(true);
     }
 

@@ -2,10 +2,7 @@ package keegan.labstuff.blocks;
 
 import java.util.List;
 
-import org.apache.http.util.LangUtils;
-
 import keegan.labstuff.LabStuffMain;
-import keegan.labstuff.common.EnumColor;
 import keegan.labstuff.tileentity.DSCBench;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;

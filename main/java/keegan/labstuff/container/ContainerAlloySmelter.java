@@ -1,7 +1,7 @@
 package keegan.labstuff.container;
 
 import keegan.labstuff.slot.*;
-import keegan.labstuff.tileentity.*;
+import keegan.labstuff.tileentity.AlloySmelter;
 import net.minecraft.entity.player.*;
 import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;

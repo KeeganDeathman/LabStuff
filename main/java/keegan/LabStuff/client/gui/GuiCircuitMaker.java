@@ -2,20 +2,18 @@ package keegan.labstuff.client.gui;
 
 import java.util.ArrayList;
 
+import org.lwjgl.opengl.GL11;
+
 import keegan.labstuff.LabStuffMain;
 import keegan.labstuff.PacketHandling.PacketCircuitMaker;
 import keegan.labstuff.container.ContainerCircuitMaker;
-import keegan.labstuff.recipes.CircuitCreation;
-import keegan.labstuff.recipes.Recipes;
+import keegan.labstuff.recipes.*;
 import keegan.labstuff.tileentity.TileEntityCircuitMaker;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.entity.player.*;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-
-import org.lwjgl.opengl.GL11;
 
 public class GuiCircuitMaker extends GuiContainer
 {

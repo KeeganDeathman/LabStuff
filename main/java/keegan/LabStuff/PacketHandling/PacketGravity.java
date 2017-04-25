@@ -8,7 +8,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class PacketGravity extends AbstractPacket
+public class PacketGravity extends PacketBase
 {
 
 	private int x,y,z;
@@ -25,7 +25,7 @@ public class PacketGravity extends AbstractPacket
 	}
 	
 	@Override
-	public void encodeInto(ChannelHandlerContext ctx, ByteBuf buffer)
+	public void encodeInto(ByteBuf buffer)
 	{
 		buffer.writeInt(x);
 		buffer.writeInt(y);
@@ -34,7 +34,7 @@ public class PacketGravity extends AbstractPacket
 	}
 
 	@Override
-	public void decodeInto(ChannelHandlerContext ctx, ByteBuf buffer)
+	public void decodeInto(ByteBuf buffer)
 	{
 		this.x = buffer.readInt();
 		this.y = buffer.readInt();
@@ -57,12 +57,7 @@ public class PacketGravity extends AbstractPacket
 		TileEntity te = world.getTileEntity(new BlockPos(x,y,z));
 		if(te instanceof TileEntityGravityManipulater)
 		{
-			System.out.println("Performing action");
 			((TileEntityGravityManipulater) te).setGravityModifier(gravity);
-		}
-		else
-		{
-			System.out.println("Nope, its something else");
 		}
 
 	}

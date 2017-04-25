@@ -1,7 +1,7 @@
 package keegan.labstuff.jei.workbench;
 
 
-import keegan.labstuff.recipes.*;
+import keegan.labstuff.recipes.ResearchItem;
 import mezz.jei.api.*;
 import mezz.jei.api.recipe.*;
 

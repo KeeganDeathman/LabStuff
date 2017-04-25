@@ -1,16 +1,10 @@
 package keegan.labstuff.multipart;
 
-import mcmultipart.multipart.IMultipart;
-import mcmultipart.multipart.IPartFactory;
-import mcmultipart.multipart.Multipart;
-import mcmultipart.multipart.MultipartRegistry;
+import mcmultipart.multipart.*;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.Vec3d;
-import net.minecraftforge.fml.common.event.FMLInterModComms;
+import net.minecraft.util.*;
+import net.minecraft.util.math.*;
 
 public class MultipartLabStuff implements IPartFactory
 {

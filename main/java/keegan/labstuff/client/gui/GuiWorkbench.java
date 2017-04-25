@@ -6,10 +6,9 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 import keegan.labstuff.LabStuffMain;
-import keegan.labstuff.PacketHandling.*;
-import keegan.labstuff.container.*;
-import keegan.labstuff.tileentity.*;
-import net.minecraft.client.gui.GuiTextField;
+import keegan.labstuff.PacketHandling.WorkbenchPacket;
+import keegan.labstuff.container.ContainerWorkbench;
+import keegan.labstuff.tileentity.TileEntityWorkbench;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.*;
 import net.minecraft.util.ResourceLocation;

@@ -1,16 +1,13 @@
 package keegan.labstuff.common.capabilities;
 
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import keegan.labstuff.container.InventoryExtended;
 import keegan.labstuff.util.Vector3;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.*;
+import net.minecraft.nbt.NBTTagCompound;
 
 public interface IStatsCapability
 {

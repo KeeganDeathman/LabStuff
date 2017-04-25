@@ -1,14 +1,13 @@
 package keegan.labstuff.client.gui;
 
+import org.lwjgl.opengl.GL11;
+
 import keegan.labstuff.container.ContainerGasChamberPort;
 import keegan.labstuff.tileentity.TileEntityGasChamberPort;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.entity.player.*;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-
-import org.lwjgl.opengl.GL11;
 
 public class GuiGasChamberPort extends GuiContainer
 {

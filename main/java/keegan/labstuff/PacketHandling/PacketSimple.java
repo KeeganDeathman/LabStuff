@@ -10,17 +10,18 @@ import com.mojang.authlib.properties.Property;
 import io.netty.buffer.ByteBuf;
 import keegan.labstuff.LabStuffMain;
 import keegan.labstuff.client.*;
+import keegan.labstuff.client.fx.ParticleSparks;
+import keegan.labstuff.client.gui.*;
 import keegan.labstuff.common.TickHandlerServer;
 import keegan.labstuff.common.capabilities.*;
 import keegan.labstuff.config.ConfigManagerCore;
 import keegan.labstuff.dimension.*;
 import keegan.labstuff.entities.*;
-import keegan.labstuff.entity.IBubbleProvider;
 import keegan.labstuff.galaxies.*;
-import keegan.labstuff.items.EnumExtendedInventorySlot;
+import keegan.labstuff.items.*;
 import keegan.labstuff.tileentity.*;
 import keegan.labstuff.util.*;
-import keegan.labstuff.wrappers.PlayerGearData;
+import keegan.labstuff.wrappers.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.settings.GameSettings;
@@ -71,6 +72,7 @@ public class PacketSimple extends PacketBase implements Packet<INetHandler>
         S_REQUEST_DATA(Side.SERVER, Integer.class, BlockPos.class),
         S_UPDATE_CHECKLIST(Side.SERVER, NBTTagCompound.class),
         S_REQUEST_MACHINE_DATA(Side.SERVER, BlockPos.class),
+        S_UPDATE_CARGO_ROCKET_STATUS(Side.SERVER, Integer.class, Integer.class),
         // CLIENT
         C_AIR_REMAINING(Side.CLIENT, Integer.class, Integer.class, String.class),
         C_UPDATE_DIMENSION_LIST(Side.CLIENT, String.class, String.class),
@@ -85,6 +87,7 @@ public class PacketSimple extends PacketBase implements Packet<INetHandler>
         C_UPDATE_CONFIGS(Side.CLIENT, Integer.class, Double.class, Integer.class, Integer.class, Integer.class, String.class, Float.class, Float.class, Float.class, Float.class, Integer.class, String[].class),
         C_UPDATE_STATS(Side.CLIENT, Integer.class),
         C_UPDATE_OXYGEN_VALIDITY(Side.CLIENT, Boolean.class),
+        C_OPEN_PARACHEST_GUI(Side.CLIENT, Integer.class, Integer.class, Integer.class),
         C_UPDATE_STATION_SPIN(Side.CLIENT, Float.class, Boolean.class),
         C_UPDATE_STATION_DATA(Side.CLIENT, Double.class, Double.class),
         C_UPDATE_STATION_BOX(Side.CLIENT, Integer.class, Integer.class, Integer.class, Integer.class, Integer.class, Integer.class),
@@ -97,7 +100,10 @@ public class PacketSimple extends PacketBase implements Packet<INetHandler>
         C_SEND_OVERWORLD_IMAGE(Side.CLIENT, Integer.class, Integer.class, byte[].class),
         C_RECOLOR_ALL_GLASS(Side.CLIENT, Integer.class, Integer.class, Integer.class),  //Number of integers to match number of different blocks of PLAIN glass individually instanced and registered in GCBlocks
         C_UPDATE_MACHINE_DATA(Side.CLIENT, BlockPos.class, Integer.class, Integer.class, Integer.class, Integer.class),
-        C_BEGIN_CRYOGENIC_SLEEP(Side.CLIENT, BlockPos.class);
+        C_UPDATE_GRAPPLE_POS(Side.CLIENT, Integer.class, Vector3.class),
+        C_TELEPAD_SEND(Side.CLIENT, BlockVec3.class, Integer.class),
+        C_BEGIN_CRYOGENIC_SLEEP(Side.CLIENT, BlockPos.class),
+        C_OPEN_CUSTOM_GUI(Side.CLIENT, Integer.class, Integer.class, Integer.class);
 
         private Side targetSide;
         private Class<?>[] decodeAs;
@@ -302,6 +308,31 @@ public class PacketSimple extends PacketBase implements Packet<INetHandler>
                 }
             }
             break;
+        case C_OPEN_CUSTOM_GUI:
+            int entityID = 0;
+            Entity entity = null;
+
+            switch ((Integer) this.data.get(1))
+            {
+            case 0:
+                entityID = (Integer) this.data.get(2);
+                entity = player.worldObj.getEntityByID(entityID);
+
+                player.openContainer.windowId = (Integer) this.data.get(0);
+                break;
+            case 1:
+                entityID = (Integer) this.data.get(2);
+                entity = player.worldObj.getEntityByID(entityID);
+
+                if (entity != null && entity instanceof EntityCargoRocket)
+                {
+                    FMLClientHandler.instance().getClient().displayGuiScreen(new GuiCargoRocket(player.inventory, (EntityCargoRocket) entity));
+                }
+
+                player.openContainer.windowId = (Integer) this.data.get(0);
+                break;
+            }
+            break;
         case C_UPDATE_GEAR_SLOT:
             int subtype = (Integer) this.data.get(3);
             EntityPlayer gearDataPlayer;
@@ -417,6 +448,16 @@ public class PacketSimple extends PacketBase implements Packet<INetHandler>
             ConfigManagerCore.saveClientConfigOverrideable();
             ConfigManagerCore.setConfigOverride(data);
             break;
+        case C_UPDATE_OXYGEN_VALIDITY:
+            stats.setOxygenSetupValid((Boolean) this.data.get(0));
+            break;
+        case C_OPEN_PARACHEST_GUI:
+        	 if (player.getRidingEntity() instanceof EntityBuggy)
+             {
+                 FMLClientHandler.instance().getClient().displayGuiScreen(new GuiBuggy(player.inventory, (EntityBuggy) player.getRidingEntity(), ((EntityBuggy) player.getRidingEntity()).getType()));
+                 player.openContainer.windowId = (Integer) this.data.get(0);
+             }
+             break;
         case C_UPDATE_STATION_SPIN:
             if (playerBaseClient.worldObj.provider instanceof WorldProviderSpaceStation)
             {
@@ -525,10 +566,30 @@ public class PacketSimple extends PacketBase implements Packet<INetHandler>
             }
             break;
         case C_BEGIN_CRYOGENIC_SLEEP:
+        	pos = (BlockPos) this.data.get(0);
+            tile = player.worldObj.getTileEntity(pos);
+            
             if (tile instanceof TileEntityCryogenicChamber)
             {
                 ((TileEntityCryogenicChamber) tile).sleepInBedAt(player, pos.getX(), pos.getY(), pos.getZ());
             }
+        case C_TELEPAD_SEND:
+            Entity entity2 = playerBaseClient.worldObj.getEntityByID((Integer) this.data.get(1));
+
+            if (entity2 != null && entity2 instanceof EntityLivingBase)
+            {
+                BlockVec3 pos3 = (BlockVec3) this.data.get(0);
+                entity2.setPosition(pos3.x + 0.5, pos3.y + 2.2, pos3.z + 0.5);
+            }
+            break;
+        case C_UPDATE_GRAPPLE_POS:
+            entity = playerBaseClient.worldObj.getEntityByID((Integer) this.data.get(0));
+            if (entity != null && entity instanceof EntityGrapple)
+            {
+                Vector3 vec = (Vector3) this.data.get(1);
+                entity.setPosition(vec.x, vec.y, vec.z);
+            }
+            break;
         default:
             break;
         }
@@ -643,7 +704,7 @@ public class PacketSimple extends PacketBase implements Packet<INetHandler>
             }
             else if (player.getRidingEntity() instanceof EntitySpaceshipBase)
             {
-                player.openGui(LabStuffMain.instance, GuiIdsCore.ROCKET_INVENTORY, player.worldObj, (int) player.posX, (int) player.posY, (int) player.posZ);
+                player.openGui(LabStuffMain.instance, 33, player.worldObj, (int) player.posX, (int) player.posY, (int) player.posZ);
             }
             break;
         case S_UPDATE_SHIP_YAW:
@@ -915,7 +976,23 @@ public class PacketSimple extends PacketBase implements Packet<INetHandler>
                 ((ITileClientUpdates)tile3).sendUpdateToClient(playerBase);
             }
             break;
+        case S_UPDATE_CARGO_ROCKET_STATUS:
+            Entity entity3 = player.worldObj.getEntityByID((Integer) this.data.get(0));
 
+            if (entity3 instanceof EntityCargoRocket)
+            {
+                EntityCargoRocket rocket = (EntityCargoRocket) entity3;
+
+                int subType = (Integer) this.data.get(1);
+
+                switch (subType)
+                {
+                default:
+                    rocket.statusValid = rocket.checkLaunchValidity();
+                    break;
+                }
+            }
+            break;
         default:
             break;
         }

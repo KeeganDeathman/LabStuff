@@ -6,10 +6,10 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 import keegan.labstuff.LabStuffMain;
-import keegan.labstuff.PacketHandling.*;
-import keegan.labstuff.container.*;
-import keegan.labstuff.recipes.Recipes;
-import keegan.labstuff.tileentity.*;
+import keegan.labstuff.PacketHandling.GuiChangePacket;
+import keegan.labstuff.container.ContainerKeyPunch;
+import keegan.labstuff.tileentity.KeyPunch;
+import keegan.labstuff.util.LabStuffUtils;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.*;
@@ -60,11 +60,11 @@ public class GuiKeyPunchRead extends GuiContainer
 	{
 		if(btn.id == 0)
 		{
-			LabStuffMain.packetPipeline.sendToServer(new GuiChangePacket(tile.getPos(), 30));
+			LabStuffMain.packetPipeline.sendToServer(new GuiChangePacket(tile.getPos(), 30, LabStuffUtils.getDimensionID(tile.getWorld())));
 		}
 		else if(btn.id == 1)
 		{
-			LabStuffMain.packetPipeline.sendToServer(new GuiChangePacket(tile.getPos(), 24));
+			LabStuffMain.packetPipeline.sendToServer(new GuiChangePacket(tile.getPos(), 24, LabStuffUtils.getDimensionID(tile.getWorld())));
 		}
 	}
 

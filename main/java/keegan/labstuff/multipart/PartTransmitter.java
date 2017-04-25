@@ -1,15 +1,12 @@
 package keegan.labstuff.multipart;
 
-import java.util.*;
+import java.util.Collection;
 
-import keegan.labstuff.common.Coord4D;
 import keegan.labstuff.common.capabilities.Capabilities;
 import keegan.labstuff.network.*;
 import keegan.labstuff.network.DynamicNetwork.NetworkClientRequest;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 

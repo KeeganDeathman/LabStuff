@@ -1,20 +1,15 @@
 package keegan.labstuff.dimension;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.world.DimensionType;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldSavedData;
-import net.minecraftforge.common.DimensionManager;
-
 import java.util.ArrayList;
 
 import keegan.labstuff.common.capabilities.LSPlayerStats;
 import keegan.labstuff.config.ConfigManagerCore;
 import keegan.labstuff.galaxies.*;
 import keegan.labstuff.util.*;
+import net.minecraft.entity.player.*;
+import net.minecraft.nbt.*;
+import net.minecraft.world.*;
+import net.minecraftforge.common.DimensionManager;
 
 public class SpaceStationWorldData extends WorldSavedData
 {

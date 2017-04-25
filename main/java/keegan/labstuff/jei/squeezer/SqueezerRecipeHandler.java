@@ -1,7 +1,7 @@
 package keegan.labstuff.jei.squeezer;
 
 
-import keegan.labstuff.recipes.*;
+import keegan.labstuff.recipes.Squeeze;
 import mezz.jei.api.*;
 import mezz.jei.api.recipe.*;
 

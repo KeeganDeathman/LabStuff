@@ -1,8 +1,5 @@
 package keegan.labstuff.network;
 
-import keegan.labstuff.LabStuffMain;
-import net.minecraft.item.*;
-
 public enum TransmitterType
 {
 	POWERCABLE("powercable", Size.SMALL, TransmissionType.ENERGY, false, 0, 0),

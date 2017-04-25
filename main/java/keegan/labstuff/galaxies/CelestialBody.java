@@ -18,11 +18,13 @@ public abstract class CelestialBody implements Comparable<CelestialBody>
     protected ScalableDistance relativeDistanceFromCenter = new ScalableDistance(1.0F, 1.0F);
     protected float relativeOrbitTime = 1.0F;
     protected float phaseShift = 0.0F;
-    protected int dimensionID = 0;
+    protected int dimensionID = -1;
     protected Class<? extends WorldProvider> providerClass;
+    protected String dimensionSuffix;
     protected boolean autoRegisterDimension = false;
     protected boolean isReachable = false;
     protected boolean forceStaticLoad = true;
+    protected int tierRequired = 0;
 
     public ArrayList<IAtmosphericGas> atmosphere = new ArrayList<>();
 
@@ -119,6 +121,16 @@ public abstract class CelestialBody implements Comparable<CelestialBody>
         return this.relativeOrbitTime;
     }
 
+    public int getTierRequirement()
+    {
+        return this.tierRequired;
+    }
+
+    public CelestialBody setTierRequired(int tierRequired)
+    {
+        this.tierRequired = tierRequired;
+        return this;
+    }
 
     public CelestialBody setRelativeSize(float relativeSize)
     {
@@ -285,4 +297,14 @@ public abstract class CelestialBody implements Comparable<CelestialBody>
 	{
 		this.isReachable = false;
 	}
+
+    public String getDimensionSuffix()
+    {
+        return dimensionSuffix;
+    }
+
+    public void setDimensionSuffix(String dimensionSuffix)
+    {
+        this.dimensionSuffix = dimensionSuffix;
+    }
 }

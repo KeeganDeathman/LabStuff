@@ -1,7 +1,6 @@
 package keegan.labstuff.jei.chloralakizer;
 
 import keegan.labstuff.LabStuffMain;
-import keegan.labstuff.render.LabStuffOBJLoader;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.*;
 

@@ -9,5 +9,6 @@ public enum EnumSortCategoryItem
     ARMOR,
     PLATE,
     INGOT,
-    TOOLS
+    TOOLS,
+    ROCKET
 }

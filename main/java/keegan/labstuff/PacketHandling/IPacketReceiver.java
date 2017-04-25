@@ -1,8 +1,8 @@
 package keegan.labstuff.PacketHandling;
 
-import io.netty.buffer.ByteBuf;
-
 import java.util.ArrayList;
+
+import io.netty.buffer.ByteBuf;
 
 public interface IPacketReceiver
 {

@@ -1,6 +1,6 @@
 package keegan.labstuff.network;
 
-import keegan.labstuff.common.*;
+import keegan.labstuff.common.Coord4D;
 import keegan.labstuff.common.capabilities.*;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;

@@ -5,13 +5,12 @@ import keegan.labstuff.PacketHandling.PacketSimple;
 import keegan.labstuff.PacketHandling.PacketSimple.EnumSimplePacket;
 import keegan.labstuff.client.ClientTickHandler;
 import keegan.labstuff.client.sounds.LSSounds;
-import keegan.labstuff.common.EnumColor;
 import keegan.labstuff.common.capabilities.LSPlayerStatsClient;
 import keegan.labstuff.config.ConfigManagerCore;
 import keegan.labstuff.event.EventWakePlayer;
 import keegan.labstuff.models.ModelPlayerLS;
 import keegan.labstuff.tileentity.TileEntityAdvanced;
-import keegan.labstuff.util.*;
+import keegan.labstuff.util.LabStuffUtils;
 import keegan.labstuff.world.*;
 import keegan.labstuff.wrappers.PlayerGearData;
 import net.minecraft.block.state.IBlockState;
@@ -19,12 +18,7 @@ import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.math.*;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.FMLClientHandler;
 
@@ -293,7 +287,7 @@ public class PlayerClient implements IPlayerClient
         // 0 : opened LS inventory tab
         // 1,2,3 : Compressor, CF, Standard Wrench
         // 4,5,6 : Fuel loader, Launchpad
-        // 7: oil found 8: placed rocket
+        // 7: placed rocket
 
         LSPlayerStatsClient stats = LSPlayerStatsClient.get(player);
         int flag = stats.getBuildFlags();
@@ -323,7 +317,6 @@ public class PlayerClient implements IPlayerClient
         case 5:
         case 6:
         case 7:
-        case 8:
         }
     }
 }
